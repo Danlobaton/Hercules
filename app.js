@@ -16,18 +16,6 @@ app.use(cors());
 app.get('/getKpis', getKpis);
 app.get('/getView', getView);
 
-function getAccount(req, res) {
-    request({
-        method: "GET",
-        url: "https://devhercules.herokuapp.com/account_state",
-        resolveWithFullResponse: true
-    })
-    .then((response) => {
-        res.send(JSON.parse(response.body))
-    })
-    .catch()
-}
-
 function getView(req, res) {
     let {object_id, view, token} = req.query;
     sdk.get_view_children_data(object_id, view, token)
