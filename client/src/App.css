@@ -1,0 +1,128 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+body {
+  height: 100%;
+  width: 100%
+}
+.logIn {
+  height: 100vh;
+  width: 100%
+}
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: 100%;
+  width: 100%;
+}
+.contentBox {
+  background-color: #EBEBEC;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.specBar {
+  flex: .9;
+  min-width: 150px;
+}
+.mainBox {
+  flex: 6;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+}
+.box {
+  position: absolute;
+  background: #FFFFFF;
+  bottom: 0;
+  height: 98.5%;
+  max-height: 100%;
+  width: 99%;
+  left: .5%;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+#title {
+  margin: 0 auto;
+  display: flex;
+  padding: 1.5em;
+  font-size: 18px;
+  transform: translateY(10px)
+}
+#normFont {
+  letter-spacing: 3px;
+  font-weight: 350;
+}
+#mainFont {
+  letter-spacing: 1px;
+  font-weight: 750;
+  color: #7F68C2;
+  padding-left: 5px;
+}
+.actionBar {
+  display: flex;
+  justify-content: space-between; 
+  width: 90%;
+  position: relative;
+  left: 5%;
+  padding-bottom: 15px;
+}
+.subGraphs {
+  width: 97%;
+  min-width: 000px;
+  display: flex;
+  height: 45%;
+  margin: 0 auto;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.leftGraph {
+  flex: 4;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  min-width: 325px;
+  min-height: 230px;
+  padding-top: 15px
+}
+.rightGraph {
+  flex: 5;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  min-width: 450px;
+  min-height: 230px;
+  padding-top: 15px
+}
+#graph {
+  background-image: linear-gradient(#181818,#020202);
+  width: 99%;
+  height: 100%;
+  border-radius: 5px 5px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+#graphContent {
+  height: 95%;
+  width: 96%;
+  margin: 0 auto;
+  bottom: 0;
+}
+#graphContent p {
+  color: #D0D0D0;
+  font-size: 14px;
+  padding: 10px 0 0 15px;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+.scroll {
+  flex: 1.6;
+  position: relative;
+}
