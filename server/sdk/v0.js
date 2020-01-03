@@ -129,5 +129,32 @@ module.exports.get_view_kpis = function(object_id, view, token) {
             }
         });
     });
+}
+
+module.exports.get_adaccounts= function(user_id, token) {
+    let params = {
+        token,
+        method: 'get',
+        fields: ["account_id", "name"]
+    }
+    let path = `${user_id}/adaccounts`;
+    let uri = build_uri(path, params, token);
+    return new Promise((resolve, reject) => {
+        request.get(uri, params,(err, res, body) => {
+            try {
+                let data = JSON.parse(body).data;
+                let payload = data.map(function(d) {
+                    return data_point = {
+                        name: d.name,
+                        id : d.id
+                    }
+                });
+                resolve(payload);
+            } catch (e) {
+                console.log('error getting fb data\n', e, '\n', body);
+                resolve(JSON.parse(body))
+            }
+        });
+    });
 
 }
