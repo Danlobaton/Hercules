@@ -150,7 +150,7 @@ module.exports.get_adaccounts= function(user_id, token) {
                 let payload = data.map(function(d) {
                     return data_point = {
                         name: d.name,
-                        id : d.id
+                        id : d.account_id
                     }
                 });
                 resolve(payload);
