@@ -52,9 +52,10 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                         status: d.status,
                         score: Math.random(),
                         spend,
-                        roas,
                         purchases,
-                        revenue
+                        revenue,
+                        roas
+                        
                     }
                 });
                 payload.sort(compare_revenue).reverse();
@@ -103,6 +104,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                 let roas = data.purchase_roas ? parseFloat(parseFloat(data.purchase_roas[0].value).toFixed(2)) : 0;
                 let purchases = data.actions ? getPurchases(data.actions) : 0;
                 let revenue = parseFloat((roas * data.spend).toFixed(2));
+                let cost_per_purchase = parseFloat((data.spend / purchases).toFixed(2));
                 let payload = {
                     name: data.name,
                     impressions: data.impressions,
@@ -110,10 +112,12 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                     reach: data.reach,
                     spend: data.spend,
                     level: ad_view_map[view][1],
+                    cost_per_purchase: (cost_per_purchase === null) ? cost_per_purchase : 0,
                     roas,
                     purchases,
                     revenue
                 };
+                console.log(data)
                 resolve(payload);
             } catch (e) {
                 console.log('error getting fb data\n', e, '\n', body);
