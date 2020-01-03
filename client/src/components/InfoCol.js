@@ -3,32 +3,22 @@ import PropTypes from 'prop-types'
 
 export class InfoCol extends Component {
     // Rounds an integer and returns formatted number 
-    roundInt = (unum) => {
-        var num = this.typeCheck(unum)
+    roundInt = (value) => {
+        var num = (typeof value === 'string') ? parseInt(value) : parseInt(value)
         var strInt = num.toString()
-        if (strInt.length >= 7) {
-            return ((num / 1000000).toString().substring(0, 4) + 'M')
-        } else if (strInt.length >= 4) {
-            return ((num / 1000).toString().substring(0, 4) + "K")
-        } else {
-            return strInt.toString()
+
+        // rounds number
+        switch (true) {
+            case (strInt.length >= 7) : return ((num / 1000000).toString().substring(0, 4) + 'M')
+            case (strInt.length >= 4) : return ((num / 1000).toString().substring(0, 4) + "K")
+            default : return strInt.toString()
         }
     } 
 
     // Rounds a double
     roundDouble = (num) => {
-        if (num)
-            var strDub = num.toString()
-        else strDub = '0.0'
+        var strDub = num ? num.toString() : '0.0'
         return strDub.substring(0, strDub.indexOf('.') + 3)
-    }
-
-    typeCheck = (object) => {
-        if(typeof object === 'string') {
-            return parseInt(object)
-        } else {
-           return parseInt(object.toString())
-        }
     }
 
     render() { 
@@ -125,7 +115,6 @@ const valueStyle = {
 }
 
 InfoCol.propTypes = {
-    data: PropTypes.object.isRequired,
     liveKPI: PropTypes.object.isRequired
 }
 

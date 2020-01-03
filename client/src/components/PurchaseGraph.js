@@ -10,7 +10,6 @@ export class PurchaseGraph extends Component {
     getGraphData = () => {
         var dData = []
         var data = this.props.data ? this.props.data.sort((a,b) => a.score - b.score) : [] // sorts data from least to best performing
-        
         if (this.props.level !== 'Ad') { // TODO check redundancy
             /* returns top 4 best performing ad objects in the sublist if there are more than 4,
                 else it just returns the ad objects available */

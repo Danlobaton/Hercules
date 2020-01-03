@@ -22,9 +22,8 @@ export class MainGraph extends Component {
                     })
                 }
             }
-            return graphData
         }
-        return 0
+        return graphData
     }
 
     // Custom dot for actual line

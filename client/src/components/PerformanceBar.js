@@ -5,14 +5,13 @@ export class PerformanceBar extends Component {
     // delete when actual performance data is available
     getPerformance = () => {
         var performance = [0, 0, 0]
+        var sub = this.props.sub
         if (this.props.level !== "Ad") {
             for (var i = 0; i < this.props.sub.length; i+=1) {
-                if (this.props.sub[i].score >= .6) {
-                    performance[0] += 1
-                } else if (this.props.sub[i].score <= .3) {
-                    performance[2] += 1
-                } else {
-                    performance[1] += 1
+                switch (true) {
+                    case (sub[i].score >= .6) : performance[0] += 1; break
+                    case (sub[i].score <= .3) : performance[1] += 1; break
+                    default : performance[2] += 1; break
                 }
             }
         }
@@ -21,7 +20,8 @@ export class PerformanceBar extends Component {
     
     // show performance bar until object displayed is at the Ad level
     showPeformance = (performance) => {
-        if(this.props.level !== 'Ad') {
+        const level = this.props.level
+        if(level !== 'Ad') {
             return(
                 <div style={{display: 'flex'}}>
                     <div  style={pStyle}>

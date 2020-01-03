@@ -13,7 +13,7 @@ export class Login extends Component {
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
           this.setState({
-            username: resultObject,
+            username: resultObject
           });
           this.props.login()
           console.log(resultObject)
