@@ -35,7 +35,6 @@ module.exports.get_view_children_data = function(object_id, view, token) {
     let uri = build_uri(path, params, token);
 
     return new Promise((resolve, reject) => {
-
         request.get(uri, params,(err, res, body) => {
             try {
                 let data = JSON.parse(body).data;
@@ -155,8 +154,14 @@ module.exports.get_adaccounts= function(user_id, token) {
                 });
                 resolve(payload);
             } catch (e) {
-                console.log('error getting fb data\n', e, '\n', body);
-                resolve(JSON.parse(body))
+                let error = {
+                    sys_error: e,
+                    fb_body: JSON.parse(body),
+                    level: "Ad Account"
+                }
+                console.log(error)
+                resolve(error);
+
             }
         });
     });
