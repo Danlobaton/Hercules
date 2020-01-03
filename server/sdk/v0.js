@@ -149,15 +149,15 @@ module.exports.get_adaccounts= function(user_id, token) {
                 let payload = data.map(function(d) {
                     return data_point = {
                         name: d.name,
-                        id : d.account_id
+                        id : d.account_id,
+                        level: "Ad Account"
                     }
                 });
                 resolve(payload);
             } catch (e) {
                 let error = {
                     sys_error: e,
-                    fb_body: JSON.parse(body),
-                    level: "Ad Account"
+                    fb_body: JSON.parse(body)
                 }
                 console.log(error)
                 resolve(error);
