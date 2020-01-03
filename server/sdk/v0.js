@@ -69,15 +69,23 @@ module.exports.get_view_children_data = function(object_id, view, token) {
 }
 
 module.exports.get_view_kpis = function(object_id, view, token) {
+    let name_param;
     view = view.toLowerCase();
     let ad_view_map = {
         "adaccount": [`act_${object_id}`, "Ad Account"],
         "campaign": [object_id, "Campaign"],
         "adset": [object_id, "Ad Set"]
     };
+    if (view === "adaccount"){
+        name_param = "account_name";
+    } else if (view === "campaign"){
+        name_param = "campaign_name";
+    } else {
+        name_param = "adset_name";
+    }
     let params = {
         method: 'get',
-        fields: ["account_name", "spend", "impressions", "reach", "clicks", "actions", "purchase_roas"]
+        fields: [name_param, "spend", "impressions", "reach", "clicks", "actions", "purchase_roas"]
     }
     if (view === "adaccount"){
         // get only that last 60 days worth of data if it on the ad account level
@@ -106,7 +114,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                 let revenue = parseFloat((roas * data.spend).toFixed(2));
                 let cost_per_purchase = parseFloat((data.spend / purchases).toFixed(2));
                 let payload = {
-                    name: data.name,
+                    name: data[name_param],
                     impressions: data.impressions,
                     clicks: data.clicks,
                     reach: data.reach,
