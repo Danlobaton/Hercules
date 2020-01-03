@@ -60,8 +60,12 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                 payload.sort(compare_revenue).reverse();
                 resolve(payload);
             } catch (e) {
-                console.log('error getting fb data\n', e, '\n', body);
-                resolve([])
+                let error = {
+                    sys_error: e,
+                    fb_body: JSON.parse(body)
+                }
+                console.log(error);
+                resolve(error);
             }
         });
     });
@@ -124,11 +128,14 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                     purchases,
                     revenue
                 };
-                console.log(data)
                 resolve(payload);
             } catch (e) {
-                console.log('error getting fb data\n', e, '\n', body);
-                resolve([])
+                let error = {
+                    sys_error: e,
+                    fb_body: JSON.parse(body)
+                }
+                console.log(error);
+                resolve(error);
             }
         });
     });
@@ -159,9 +166,8 @@ module.exports.get_adaccounts= function(user_id, token) {
                     sys_error: e,
                     fb_body: JSON.parse(body)
                 }
-                console.log(error)
+                console.log(error);
                 resolve(error);
-
             }
         });
     });
