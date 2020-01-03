@@ -27,40 +27,18 @@ export class App extends Component {
     liveName: '',
     liveLevel: '',
     liveNextLevel: '',
+    liveAdAccounts: [],
+    id: this.props.id,
+    token: this.props.token,
     master: Data, // remove when ad account becomes array
     history: [Data[0]], // restructure history to work with api after ad account becomes array
     loggedIn: this.props.loggedIn,
     objectRecord: null
   }
 
-  // TODO delete
-  changeAdAccount = (object) => {
-    this.setState({
-      history: [object],
-      data: object
-    })
-  }
-
   // makes state the origin ad account
   goHome = () => {
-    fetch('https://devhercules.herokuapp.com/account_state')
-    .then(res => res.json())
-    .then((data) => {
-        this.setState({        
-          liveSub: data.children_data,
-            liveKPI: {
-                clicks: data.object_data.clicks,
-                impressions: data.object_data.impressions,
-                purchases: data.object_data.purchases,
-                reach: data.object_data.reach,
-                revenue: data.object_data.revenue,
-                spent: data.object_data.spend,
-            },
-            liveName: data.object_data.object_name,
-            liveLevel: data.object_data.level,
-            liveNextLevel: this.getNextLevel(data.object_data.level)
-        })
-    })
+    this.changeView(this.state.liveAdAccounts[0].id, this.state.liveAdAccounts[0].level)
   }
 
   // gets children's level
@@ -76,6 +54,7 @@ export class App extends Component {
   // returns raw level for api changes
   getRawLevel = (level) => {
     switch (true) {
+      case (level === 'Ad Account') : return 'adaccount'
       case (level === 'Campaign') : return 'campaign'
       case (level === 'Ad Set') : return 'adset'
       default : return ''
@@ -86,15 +65,14 @@ export class App extends Component {
   changeView = (id, level) => {
     var rawLevel = this.getRawLevel(level)
     this.state.history.push({id: id, level: level})
-    fetch(`http://localhost:5000/getView?object_id=${id}&view=${rawLevel}&token=EAAhtRUgS5gQBAELFOycvdGCvUF4dPD489Y1KxOQfVA4D2ybE2wbUww8ZBiInw7NsT5GLkvrMHqbqkbx01IoOuLuESPUYCTvY7544mxQnip44ZBrRayODCQPT6M4rfjOrRS93YgMKiN8jZC1Kxjh7inRQnWWDp2lFYYv1noCMxTGtBxOqToP7XQTTQzpNyah7NePTtkiswZDZD`)
+    fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
         this.setState({  
           liveSub: data,
         })
     })
-
-    fetch(`http://localhost:5000/getKpis?object_id=${id}&view=${rawLevel}&token=EAAhtRUgS5gQBAELFOycvdGCvUF4dPD489Y1KxOQfVA4D2ybE2wbUww8ZBiInw7NsT5GLkvrMHqbqkbx01IoOuLuESPUYCTvY7544mxQnip44ZBrRayODCQPT6M4rfjOrRS93YgMKiN8jZC1Kxjh7inRQnWWDp2lFYYv1noCMxTGtBxOqToP7XQTTQzpNyah7NePTtkiswZDZD`)
+    fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
       this.setState({
@@ -125,37 +103,24 @@ export class App extends Component {
   // TODO might have to look over this when ad account endpoint returns array
   // initial call to get default data, always first ad account in array
   componentDidMount() {
-    fetch('https://devhercules.herokuapp.com/account_state')
+    var adAccounts = this.state.liveAdAccounts
+    fetch(`/getAccounts?user_id=${this.state.id}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
-        this.setState({        
-          liveSub: data.children_data,
-            liveKPI: {
-                clicks: data.object_data.clicks,
-                impressions: data.object_data.impressions,
-                purchases: data.object_data.purchases,
-                reach: data.object_data.reach,
-                revenue: data.object_data.revenue,
-                spent: data.object_data.spend,
-                costPerPurchase: data.object_data.cost_per_purchase
-            },
-            liveName: data.object_data.object_name,
-            liveLevel: data.object_data.level,
-            liveNextLevel: this.getNextLevel(data.object_data.level),
-            objectRecord: null
-        })
+        this.setState({liveAdAccounts: data}) //makes live ad accounts equal to array of ad account info
     })
+    this.changeView(adAccounts[0].id, adAccounts[0].level) // changes view to first ad account in array
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub} = this.state
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
         <div className='app'>
           <Header 
             goHome={this.goHome}
-            level={this.state.data.level}
-            master={Data}
-            changeAdAccount={this.changeAdAccount}
+            level={liveLevel}
+            master={liveAdAccounts}
+            changeAdAccount={this.changeView}
           />
           <div className='contentBox'>
             

@@ -6,17 +6,23 @@ import './App.css'
 
 export class App extends Component {
   state = {
-    loggedIn: false
+    loggedIn: false,
+    userID: null,
+    accessToken: null
   }
 
-  login = () => {
-    this.setState({loggedIn: true})
+  login = (userID, accessToken) => {
+    this.setState({
+      userID: userID,
+      accessToken: accessToken,
+      loggedIn: true
+    })
   }
 
   showApp = () => {
     if (this.state.loggedIn) {
       return (
-        <ADMApp />
+        <ADMApp id={this.state.userID} token={this.state.accessToken} />
       )
     } else {
       return (

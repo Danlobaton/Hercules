@@ -7,15 +7,11 @@ import FacebookLogin from '../functional/FacebookLogin'
 export class Login extends Component {
     state = {
         loggedIn: this.props.loggedIn,
-        username: null
     }
 
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
-          this.setState({
-            username: resultObject
-          });
-          this.props.login()
+          this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken)
           console.log(resultObject)
         } else {
           console.log('Not logged in')

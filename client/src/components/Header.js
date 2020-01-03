@@ -8,14 +8,19 @@ import PropTypes from 'prop-types'
 export class Header extends Component {
     // Gets the ad accounts and makes them dropdown elements for accessibilty in the header 
     getAdAccounts = (adAccount) => {
-        return (
-            <NavDropdown.Item onClick={this.props.changeAdAccount.bind(this, adAccount)} key={adAccount.id}>
-                {adAccount.name}
-            </NavDropdown.Item>
-        )
+        if (this.props.master.length > 0) { 
+            return (
+                <NavDropdown.Item onClick={this.props.changeAdAccount.bind(this, adAccount.id, adAccount.level)} key={adAccount.id}>
+                    {adAccount.name}
+                </NavDropdown.Item>
+            )
+        } else {
+            return (<NavDropdown.Item key='0'></NavDropdown.Item>)
+        }
     }
 
     render() {
+        const master = this.props.master ? this.props.master : [] 
         return (
             <div>
                 <Navbar bg='black' variant='dark' style={{background: 'black', zIndex: 1}}>
@@ -24,7 +29,7 @@ export class Header extends Component {
                     </Navbar.Brand>
                     <Nav style={{color: 'white', transform: 'translateX(60px)'}}>
                         <NavDropdown title="Choose Ad Account" id="basic-nav-dropdown">
-                            {this.props.master.map((adAccount) => this.getAdAccounts(adAccount))}
+                            {master.map((adAccount) => this.getAdAccounts(adAccount))}
                         </NavDropdown>
                     </Nav>
                 </Navbar>
