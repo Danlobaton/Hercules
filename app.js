@@ -28,6 +28,7 @@ app.listen(port, function() {
 //routes
 app.get('/getKpis', getKpis);
 app.get('/getView', getView);
+app.get('/getAccounts', getAccounts);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname,'client' ,'build', 'index.html'));
 });
@@ -43,11 +44,21 @@ function getView(req, res) {
 }
 
 function getKpis(req, res) {
-  let {object_id, view, token} = req.query;
-  sdk.get_view_kpis(object_id, view, token)
+    let {object_id, view, token} = req.query;
+    sdk.get_view_kpis(object_id, view, token)
+    .then(r => res.json(r))
+    .catch(r => {
+        console.log(r)
+            res.json({fail: r})
+        })
+}
+
+function getAccounts(req, res) {
+  let {user_id, token} = req.query;
+  sdk.get_adaccounts(user_id, token)
   .then(r => res.json(r))
   .catch(r => {
       console.log(r)
           res.json({fail: r})
-  })
+      })
 }
