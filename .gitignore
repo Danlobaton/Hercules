@@ -112,3 +112,4 @@ package-lock.json
 *.key
 .vscode
 client/build
+.DS_Store
