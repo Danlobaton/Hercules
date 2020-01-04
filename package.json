@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev_deploy": "npm install && cd client && npm install && npm run build && cd .. && node app.js"
+    "dev_deploy": "npm install && cd client && npm install && npm run build && cd .. && node app.js",
+    "soft_deploy": "cd client && npm run build && cd .. && nodemon app.js"
   },
   "keywords": [],
   "author": "",
