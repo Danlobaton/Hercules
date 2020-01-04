@@ -23,12 +23,7 @@ https.createServer({
     cert: fs.readFileSync('server.crt')
   }, app).listen(port, () => {
     console.log(`Listening to port ${port}`)
-<<<<<<< HEAD
   })
-=======
-    console.log('https is wokring')
-})
->>>>>>> 9cfd5a0bd80fb44fe8bc2029b24b7c8260aa5e08
 
 //routes
 app.get('/getKpis', getKpis);
