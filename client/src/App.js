@@ -14,9 +14,9 @@ export class App extends Component {
   login = (userID, accessToken) => {
     this.setState({
       userID: userID,
-      accessToken: accessToken,
-      loggedIn: true
+      accessToken: accessToken
     })
+    this.state.userID ? this.setState({loggedIn: true}) : console.log('error')
   }
 
   showApp = () => {

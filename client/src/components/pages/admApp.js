@@ -104,12 +104,13 @@ export class App extends Component {
   // initial call to get default data, always first ad account in array
   componentDidMount() {
     var adAccounts = this.state.liveAdAccounts
-    fetch(`/getAccounts?user_id=${this.state.id}&token=${this.state.token}`)
+    fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
     .then(res => res.json())
     .then((data) => {
+        console.log(data)
         this.setState({liveAdAccounts: data}) //makes live ad accounts equal to array of ad account info
+        this.changeView(data[0].id, data[0].level)
     })
-    this.changeView(adAccounts[0].id, adAccounts[0].level) // changes view to first ad account in array
   }
 
   render() {
