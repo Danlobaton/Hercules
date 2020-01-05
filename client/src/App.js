@@ -11,7 +11,7 @@ export class App extends Component {
     accessToken: null
   }
 
-  login = (userID, accessToken) => {
+  Login = (userID, accessToken) => {
     this.setState({
       userID: userID,
       accessToken: accessToken

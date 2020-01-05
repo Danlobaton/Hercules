@@ -1,9 +1,7 @@
 'use stric';
 
-var request = require('request-promise');
 var express = require('express');
 var cors = require('cors');
-var url = require('url');
 var path = require('path');
 var sdk = require('./server/sdk/v0');
 var https = require('https');
