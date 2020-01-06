@@ -102,6 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+
 build/
 node_modules
 node_modules/
@@ -110,3 +112,8 @@ package-lock.json
 *.crt
 *.key
 .vscode
+client/build
+.DS_Store
+/node_modules
+npm-debug.log
+/*.env

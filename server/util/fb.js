@@ -1,6 +1,5 @@
 'use strict';
 
-// WTF IS THIS ?!?!?!?!?!?!?!?!? - Dani
 const fb = module.exports = {
 
     /*
