@@ -21,5 +21,8 @@ const fb = module.exports = {
         query += `&${encodeURI(param)}=${encodeURI(val)}`;
       }
       return uri + query;
+    },
+    isTokenValid(short_token) {
+
     }
   }

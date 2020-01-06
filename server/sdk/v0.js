@@ -3,6 +3,7 @@
 const request = require('request-promise');
 const {build_uri} = require('../util/fb');
 const {getPurchases, compare_revenue} = require('../util/helpers');
+const {check_user_id} = require('../util/db');
 
 module.exports.get_view_children_data = function(object_id, view, token) {
     view = view.toLowerCase();
@@ -141,7 +142,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
     });
 }
 
-module.exports.get_adaccounts= function(user_id, token) {
+module.exports.get_adaccounts = function(user_id, token) {
     let params = {
         token,
         method: 'get',
@@ -171,5 +172,19 @@ module.exports.get_adaccounts= function(user_id, token) {
             }
         });
     });
+}
 
+module.exports.check_perm_token = function(user_id, short_token) {
+    /*
+        Note: Response time doesn't matter here since 
+        all of this is happening on the background
+        purely for polling porposes
+
+        Step 1: Does a perm token already exists for this user on the DB
+            - If token does exist on DB
+                * isTokenValid ? doNothing : getNewToken;
+            - Else get a new permToken
+                - Store it in DB
+    */
+   return check_user_id(user_id, short_token);
 }

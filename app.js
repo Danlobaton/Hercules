@@ -1,5 +1,6 @@
 'use stric';
 
+require('dotenv').config()
 var express = require('express');
 var cors = require('cors');
 var path = require('path');
@@ -8,22 +9,25 @@ var https = require('https');
 var fs = require('fs');
 var app = express();
 
+// set up middleware
 app.use(cors());
 app.use(express.static(path.join(__dirname,'client','build')));
 const port = process.env.PORT || 5000;
 
-app.listen(port, function() { 
-    console.log(`Listening to port ${port}`);
-});
+if(process.env.DEV_ENV == "false") {
+    app.listen(port, function() { 
+        console.log(`Listening to port ${port}`);
+    });
+} else {
+    https.createServer({
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.crt')
+    }, app).listen(port, () => {
+        console.log(`Listening to port ${port}`)
+    })
+}
 
-// https.createServer({
-//     key: fs.readFileSync('server.key'),
-//     cert: fs.readFileSync('server.crt')
-//   }, app).listen(port, () => {
-//     console.log(`Listening to port ${port}`)
-//   })
-
-//routes
+// routes
 app.get('/getKpis', getKpis);
 app.get('/getView', getView);
 app.get('/getAccounts', getAccounts);
@@ -60,3 +64,7 @@ function getAccounts(req, res) {
           res.json({fail: r})
       })
 }
+
+sdk.check_perm_token("10220792625024921", function(x){
+    console.log(x);
+});
