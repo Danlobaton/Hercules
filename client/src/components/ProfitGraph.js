@@ -21,7 +21,6 @@ export class ProfitGraph extends Component {
                     dData.push({'Name': data[i].name, 'Amount Spent': data[i].spend, 'Revenue': data[i].revenue})
             }
         }
-
         return dData.reverse()
     }
 
@@ -100,7 +99,7 @@ export class ProfitGraph extends Component {
                         <Bar type='monotone' dataKey='Revenue' stroke='#55C2E8' strokeWidth={3} barSize={35}>
                             <LabelList dataKey='Revenue' position='' stroke='white' content={this.generalLabel}/>
                         </Bar>
-                        <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} />
+                        <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]} />
                         <XAxis dataKey='Name' tick={false} height={0} />
                     </BarChart>
                 </ResponsiveContainer>

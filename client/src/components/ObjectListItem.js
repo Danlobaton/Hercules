@@ -25,7 +25,7 @@ export class ObjectListItem extends Component {
     getText = (object) => {
         const nextLevel = this.props.nextLevel
         return (nextLevel === 'Campaign') ?
-        (<p style={pStyle}>ROAS: {object.ROAS}</p>) : (<p style={pStyle}>Budget: {object.ROAS}</p>)
+        (<p style={pStyle}>ROAS: {object.roas}</p>) : (<p style={pStyle}>Budget: {object.roas}</p>)
     }
 
     render() {
