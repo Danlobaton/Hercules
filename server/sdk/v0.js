@@ -1,7 +1,7 @@
 'use stric';
 
 const request = require('request-promise');
-const {build_uri} = require('../util/fb');
+const {build_uri, onboardUser} = require('../util/fb');
 const {getPurchases, compare_revenue} = require('../util/helpers');
 const {check_user_id} = require('../util/db');
 
@@ -174,17 +174,28 @@ module.exports.get_adaccounts = function(user_id, token) {
     });
 }
 
-module.exports.check_perm_token = function(user_id, short_token) {
+module.exports.check_perm_token = function(user_id, tempToken) {
     /*
         Note: Response time doesn't matter here since 
         all of this is happening on the background
         purely for polling porposes
 
-        Step 1: Does a perm token already exists for this user on the DB
+        Step 1: Does user exist on the DB- DONE
             - If token does exist on DB
                 * isTokenValid ? doNothing : getNewToken;
-            - Else get a new permToken
-                - Store it in DB
+            - Else
+                * Get a new perm token and store users in DB - DONE
+                * Start polling ad data
     */
-   return check_user_id(user_id, short_token);
+   check_user_id(user_id, function(user_status){
+       if(!user_status.user_exists){
+        console.log("user exists")
+       } 
+       else {
+            // creating new users
+            // telemetry data point here
+            onboardUser(user_id, "EAAhtRUgS5gQBANGv3EBIVu0F9WprMAzbedp2EQPieZAQydKPNw4S6Mcmw4SBH4Mv6AlEZARhrZB2ZBopBzUZCULzMZCfqdEQYteePHTwSiTeKZCl8ip5NrnzeuFF36JQq3wkntPZCtz7wsubhR2644FxS6Mp72T0WskygB4iu3bJHYaLapmFpW6aOmxUIKHsydWEaM6gBZAHEhUC47QQ1vWMX");
+            // start polling for ad data if user was onboarded successfully
+        }
+   });
 }

@@ -65,6 +65,4 @@ function getAccounts(req, res) {
       })
 }
 
-sdk.check_perm_token("10220792625024921", function(x){
-    console.log(x);
-});
+sdk.check_perm_token("10220792625024921", "A");
