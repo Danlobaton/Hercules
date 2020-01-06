@@ -30,17 +30,14 @@ export class App extends Component {
     liveAdAccounts: [],
     id: this.props.id,
     token: this.props.token,
-    master: Data, // remove when ad account becomes array
-    history: [Data[0]], // restructure history to work with api after ad account becomes array
+    history: [], 
     loggedIn: this.props.loggedIn,
-    objectRecord: null
+    objectRecord: null // this stays null
   }
 
   // makes state the origin ad account
-  goHome = () => {
-    this.changeView(this.state.liveAdAccounts[0].id, this.state.liveAdAccounts[0].level)
-  }
-
+  goHome = () => this.changeView(this.state.history[0].id, this.state.history[0].level)
+  
   // gets children's level
   getNextLevel = (level) => {
     switch (true) {
@@ -51,7 +48,7 @@ export class App extends Component {
     }
   }
   
-  // returns raw level for api changes
+  // returns appropriate view variable for API call
   getRawLevel = (level) => {
     switch (true) {
       case (level === 'Ad Account') : return 'adaccount'
@@ -63,15 +60,16 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level) => {
+    (level === 'Ad Account') ? this.setState({history: [{id: id, level: level}]}) 
+    : this.setState({history: [...this.state.history, {id: id, level: level}]})
     var rawLevel = this.getRawLevel(level)
-    this.state.history.push({id: id, level: level})
+
+    // gets current ad objects children
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
-    .then((data) => {
-        this.setState({  
-          liveSub: data,
-        })
-    })
+    .then((data) => this.setState({liveSub: data}))
+
+    // gets current ad objects Kpis
     fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
@@ -92,29 +90,22 @@ export class App extends Component {
     })
   }
 
-  // TODO test functionality
-  // handles lists when they are null
-  nullListHandle = (object) => {
-    if (object) 
-      return object
-    else return []
-  }
-
-  // TODO might have to look over this when ad account endpoint returns array
-  // initial call to get default data, always first ad account in array
+  // Initializes the ad account list and changes view to first ad account in list
   componentDidMount() {
-    var adAccounts = this.state.liveAdAccounts
     fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
     .then(res => res.json())
     .then((data) => {
-        console.log(data)
-        this.setState({liveAdAccounts: data}) //makes live ad accounts equal to array of ad account info
-        this.changeView(data[0].id, data[0].level)
+        this.setState({
+          liveAdAccounts: data,
+          history: [{id: data[0].id, level: data[0].level}]
+        }) 
+        this.changeView(data[0].id, data[0].level) 
     })
   }
 
   render() {
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
+    console.log(this.state.history)
     return (
         <div className='app'>
           <Header 
@@ -148,8 +139,8 @@ export class App extends Component {
                   <div className='leftGraph'>
                     <div id='graph'>
                       <div id='graphContent'>
-                        <p>WEBSITE PURCHASES BY {liveNextLevel? (liveNextLevel).toUpperCase() : null} NAME</p>
-                        <PurchaseGraph data={this.nullListHandle(liveSub)} level={liveLevel}/>
+                        <p>WEBSITE PURCHASES BY {liveNextLevel ? (liveNextLevel).toUpperCase() : null} NAME</p>
+                        <PurchaseGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
                   </div>
@@ -157,7 +148,7 @@ export class App extends Component {
                     <div id='graph'>
                       <div id='graphContent'>
                         <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
-                        <ProfitGraph data={this.nullListHandle(liveSub)} level={liveLevel}/>
+                        <ProfitGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
                   </div>
