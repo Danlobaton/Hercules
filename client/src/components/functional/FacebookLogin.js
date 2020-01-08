@@ -4,7 +4,6 @@ export default class FacebookLogin extends Component {
 
   componentDidMount() {
     document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
-    console.log(this.FB)
     console.log('event listener added')
   }
 
@@ -17,7 +16,9 @@ export default class FacebookLogin extends Component {
    * Init FB object and check Facebook Login status
    */
   initializeFacebookLogin = () => {
+    console.log(window.FB)
     this.FB = window.FB;
+    console.log(this.FB)
     this.checkLoginStatus();
     console.log(this.checkLoginStatus)
     console.log('facebook login status check')
