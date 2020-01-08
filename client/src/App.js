@@ -11,12 +11,12 @@ export class App extends Component {
     accessToken: null
   }
 
-  login = (userID, accessToken) => {
+  login = (userID, accessToken, loginStatus) => {
     this.setState({
       userID: userID,
       accessToken: accessToken
     })
-    this.state.userID ? this.setState({loggedIn: true}) : console.log('error')
+    this.setState({loggedIn: loginStatus})
   }
 
   showApp = () => {
