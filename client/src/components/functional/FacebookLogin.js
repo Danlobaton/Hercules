@@ -11,7 +11,7 @@ export default class FacebookLogin extends Component {
     console.log('event listener added')
     if (window.FB) {
       console.log('this worked')
-      this.initializeFacebookLogin
+      this.initializeFacebookLogin()
     }
   }
 
