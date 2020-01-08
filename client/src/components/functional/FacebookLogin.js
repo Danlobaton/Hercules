@@ -4,10 +4,12 @@ export default class FacebookLogin extends Component {
 
   componentDidMount() {
     document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
+    console.log('event listener added')
   }
 
   componentWillUnmount() {
     document.removeEventListener('FBObjectReady', this.initializeFacebookLogin);
+    console.log('event listener removed')
   }
 
   /**
@@ -16,6 +18,8 @@ export default class FacebookLogin extends Component {
   initializeFacebookLogin = () => {
     this.FB = window.FB;
     this.checkLoginStatus();
+    console.log(this.checkLoginStatus)
+    console.log('facebook login status check')
   }
 
   /**
@@ -29,7 +33,10 @@ export default class FacebookLogin extends Component {
    * Check login status and call login api is user is not logged in
    */
   facebookLogin = () => {
-    if (!this.FB) return;
+    if (!this.FB) {
+      console.log('FB not initialized')
+      return;
+    }
 
     this.FB.getLoginStatus(response => {
       if (response.status === 'connected') {
