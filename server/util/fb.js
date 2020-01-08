@@ -66,7 +66,7 @@ module.exports.isTokenValid = function(permToken) {
   });
 };
 
-modules.exports.getNewToken = function(userID, tempToken){
+module.exports.getNewToken = function(userID, tempToken){
   let params = {
     grant_type: "fb_exchange_token",
     fb_exchange_token: tempToken,
