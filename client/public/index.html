@@ -25,6 +25,7 @@
         });
         // Broadcast an event when FB object is ready
       var fbInitEvent = new Event('FBObjectReady');
+      console.log('object is ready')
       document.dispatchEvent(fbInitEvent);
     };
 
