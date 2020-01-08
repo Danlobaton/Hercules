@@ -36,7 +36,8 @@ export class App extends Component {
     kpiLoaded: false,
     subLoaded: false,
     test: false,
-    objectRecord: null // this stays null
+    objectRecord: null, // this stays null
+    incoming: {}
   }
 
   // makes state the origin ad account
@@ -53,7 +54,6 @@ export class App extends Component {
     if (!this.state.test) {
       if (this.state.kpiLoaded && this.state.subLoaded) {
         this.setState({test: true})
-        console.log(this.state)
       }
     }
   }
@@ -85,6 +85,10 @@ export class App extends Component {
     else {
       if (level !== null)
         this.setState({history: [...this.state.history, {id: id, level: level}]})
+        this.setState({incoming: {
+          history: [...this.state.history, {id: id, level: level}]
+        }})
+        console.log(this.state.incoming.history)
     }
     var rawLevel = this.getRawLevel(level)
 
