@@ -6,11 +6,7 @@ export default class FacebookLogin extends Component {
   }
 
   componentDidMount() {
-    console.log(window.FB)
-    
-    console.log('event listener added')
     if (window.FB) {
-      console.log('this worked')
       this.initializeFacebookLogin()
     } else
       document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
@@ -18,7 +14,6 @@ export default class FacebookLogin extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('FBObjectReady', this.initializeFacebookLogin);
-    console.log('event listener removed')
   }
 
   /**
@@ -28,8 +23,6 @@ export default class FacebookLogin extends Component {
     this.setState({listenerActive: true})
     this.FB = window.FB;
     this.checkLoginStatus();
-    console.log(this.checkLoginStatus)
-    console.log('facebook login status check')
   }
 
   /**
@@ -44,7 +37,6 @@ export default class FacebookLogin extends Component {
    */
   facebookLogin = () => {
     if (!this.FB) {
-      console.log('FB not initialized')
       return;
     }
 
@@ -69,7 +61,6 @@ export default class FacebookLogin extends Component {
       //   };
       //   this.props.onLogin(true, result);
       // });
-      console.log(response)
       this.props.onLogin(true, response)
     } else {
       this.props.onLogin(false);
@@ -78,7 +69,6 @@ export default class FacebookLogin extends Component {
 
   render() {
     let {children} = this.props;
-    console.log(window.FB)
     return (
       <div onClick={this.facebookLogin} >
         {children}
