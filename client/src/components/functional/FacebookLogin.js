@@ -4,6 +4,7 @@ export default class FacebookLogin extends Component {
 
   componentDidMount() {
     document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
+    console.log(this.FB)
     console.log('event listener added')
   }
 
@@ -35,8 +36,6 @@ export default class FacebookLogin extends Component {
   facebookLogin = () => {
     if (!this.FB) {
       console.log('FB not initialized')
-      document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
-      console.log('FB reinitializing')
       return;
     }
 
