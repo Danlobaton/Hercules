@@ -12,6 +12,8 @@ import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
 import ProfitGraph from '../ProfitGraph'
 
+// this does nothing
+
 export class App extends Component {
   state = {
     data: Data[0], // remove when MainGraph info is available
