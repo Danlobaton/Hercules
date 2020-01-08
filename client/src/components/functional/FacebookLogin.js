@@ -6,13 +6,17 @@ export default class FacebookLogin extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
+    // document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
     console.log(this.state.listenerActive)
     console.log('event listener added')
+    if (window.FB) {
+      console.log('this worked')
+      this.initializeFacebookLogin
+    }
   }
 
   componentWillUnmount() {
-    document.removeEventListener('FBObjectReady', this.initializeFacebookLogin);
+    // document.removeEventListener('FBObjectReady', this.initializeFacebookLogin);
     console.log('event listener removed')
   }
 
