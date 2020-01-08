@@ -7,9 +7,8 @@ export default class FacebookLogin extends Component {
 
   componentDidMount() {
     // document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
-    console.log(this.state.listenerActive)
     console.log('event listener added')
-    if (window.FB) {
+    while (!window.FB) {
       console.log('this worked')
       this.initializeFacebookLogin()
     }
@@ -76,7 +75,6 @@ export default class FacebookLogin extends Component {
   }
 
   render() {
-    console.log(window.FB)
     let {children} = this.props;
     return (
       <div onClick={this.facebookLogin} >
