@@ -38,6 +38,13 @@ export class App extends Component {
   // makes state the origin ad account
   goHome = () => this.changeView(this.state.history[0].id, this.state.history[0].level)
   
+  // changes view to previous object in history
+  goBack = () => {
+    this.state.history.pop()
+    var history = this.state.history
+    this.changeView(history[history.length-1].id, history[history.length-1].level)
+  }
+
   // gets children's level
   getNextLevel = (level) => {
     switch (true) {
@@ -60,8 +67,12 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level) => {
-    (level === 'Ad Account') ? this.setState({history: [{id: id, level: level}]}) 
-    : this.setState({history: [...this.state.history, {id: id, level: level}]})
+    if (level === 'Ad Account') 
+      this.setState({history: [{id: id, level: level}]}) 
+    else {
+      if (level !== null)
+        this.setState({history: [...this.state.history, {id: id, level: level}]})
+    }
     var rawLevel = this.getRawLevel(level)
 
     // gets current ad objects children
@@ -156,6 +167,7 @@ export class App extends Component {
               </div>
             </div>
             <div className='specBar'> 
+              {(liveLevel !== 'Ad Account') ? (<button onClick={this.goBack}>Back</button>) : false}
               <InfoCol liveKPI={liveKPI}/>
             </div>
           </div>

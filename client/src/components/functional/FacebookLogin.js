@@ -35,7 +35,7 @@ export default class FacebookLogin extends Component {
       if (response.status === 'connected') {
         this.facebookLoginHandler(response);
       } else {
-        this.FB.login(this.facebookLoginHandler, {scope: ['ads_manage', 'ad']});
+        this.FB.login(this.facebookLoginHandler, {scope: 'ads_management'});
       }
     }, );
   }
@@ -52,6 +52,7 @@ export default class FacebookLogin extends Component {
       //   };
       //   this.props.onLogin(true, result);
       // });
+      console.log(response)
       this.props.onLogin(true, response)
     } else {
       this.props.onLogin(false);
