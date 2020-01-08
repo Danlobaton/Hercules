@@ -1,7 +1,7 @@
 'use stric';
 
 const request = require('request-promise');
-const {build_uri, onboardUser} = require('../util/fb');
+const {build_uri, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
 const {getPurchases, compare_revenue} = require('../util/helpers');
 const {check_user_id} = require('../util/db');
 
@@ -176,10 +176,6 @@ module.exports.get_adaccounts = function(user_id, token) {
 
 module.exports.check_perm_token = function(user_id, tempToken) {
     /*
-        Note: Response time doesn't matter here since 
-        all of this is happening on the background
-        purely for polling porposes
-
         Step 1: Does user exist on the DB- DONE
             - If token does exist on DB
                 * isTokenValid ? doNothing : getNewToken;
@@ -188,8 +184,16 @@ module.exports.check_perm_token = function(user_id, tempToken) {
                 * Start polling ad data
     */
    check_user_id(user_id, function(user_status){
-       if(!user_status.user_exists){
-        console.log("user exists")
+       if(user_status.user_exists){
+            // check if the user access token is still valid
+            isTokenValid(user_status.permToken)
+            .then(r => {
+                r.valid ? 0 : getNewToken();
+            })
+            .catch(r => {
+                console.log(r)
+                return {fail: r};
+            })
        } 
        else {
             // creating new users

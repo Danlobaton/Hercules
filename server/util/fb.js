@@ -1,5 +1,6 @@
 'use strict';
 const request = require('request-promise');
+const {add_new_user} = require('../util/db');
 
 let build_uri = module.exports.build_uri = function(path, params = {}, fb_token) {
     path = path.replace(/^\/+/, ''); // strip any passed in preceding slashes
@@ -18,8 +19,6 @@ let build_uri = module.exports.build_uri = function(path, params = {}, fb_token)
   return uri + query;
 }
 
-module.exports.isTokenValid = function(permToken) {};
-
 module.exports.onboardUser = function(user_id, tempToken) {
   let params = {
     grant_type: "fb_exchange_token",
@@ -32,8 +31,11 @@ module.exports.onboardUser = function(user_id, tempToken) {
       request.get(uri, params,(err, res, body) => {
           try {
             let access_token = JSON.parse(body).access_token;
-            resolve(access_token);
-          } 
+            add_new_user(user_id, access_token, function(status){
+              resolve(status)
+              status.success ? console.log("User successfully onboarded!") : console.log(`Error onboarding userID: ${user_id} permToken: ${permToken}`);
+            });
+          }
           catch (e) {
             let error = {
               sys_error: e,
@@ -44,4 +46,51 @@ module.exports.onboardUser = function(user_id, tempToken) {
            }
         });
     });
+}
+
+module.exports.isTokenValid = function(permToken) {
+  let uri = build_uri("me",{}, permToken);
+  request.get(uri, params,(err, res, body) => {
+    try {
+      let data = JSON.parse(body);
+      data.error ? (data.error.type === "OAuthException" ? resolve({valid:false}): resolve({valid : true, message: data.error})) : resolve({valid:true});
+    }
+    catch (e) {
+      let error = {
+        sys_error: e,
+        fb_body: JSON.parse(body)
+      }
+      console.log(error);
+      resolve(error);
+     }
+  });
+};
+
+modules.exports.getNewToken = function(userID, tempToken){
+  let params = {
+    grant_type: "fb_exchange_token",
+    fb_exchange_token: tempToken,
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET
+  }
+  let uri = build_uri("oauth/access_token", params,"");
+  return new Promise((resolve, reject) => {
+    request.get(uri, params,(err, res, body) => {
+        try {
+          let access_token = JSON.parse(body).access_token;
+          update_user_token(user_id, access_token, function(status){
+            resolve(status)
+            status.success ? console.log("token updated") : console.log(`Error onboarding userID: ${user_id} permToken: ${permToken}`);  // TODO possible bug here!! where is perm token coming from?!?!
+          });
+        }
+        catch (e) {
+          let error = {
+            sys_error: e,
+            fb_body: JSON.parse(body)
+          }
+          console.log(error);
+          resolve(error);
+         }
+      });
+  });
 }
