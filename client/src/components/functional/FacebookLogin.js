@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 
 export default class FacebookLogin extends Component {
+  state = {
+    listenerActive: false
+  }
 
   componentDidMount() {
     document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
+    console.log(this.state.listenerActive)
     console.log('event listener added')
   }
 
@@ -16,9 +20,8 @@ export default class FacebookLogin extends Component {
    * Init FB object and check Facebook Login status
    */
   initializeFacebookLogin = () => {
-    console.log(window.FB)
+    this.setState({listenerActive: true})
     this.FB = window.FB;
-    console.log(this.FB)
     this.checkLoginStatus();
     console.log(this.checkLoginStatus)
     console.log('facebook login status check')
@@ -69,6 +72,7 @@ export default class FacebookLogin extends Component {
   }
 
   render() {
+    console.log(window.FB)
     let {children} = this.props;
     return (
       <div onClick={this.facebookLogin} >
