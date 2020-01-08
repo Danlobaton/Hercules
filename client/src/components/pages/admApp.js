@@ -37,7 +37,8 @@ export class App extends Component {
     subLoaded: false,
     test: false,
     objectRecord: null, // this stays null
-    incoming: {}
+    incoming: {
+    }
   }
 
   // makes state the origin ad account
@@ -88,7 +89,6 @@ export class App extends Component {
         this.setState({incoming: {
           history: [...this.state.history, {id: id, level: level}]
         }})
-        console.log(this.state.incoming.history)
     }
     var rawLevel = this.getRawLevel(level)
 
