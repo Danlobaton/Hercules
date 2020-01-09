@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
 export default class FacebookLogin extends Component {
-  state = {
-    listenerActive: false
-  }
-
   componentDidMount() {
     if (window.FB) {
       this.initializeFacebookLogin()
