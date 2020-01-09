@@ -33,8 +33,12 @@ export class App extends Component {
     id: this.props.id,
     token: this.props.token,
     history: [], 
-    loggedIn: this.props.loggedIn,
-    objectRecord: null // this stays null
+    kpiLoaded: false,
+    subLoaded: false,
+    test: false,
+    objectRecord: null, // this stays null
+    incoming: {
+    }
   }
 
   // makes state the origin ad account
@@ -45,6 +49,14 @@ export class App extends Component {
     this.state.history.pop()
     var history = this.state.history
     this.changeView(history[history.length-1].id, history[history.length-1].level)
+  }
+
+  loadState = () => {
+    if (!this.state.test) {
+      if (this.state.kpiLoaded && this.state.subLoaded) {
+        this.setState({test: true})
+      }
+    }
   }
 
   // gets children's level
@@ -74,13 +86,18 @@ export class App extends Component {
     else {
       if (level !== null)
         this.setState({history: [...this.state.history, {id: id, level: level}]})
+        this.setState({incoming: {
+          history: [...this.state.history, {id: id, level: level}]
+        }})
     }
     var rawLevel = this.getRawLevel(level)
 
     // gets current ad objects children
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
-    .then((data) => this.setState({liveSub: data}))
+    .then((data) => { 
+      this.setState({liveSub: data, subLoaded: true})
+    })
 
     // gets current ad objects Kpis
     fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
@@ -98,10 +115,11 @@ export class App extends Component {
           revenue: data.revenue,
           spent: data.spend,
           costPerPurchase: data.cost_per_purchase
-      }
-      })
+      },
+      kpiLoaded: true
     })
-  }
+  })
+}
 
   // Initializes the ad account list and changes view to first ad account in list
   componentDidMount() {
@@ -117,8 +135,8 @@ export class App extends Component {
   }
 
   render() {
+    this.loadState()
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
-    console.log(this.state.history)
     return (
         <div className='app'>
           <Header 
