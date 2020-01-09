@@ -12,8 +12,6 @@ import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
 import ProfitGraph from '../ProfitGraph'
 
-// this does nothing
-
 export class App extends Component {
   state = {
     data: Data[0], // remove when MainGraph info is available
@@ -33,12 +31,7 @@ export class App extends Component {
     id: this.props.id,
     token: this.props.token,
     history: [], 
-    kpiLoaded: false,
-    subLoaded: false,
-    test: false,
     objectRecord: null, // this stays null
-    incoming: {
-    }
   }
 
   // makes state the origin ad account
@@ -51,12 +44,26 @@ export class App extends Component {
     this.changeView(history[history.length-1].id, history[history.length-1].level)
   }
 
-  loadState = () => {
-    if (!this.state.test) {
-      if (this.state.kpiLoaded && this.state.subLoaded) {
-        this.setState({test: true})
-      }
-    }
+  // defines state only when all call responses are loaded
+  loadState = (incoming) => {  
+    if (incoming.subLoaded && incoming.kpiLoaded) {
+      this.setState({
+        liveSub: incoming.sub,
+        liveLevel: incoming.level,
+        liveNextLevel: incoming.nextLevel,
+        liveName: incoming.name,
+        history: incoming.history,
+        liveKPI: {
+          clicks: incoming.KPI.clicks,
+          impressions: incoming.KPI.impressions,
+          purchases: incoming.KPI.purchases,
+          reach: incoming.KPI.reach,
+          revenue: incoming.KPI.revenue,
+          spent: incoming.KPI.spent,
+          costPerPurchase: incoming.KPI.costPerPurchase
+        },
+      })
+    } 
   }
 
   // gets children's level
@@ -81,45 +88,65 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level) => {
+    // the incoming response object that will be loaded
+    var incoming = {
+      kpiLoaded: false,
+      subLoaded: false,
+      loadedMessage: '',
+      sub: [],
+      level: '',
+      nextLevel: '',
+      name: '',
+      history: [],
+      KPI: {
+        clicks: '',
+        impressions: '',
+        purchases: '',
+        reach: '',
+        revenue: '',
+        spent: '',
+        costPerPurchase: ''
+      }
+    }
+
     if (level === 'Ad Account') 
-      this.setState({history: [{id: id, level: level}]}) 
+      incoming.history = [{id: id, level: level}]
     else {
       if (level !== null)
-        this.setState({history: [...this.state.history, {id: id, level: level}]})
-        this.setState({incoming: {
-          history: [...this.state.history, {id: id, level: level}]
-        }})
+        incoming.history = [...this.state.history, {id: id, level: level}]
     }
     var rawLevel = this.getRawLevel(level)
+
 
     // gets current ad objects children
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => { 
-      this.setState({liveSub: data, subLoaded: true})
+      incoming.sub = data
+      incoming.subLoaded = true 
+      this.loadState(incoming)
     })
 
     // gets current ad objects Kpis
     fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
-      this.setState({
-        liveLevel: data.level,
-        liveNextLevel: this.getNextLevel(data.level),
-        liveName: data.name,
-        liveKPI: {
-          clicks: data.clicks,
-          impressions: data.impressions,
-          purchases: data.purchases,
-          reach: data.reach,
-          revenue: data.revenue,
-          spent: data.spend,
-          costPerPurchase: data.cost_per_purchase
-      },
-      kpiLoaded: true
+      incoming.level = data.level
+      incoming.nextLevel = this.getNextLevel(data.level)
+      incoming.name = data.name
+      incoming.KPI = {
+        clicks: data.clicks,
+        impressions: data.impressions,
+        purchases: data.purchases,
+        reach: data.reach,
+        revenue: data.revenue,
+        spent: data.spend,
+        costPerPurchase: data.cost_per_purchase
+      }
+      incoming.kpiLoaded = true
+      this.loadState(incoming)
     })
-  })
-}
+  }
 
   // Initializes the ad account list and changes view to first ad account in list
   componentDidMount() {
@@ -135,7 +162,6 @@ export class App extends Component {
   }
 
   render() {
-    this.loadState()
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
         <div className='app'>
