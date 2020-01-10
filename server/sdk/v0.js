@@ -1,7 +1,6 @@
 'use stric';
 
 const request = require('request-promise');
-const d3 = require("d3");
 const {build_uri, get_obj_score} = require('../util/fb');
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
@@ -32,7 +31,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
             time_range: {since: pastDate, until: todayDate}
           }, params)
     } else {
-        params.data_presets = "lifetime";
+        params.data_preset = "lifetime";
     }
     let path = `${ad_view_map[view][0]}/${ad_view_map[view][1]}`;
     let uri = build_uri(path, params, token);
@@ -133,7 +132,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                     reach: data.reach,
                     spend: data.spend,
                     level: ad_view_map[view][1],
-                    cost_per_purchase: (cost_per_purchase) ? cost_per_purchase : 0,
+                    cost_per_purchase: (cost_per_purchase === null) ? cost_per_purchase : 0,
                     roas,
                     purchases,
                     revenue
