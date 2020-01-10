@@ -35,7 +35,7 @@ const fb = module.exports = {
           profit: raw_metrics.revenue - raw_metrics.spend
         });
       } else {
-        return 0;
+        return false;
       }
       if(raw_metrics.actions){
         (raw_metrics.actions).forEach(elem => {
