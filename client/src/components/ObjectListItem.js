@@ -32,7 +32,7 @@ export class ObjectListItem extends Component {
         const {changeData, nextLevel, object} = this.props
         return (
             <div style={this.getStyle(object.score)}>
-                <button onClick={changeData.bind(this, object.id, nextLevel)} style={buttonStyle}>
+                <button onClick={changeData.bind(this, object.id, nextLevel, object.name)} style={buttonStyle}>
                     <p style={titleStyle}>{object.name}</p>
                     <div style={infoContainerStyle}>                        
                         <p style={pStyle}>Purchases: {object.purchases}</p>            

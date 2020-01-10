@@ -35,13 +35,13 @@ export class App extends Component {
   }
 
   // makes state the origin ad account
-  goHome = () => this.changeView(this.state.history[0].id, this.state.history[0].level)
+  goHome = () => this.changeView(this.state.history[0].id, this.state.history[0].level, this.state.history[0].name)
   
   // changes view to previous object in history
   goBack = () => {
     this.state.history.pop()
     var history = this.state.history
-    this.changeView(history[history.length-1].id, history[history.length-1].level)
+    this.changeView(history[history.length-1].id, history[history.length-1].level, history[history.length-1].name)
   }
 
   // defines state only when all call responses are loaded
@@ -87,7 +87,7 @@ export class App extends Component {
   }
 
   // changes the ad object in the view
-  changeView = (id, level) => {
+  changeView = (id, level, name) => {
     // the incoming response object that will be loaded
     var incoming = {
       kpiLoaded: false,
@@ -110,10 +110,10 @@ export class App extends Component {
     }
 
     if (level === 'Ad Account') 
-      incoming.history = [{id: id, level: level}]
+      incoming.history = [{id: id, level: level, name: name}]
     else {
       if (level !== null)
-        incoming.history = [...this.state.history, {id: id, level: level}]
+        incoming.history = [...this.state.history, {id: id, level: level, name: name}]
     }
     var rawLevel = this.getRawLevel(level)
 
@@ -155,9 +155,9 @@ export class App extends Component {
     .then((data) => {
         this.setState({
           liveAdAccounts: data,
-          history: [{id: data[0].id, level: data[0].level}]
+          history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
         }) 
-        this.changeView(data[0].id, data[0].level) 
+        this.changeView(data[0].id, data[0].level, data[0].name) 
     })
   }
 
@@ -195,7 +195,7 @@ export class App extends Component {
               <div className='box'>
                 <div id='title'>
                   <p id='normFont'>PREDICTIVE MODEL:</p>
-                  <p id='mainFont'>{(liveName ? liveName : 'Name').toUpperCase()}</p>
+                  <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
                 </div>
                 <div className='actionBar'>
                   <MainDropdown />
