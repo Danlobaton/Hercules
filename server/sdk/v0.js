@@ -1,7 +1,6 @@
 'use stric';
 
 const request = require('request-promise');
-const d3 = require("d3");
 const {build_uri, get_obj_score} = require('../util/fb');
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
