@@ -161,6 +161,16 @@ export class App extends Component {
     })
   }
 
+  // Temporary Fucntion
+  passDownName = () => {
+    const history = this.state.history
+    if (history[0]) {
+      if (history[history.length-1].level) {
+        return history[history.length-1].level === 'Ad Account' ? 'Name' : history[history.length-1].name
+      } else { return 'Name' }
+    } else { return 'Name' }
+  }
+
   render() {
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
