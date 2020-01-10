@@ -87,7 +87,9 @@ export class App extends Component {
   }
 
   // changes the ad object in the view
-  changeView = (id, level, name) => {
+  changeView = (id, level, name, subMessage) => {
+    // remove later
+    if (subMessage) console.log(subMessage)
     // the incoming response object that will be loaded
     var incoming = {
       kpiLoaded: false,
