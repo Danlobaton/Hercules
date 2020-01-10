@@ -1,8 +1,8 @@
 'use stric';
 
 const request = require('request-promise');
-const {build_uri} = require('../util/fb');
-const {getPurchases, compare_revenue} = require('../util/helpers');
+const {build_uri, get_obj_score} = require('../util/fb');
+const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 module.exports.get_view_children_data = function(object_id, view, token) {
     view = view.toLowerCase();
@@ -13,7 +13,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
     };
     let params = {
         method: 'get',
-        fields: ["id", "name", "status", "insights{purchase_roas, actions, spend}"]
+        fields: ["id", "name", "status", "insights{purchase_roas, actions, spend, impressions,reach}"]
     }
     if(view === "adaccount"){
         // get only that last 60 days worth of data if it on the ad account level
@@ -30,6 +30,8 @@ module.exports.get_view_children_data = function(object_id, view, token) {
             }],
             time_range: {since: pastDate, until: todayDate}
           }, params)
+    } else {
+        params.data_preset = "lifetime";
     }
     let path = `${ad_view_map[view][0]}/${ad_view_map[view][1]}`;
     let uri = build_uri(path, params, token);
@@ -39,23 +41,31 @@ module.exports.get_view_children_data = function(object_id, view, token) {
             try {
                 let data = JSON.parse(body).data;
                 let payload = data.map(function(d) {
-                    let spend = d.insights ? parseFloat(d.insights.data[0].spend) : 0;
                     // a bit werid, but the double ternary is used to deal with Facebook's data formatting patterns
                     // I have no idea why I need the the double parseFloat(), but it wont work otherwise
+                    let spend = d.insights ? parseFloat(d.insights.data[0].spend) : 0;
                     let roas = d.insights ? ( d.insights.data[0].purchase_roas ? parseFloat(parseFloat(d.insights.data[0].purchase_roas[0].value).toFixed(2)): 0) : 0;
                     let purchases = d.insights ? ( d.insights.data[0].actions ? getPurchases(d.insights.data[0].actions) : 0) : 0;
                     let revenue = parseFloat((roas * spend).toFixed(2));
+                    let score_metrics = d.insights ? Object.assign(d.insights.data[0], {spend, roas, purchases, revenue}) : {};
+                    let raw_score = get_obj_score(score_metrics);
                     return data_point = {
                         name: d.name,
                         id: d.id,
                         status: d.status,
-                        score: Math.random(),
                         spend,
                         purchases,
                         revenue,
-                        roas
+                        roas,
+                        raw_score
+                        
                     }
                 });
+                let nonzero_score_objs = payload.filter(function(elem) { return elem.raw_score != 0; }),
+                    zero_score_objs = payload.filter(function(elem) { return elem.raw_score == 0; }),
+                    scored_objs = ranker(nonzero_score_objs.sort(compare_raw_score));
+                zero_score_objs.forEach(elem => elem.score = 0);
+                payload = [...scored_objs, ...zero_score_objs];
                 payload.sort(compare_revenue).reverse();
                 resolve(payload);
             } catch (e) {
@@ -122,7 +132,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                     reach: data.reach,
                     spend: data.spend,
                     level: ad_view_map[view][1],
-                    cost_per_purchase: (cost_per_purchase) ? cost_per_purchase : 0,
+                    cost_per_purchase: (cost_per_purchase === null) ? cost_per_purchase : 0,
                     roas,
                     purchases,
                     revenue
@@ -140,7 +150,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
     });
 }
 
-module.exports.get_adaccounts= function(user_id, token) {
+module.exports.get_adaccounts = function(user_id, token) {
     let params = {
         token,
         method: 'get',
@@ -170,5 +180,34 @@ module.exports.get_adaccounts= function(user_id, token) {
             }
         });
     });
+}
 
+module.exports.check_perm_token = function(user_id, tempToken) {
+    /*
+        Step 1: Does user exist on the DB- DONE
+            - If token does exist on DB
+                * isTokenValid ? doNothing : getNewToken;
+            - Else
+                * Get a new perm token and store users in DB - DONE
+                * Start polling ad data
+    */
+   check_user_id(user_id, function(user_status){
+       if(user_status.user_exists){
+            // check if the user access token is still valid
+            isTokenValid(user_status.permToken)
+            .then(r => {
+                r.valid ? 0 : getNewToken();
+            })
+            .catch(r => {
+                console.log(r)
+                return {fail: r};
+            })
+       } 
+       else {
+            // creating new users
+            // telemetry data point here
+            onboardUser(user_id, "EAAhtRUgS5gQBANGv3EBIVu0F9WprMAzbedp2EQPieZAQydKPNw4S6Mcmw4SBH4Mv6AlEZARhrZB2ZBopBzUZCULzMZCfqdEQYteePHTwSiTeKZCl8ip5NrnzeuFF36JQq3wkntPZCtz7wsubhR2644FxS6Mp72T0WskygB4iu3bJHYaLapmFpW6aOmxUIKHsydWEaM6gBZAHEhUC47QQ1vWMX");
+            // start polling for ad data if user was onboarded successfully
+        }
+   });
 }
