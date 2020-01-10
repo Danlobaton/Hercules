@@ -31,6 +31,7 @@ if(process.env.DEV_ENV == "false") {
 app.get('/getKpis', getKpis);
 app.get('/getView', getView);
 app.get('/getAccounts', getAccounts);
+app.get('/checkUser', checkUser);
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname,'client' ,'build', 'index.html'));
 });
@@ -65,4 +66,7 @@ function getAccounts(req, res) {
       })
 }
 
-sdk.check_perm_token("10220792625024921", "A");
+function checkUser(req, res) {
+  let {user_id, token} = req.query;
+  sdk.check_perm_token(user_id, token);
+}
