@@ -11,7 +11,7 @@ export class Login extends Component {
 
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
-          this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken)
+          this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus)
         } else {
           console.log('Not logged in')
         }

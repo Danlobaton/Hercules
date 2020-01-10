@@ -8,6 +8,8 @@ var https = require('https');
 var fs = require('fs');
 var app = express();
 
+// lol
+
 app.use(cors());
 app.use(express.static(path.join(__dirname,'client','build')));
 const port = process.env.PORT || 5000;
@@ -21,7 +23,7 @@ app.listen(port, function() {
 //     cert: fs.readFileSync('server.crt')
 //   }, app).listen(port, () => {
 //     console.log(`Listening to port ${port}`)
-//   })
+// })
 
 //routes
 app.get('/getKpis', getKpis);
