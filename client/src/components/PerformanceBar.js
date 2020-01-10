@@ -7,11 +7,12 @@ export class PerformanceBar extends Component {
         var performance = [0, 0, 0]
         var sub = this.props.sub
         if (this.props.level !== "Ad") {
-            for (var i = 0; i < this.props.sub.length; i+=1) {
+            for (var i = 0; i < sub.length; i+=1) {
                 switch (true) {
                     case (sub[i].score >= .6) : performance[0] += 1; break
-                    case (sub[i].score <= .3) : performance[1] += 1; break
-                    default : performance[2] += 1; break
+                    case (sub[i].score <= .3) : performance[2] += 1; break
+                    case (sub[i].score) : performance[1] += 1; break
+                    default : performance[1] += 1; break
                 }
             }
         }

@@ -9,6 +9,7 @@ export class ObjectListItem extends Component {
         switch (true) {
             case (score >= .6) : setting = '10px solid #3CC480'; break
             case (score <= .3) : setting = '10px solid #FF7474'; break
+            case (score) : setting = '10px solid #FAFA5B'; break
             default : setting = '10px solid #FAFA5B'; break
         }
         return {
