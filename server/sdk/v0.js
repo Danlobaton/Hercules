@@ -1,8 +1,9 @@
 'use stric';
 
 const request = require('request-promise');
+const d3 = require("d3");
 const {build_uri, get_obj_score} = require('../util/fb');
-const {getPurchases, compare_revenue} = require('../util/helpers');
+const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 module.exports.get_view_children_data = function(object_id, view, token) {
     view = view.toLowerCase();
@@ -30,6 +31,8 @@ module.exports.get_view_children_data = function(object_id, view, token) {
             }],
             time_range: {since: pastDate, until: todayDate}
           }, params)
+    } else {
+        params.data_presets = "lifetime";
     }
     let path = `${ad_view_map[view][0]}/${ad_view_map[view][1]}`;
     let uri = build_uri(path, params, token);
@@ -46,7 +49,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                     let purchases = d.insights ? ( d.insights.data[0].actions ? getPurchases(d.insights.data[0].actions) : 0) : 0;
                     let revenue = parseFloat((roas * spend).toFixed(2));
                     let score_metrics = d.insights ? Object.assign(d.insights.data[0], {spend, roas, purchases, revenue}) : {};
-                    let score = get_obj_score(score_metrics);
+                    let raw_score = get_obj_score(score_metrics);
                     return data_point = {
                         name: d.name,
                         id: d.id,
@@ -55,10 +58,15 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                         purchases,
                         revenue,
                         roas,
-                        score
+                        raw_score
                         
                     }
                 });
+                let nonzero_score_objs = payload.filter(function(elem) { return elem.raw_score != 0; }),
+                    zero_score_objs = payload.filter(function(elem) { return elem.raw_score == 0; }),
+                    scored_objs = ranker(nonzero_score_objs.sort(compare_raw_score));
+                zero_score_objs.forEach(elem => elem.score = 0);
+                payload = [...scored_objs, ...zero_score_objs];
                 payload.sort(compare_revenue).reverse();
                 resolve(payload);
             } catch (e) {

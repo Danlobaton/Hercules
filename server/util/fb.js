@@ -61,28 +61,59 @@ const fb = module.exports = {
       // calculate ad object score once the score metrics have been parsed
       if(score_metrics.roas) {
         score = ((Math.pow(score_metrics.profit, 3) * Math.pow(score_metrics.purchases, 2)* score_metrics.spend)/1000)+10000000;
+        if(isNaN(score)){
+          console.log("roa");
+          score = 10000000;
+        }
         return score;
       }
       else if(score_metrics.purchases){
-        return ((Math.pow(score_metrics.purchases, 3) * Math.pow(score_metrics.checkouts, 2)*score_metrics.spend)/1000)+1000000;
+        let score = ((Math.pow(score_metrics.purchases, 3) * Math.pow(score_metrics.checkouts, 2)*score_metrics.spend)/1000)+1000000;
+        if(isNaN(score)){
+          console.log("purchases");
+          score = 1000000;
+        }
+        return score;
       }
       else if(score_metrics.checkouts){
-        return ((Math.pow(score_metrics.checkouts, 3) * Math.pow(score_metrics.atc, 2)*score_metrics.spend)/1000)+100000;
+        let score = ((Math.pow(score_metrics.checkouts, 3) * Math.pow(score_metrics.atc, 2)*score_metrics.spend)/1000)+100000;
+        if(isNaN(score)){
+          console.log("checkouts");
+          score = 100000;
+        }
+        return score;
       }
       else if(score_metrics.atc){
-        return ((Math.pow(score_metrics.atc, 3) * Math.pow(score_metrics.content_views, 2)*score_metrics.spend)/1000)+10000;
+        let score = ((Math.pow(score_metrics.atc, 3) * Math.pow(score_metrics.content_views, 2)*score_metrics.spend)/1000)+10000;
+        if(isNaN(score)){
+          console.log("atc");
+          score = 10000;
+        }
+        return score;
       }
       else if(score_metrics.content_views){
-        return ((Math.pow(score_metrics.content_views, 3) * Math.pow(score_metrics.lpv, 2)*score_metrics.spend)/1000)+1000;
+        let score = ((Math.pow(score_metrics.content_views, 3) * Math.pow(score_metrics.lpv, 2)*score_metrics.spend)/1000)+1000;
+        if(isNaN(score)){
+          console.log("content_views");
+          score = 1000;
+        }
+        return score;
       }
       else if(score_metrics.lpv){
-        return ((Math.pow(score_metrics.lpv, 3) * Math.pow(score_metrics.link_clicks, 2)*score_metrics.spend)/1000)+100;
+        let score = ((Math.pow(score_metrics.lpv, 3) * Math.pow(score_metrics.link_clicks, 2)*score_metrics.spend)/1000)+100;
+        if(isNaN(score)){
+          console.log("lpv");
+          score = 100;
+        }
+        return score;
       }
       else if(score_metrics.reach){
-        return ((Math.pow(score_metrics.reach, 3) * Math.pow(score_metrics.link_clicks, 2)*score_metrics.spend)/1000)+10;
-      }
-      else {
-        return -100; // will mess up the distribution?
+        let score = ((Math.pow(score_metrics.reach, 3) * Math.pow(score_metrics.link_clicks, 2)*score_metrics.spend)/1000)+10;
+        if(isNaN(score)){
+          console.log("reach");
+          score = 10;
+        }
+        return score;
       }
     }
   }
