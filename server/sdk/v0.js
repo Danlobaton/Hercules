@@ -65,7 +65,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                     zero_score_objs = payload.filter(function(elem) { return elem.raw_score == 0}),
                     scored_objs = ranker(nonzero_score_objs.sort(compare_raw_score));
                 console.log(zero_score_objs);
-                zero_score_objs.forEach(elem => elem.score = 0);
+                zero_score_objs.forEach(elem => elem.score = false);
                 payload = [...scored_objs, ...zero_score_objs];
                 payload.sort(compare_revenue).reverse();
                 resolve(payload);
