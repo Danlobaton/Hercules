@@ -10,8 +10,8 @@ export class PerformanceBar extends Component {
             for (var i = 0; i < sub.length; i+=1) {
                 switch (true) {
                     case (sub[i].score >= .6) : performance[0] += 1; break
+                    case (sub[i].score === false) : performance[1] += 1; break
                     case (sub[i].score <= .3) : performance[2] += 1; break
-                    case (sub[i].score) : performance[1] += 1; break
                     default : performance[1] += 1; break
                 }
             }

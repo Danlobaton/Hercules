@@ -8,8 +8,8 @@ export class ObjectListItem extends Component {
         var score = this.props.object.score
         switch (true) {
             case (score >= .6) : setting = '10px solid #3CC480'; break
+            case (score === false) : setting = '10px solid #FAFA5B'; break
             case (score <= .3) : setting = '10px solid #FF7474'; break
-            case (score) : setting = '10px solid #FAFA5B'; break
             default : setting = '10px solid #FAFA5B'; break
         }
         return {
