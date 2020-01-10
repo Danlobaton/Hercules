@@ -123,7 +123,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                     reach: data.reach,
                     spend: data.spend,
                     level: ad_view_map[view][1],
-                    cost_per_purchase: (cost_per_purchase === null) ? cost_per_purchase : 0,
+                    cost_per_purchase: (cost_per_purchase) ? cost_per_purchase : 0,
                     roas,
                     purchases,
                     revenue
