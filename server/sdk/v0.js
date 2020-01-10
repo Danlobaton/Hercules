@@ -54,7 +54,6 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                         purchases,
                         revenue,
                         roas
-                        
                     }
                 });
                 payload.sort(compare_revenue).reverse();

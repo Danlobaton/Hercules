@@ -11,7 +11,7 @@ export class ProfitGraph extends Component {
 
     getGraphData = () => {
         var dData = []
-        var data = this.state.data ? this.state.data.sort((a,b) => a.score - b.score) : [] // sorts data from least to best performing
+        var data = this.state.data ? this.state.data.sort((a,b) => a.revenue - b.revenue) : [] // sorts data from least to best performing
         if (this.state.level !== 'Ad') { // TODO check redundancy
             /* returns top 4 best performing ad objects in the sublist if there are more than 4,
                 else it just returns the ad objects available */
