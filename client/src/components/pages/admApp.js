@@ -173,6 +173,16 @@ export class App extends Component {
     } else { return 'Name' }
   }
 
+  // Temporary Function
+  passDownLevel = () => {
+    const history = this.state.history
+    if (history[0]) {
+      if(history[history.length-1].level) {
+        return this.getNextLevel(history[history.length-1].level)
+      }
+    } else { return null }
+  }
+
   render() {
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
@@ -188,7 +198,7 @@ export class App extends Component {
             <div className='scroll'>
               <ObjectList 
                 objects={liveSub}
-                nextLevel={liveNextLevel}
+                nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel()}
                 changeData={this.changeView}
                 objectRecord={this.state.object}
               />
