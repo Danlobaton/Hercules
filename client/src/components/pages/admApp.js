@@ -168,7 +168,7 @@ export class App extends Component {
     const history = this.state.history
     if (history[0]) {
       if (history[history.length-1].level) {
-        return history[history.length-1].level === 'Ad Account' ? 'Name' : history[history.length-1].name
+        return history[history.length-1].name
       } else { return 'Name' }
     } else { return 'Name' }
   }
@@ -184,6 +184,7 @@ export class App extends Component {
   }
 
   render() {
+    console.log(this.state.history)
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
         <div className='app'>
