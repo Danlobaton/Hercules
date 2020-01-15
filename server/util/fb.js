@@ -1,6 +1,6 @@
 'use strict';
 const request = require('request-promise');
-const {add_new_user} = require('../util/db');
+const {add_new_user, update_user_token} = require('../util/db');
 
 let build_uri = module.exports.build_uri = function(path, params = {}, fb_token) {
     path = path.replace(/^\/+/, ''); // strip any passed in preceding slashes
@@ -32,8 +32,8 @@ module.exports.onboardUser = function(user_id, tempToken) {
           try {
             let access_token = JSON.parse(body).access_token;
             add_new_user(user_id, access_token, function(status){
-              resolve(status)
-              status.success ? console.log("User successfully onboarded!") : console.log(`Error onboarding userID: ${user_id} permToken: ${permToken}`);
+              status.success ? console.log("User successfully onboarded!") : console.log(`Error onboarding userID: ${user_id} permToken: ${access_token}`);
+              resolve(status);
             });
           }
           catch (e) {
@@ -42,28 +42,32 @@ module.exports.onboardUser = function(user_id, tempToken) {
               fb_body: JSON.parse(body)
             }
             console.log(error);
-            resolve(error);
+            reject({success: false, error: error});
            }
-        });
+        })
+        .catch(error => resolve(JSON.parse(error.error)))
     });
 }
 
 module.exports.isTokenValid = function(permToken) {
   let uri = build_uri("me",{}, permToken);
-  request.get(uri, params,(err, res, body) => {
-    try {
-      let data = JSON.parse(body);
-      data.error ? (data.error.type === "OAuthException" ? resolve({valid:false}): resolve({valid : true, message: data.error})) : resolve({valid:true});
-    }
-    catch (e) {
-      let error = {
-        sys_error: e,
-        fb_body: JSON.parse(body)
+  return new Promise((resolve, reject) => {
+    request.get(uri, {},(err, res, body) => {
+      try {
+        let data = JSON.parse(body);
+        data.error ? (data.error.type === "OAuthException" ? resolve({valid:false}): resolve({valid : true, message: data.error})) : resolve({valid:true});
       }
-      console.log(error);
-      resolve(error);
-     }
-  });
+      catch (e) {
+        let error = {
+          sys_error: e,
+          fb_body: JSON.parse(body)
+        }
+        console.log(error);
+        resolve(error);
+      }
+    })
+    .catch(error => {});
+  })
 };
 
 module.exports.getNewToken = function(userID, tempToken){
@@ -78,9 +82,9 @@ module.exports.getNewToken = function(userID, tempToken){
     request.get(uri, params,(err, res, body) => {
         try {
           let access_token = JSON.parse(body).access_token;
-          update_user_token(user_id, access_token, function(status){
+          update_user_token(userID, access_token, function(status){
+            status.success ? console.log("token updated") : console.log(`Error onboarding userID: ${userID} permToken: ${access_token}`);
             resolve(status)
-            status.success ? console.log("token updated") : console.log(`Error onboarding userID: ${user_id} permToken: ${permToken}`);  // TODO possible bug here!! where is perm token coming from?!?!
           });
         }
         catch (e) {

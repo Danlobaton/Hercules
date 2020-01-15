@@ -41,8 +41,8 @@ function getView(req, res) {
   sdk.get_view_children_data(object_id, view, token)
   .then(r => res.json(r))
   .catch(r => {
-      console.log(r)
-          res.json({fail: r})
+        console.log(r);
+        res.json({fail: r});
   })
 }
 
@@ -51,9 +51,9 @@ function getKpis(req, res) {
     sdk.get_view_kpis(object_id, view, token)
     .then(r => res.json(r))
     .catch(r => {
-        console.log(r)
-            res.json({fail: r})
-        })
+        console.log(r);
+        res.json({fail: r});
+    })
 }
 
 function getAccounts(req, res) {
@@ -61,12 +61,17 @@ function getAccounts(req, res) {
   sdk.get_adaccounts(user_id, token)
   .then(r => res.json(r))
   .catch(r => {
-      console.log(r)
-          res.json({fail: r})
-      })
+        console.log(r)
+        res.json({fail: r});
+    })
 }
 
 function checkUser(req, res) {
   let {user_id, token} = req.query;
-  sdk.check_perm_token(user_id, token);
+  sdk.check_perm_token(user_id, token)
+  .then(r => res.json(r))
+  .catch(r => {
+      console.log(r);
+      res.json({fail: r});
+  })
 }

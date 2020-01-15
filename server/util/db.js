@@ -9,8 +9,6 @@ var con = mysql.createConnection({
 module.exports.check_user_id = function(userID, getData) {
   let sql = `SELECT * FROM Facebook_Ads.HerculesUsers WHERE BINARY userID = ${userID}`;
   try {
-    con.connect(function(err) {
-      if (err) throw err;
       con.query(sql, function (err, result) {
           if (err){
             throw err;
@@ -21,7 +19,6 @@ module.exports.check_user_id = function(userID, getData) {
             tokenExp: result.length ? result[0].tokenExp : 0
           });
       });
-    });
   }
   catch(e){
     return {db_error : true, message: e}
@@ -29,16 +26,43 @@ module.exports.check_user_id = function(userID, getData) {
 }
 
 module.exports.add_new_user = function(userID, permToken, checkInsert) {
-  let sql = `INSERT INTO Facebook_Ads.HerculesUsers (userID, permToken, newUser) VALUES (${userID}, ${permToken},1)`;
+  let sql = `INSERT INTO Facebook_Ads.HerculesUsers (userID, permToken, newUser) VALUES (${userID}, '${permToken}', 1)`;
   try {
-    con.connect(function(err) {
-        if (err) throw err;
-        con.query(sql, function (err, result) {
-          if (err){
-            throw err;
-          }
-          checkInsert({success:true});
-        });
+    con.query(sql, function (err, result) {
+        if (err){
+          throw err;
+        }
+          checkInsert({success:true, valid: true, message: "Registered new user to ADM"});
+    });
+  }
+  catch(e){
+    return {db_error : true, message: e, success: false}
+  }
+}
+
+module.exports.add_new_user = function(userID, permToken, checkInsert) {
+  let sql = `INSERT INTO Facebook_Ads.HerculesUsers (userID, permToken, newUser) VALUES (${userID}, '${permToken}', 1)`;
+  try {
+    con.query(sql, function (err, result) {
+        if (err){
+          throw err;
+        }
+          checkInsert({success:true, valid: true, message: "Registered new user to ADM"});
+    });
+  }
+  catch(e){
+    return {db_error : true, message: e, success: false}
+  }
+}
+
+module.exports.update_user_token = function(userID, permToken, checkInsert) {
+  let sql = `UPDATE Facebook_Ads.HerculesUsers SET permToken = '${permToken}' WHERE userID = '${userID}'`;
+  try {
+    con.query(sql, function (err, result) {
+        if (err){
+          throw err;
+        }
+          checkInsert({success:true, valid: true, message: "Updated token for ADM user"});
     });
   }
   catch(e){

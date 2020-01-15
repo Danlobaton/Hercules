@@ -1,7 +1,8 @@
 'use stric';
 
 const request = require('request-promise');
-const {build_uri, get_obj_score, onboardUser} = require('../util/fb');
+const {build_uri, get_obj_score, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
+const {check_user_id} = require('../util/db')
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 
@@ -49,7 +50,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                     let purchases = d.insights ? ( d.insights.data[0].actions ? getPurchases(d.insights.data[0].actions) : 0) : 0;
                     let revenue = parseFloat((roas * spend).toFixed(2));
                     let score_metrics = d.insights ? Object.assign(d.insights.data[0], {spend, roas, purchases, revenue}) : {};
-                    let raw_score = get_obj_score(score_metrics);
+                    let raw_score = 0;
                     return data_point = {
                         name: d.name,
                         id: d.id,
@@ -184,31 +185,30 @@ module.exports.get_adaccounts = function(user_id, token) {
 }
 
 module.exports.check_perm_token = function(user_id, tempToken) {
-    /*
-        Step 1: Does user exist on the DB- DONE
-            - If token does exist on DB
-                * isTokenValid ? doNothing : getNewToken;
-            - Else
-                * Get a new perm token and store users in DB - DONE
-                * Start polling ad data
-    */
-   check_user_id(user_id, function(user_status){
-       if(user_status.user_exists){
-            // check if the user access token is still valid
-            isTokenValid(user_status.permToken)
-            .then(r => {
-                r.valid ? 0 : getNewToken();
-            })
-            .catch(r => {
-                console.log(r)
-                return {fail: r};
-            })
-       } 
-       else {
-            // creating new users
-            // telemetry data point here
-            onboardUser(user_id, tempToken);
-            // start polling for ad data if user was onboarded successfully
-        }
-   });
+   return new Promise((resolve, reject) => {
+        check_user_id(user_id, function(user_status) {
+            if(user_status.user_exists) {
+                 // check if the user access token is still valid
+                 isTokenValid(user_status.permToken)
+                 .then(r => {
+                     r.valid ?  resolve({valid: true}) : resolve(getNewToken(user_id, tempToken));
+                 })
+                 .catch(r => {
+                     console.log(r)
+                     resolve({error: r});
+                 })
+             }
+            else {
+                // creating new users
+                // telemetry data point here
+                onboardUser(user_id, tempToken)
+                .then(r => resolve(JSON.parse(r)))
+                .catch(r => {
+                    console.log(r)
+                    resolve({error: r});
+                })
+                // start polling for ad data if user was onboarded successfully
+            }
+        })
+   })
 }
