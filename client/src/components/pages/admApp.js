@@ -39,8 +39,9 @@ export class App extends Component {
   
   // changes view to previous object in history
   goBack = () => {
-    this.state.history.pop()
     var history = this.state.history
+    
+    history.pop()
     this.changeView(history[history.length-1].id, history[history.length-1].level, history[history.length-1].name)
   }
 
@@ -113,9 +114,10 @@ export class App extends Component {
 
     if (level === 'Ad Account') 
       incoming.history = [{id: id, level: level, name: name}]
-    else {
-      if (level !== null)
+    else if (level !== this.state.history[this.state.history.length-1].level) {
         incoming.history = [...this.state.history, {id: id, level: level, name: name}]
+    } else {
+      incoming.history = this.state.history
     }
     var rawLevel = this.getRawLevel(level)
 
@@ -174,17 +176,16 @@ export class App extends Component {
   }
 
   // Temporary Function
-  passDownLevel = () => {
+  passDownLevel = (isNext) => {
     const history = this.state.history
     if (history[0]) {
       if(history[history.length-1].level) {
-        return this.getNextLevel(history[history.length-1].level)
+        return isNext ? this.getNextLevel(history[history.length-1].level) : history[history.length-1].level
       }
     } else { return null }
   }
 
   render() {
-    console.log(this.state.history)
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
         <div className='app'>
@@ -199,7 +200,7 @@ export class App extends Component {
             <div className='scroll'>
               <ObjectList 
                 objects={liveSub}
-                nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel()}
+                nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel(true)}
                 changeData={this.changeView}
                 objectRecord={this.state.object}
               />
@@ -236,7 +237,7 @@ export class App extends Component {
               </div>
             </div>
             <div className='specBar'> 
-              {(liveLevel !== 'Ad Account') ? (<button onClick={this.goBack}>Back</button>) : false}
+              {(liveLevel ? liveLevel : this.passDownLevel()) !== 'Ad Account' ? (<button onClick={this.goBack}>Back</button>) : false}
               <InfoCol liveKPI={liveKPI}/>
             </div>
           </div>
