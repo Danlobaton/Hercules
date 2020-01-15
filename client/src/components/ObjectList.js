@@ -38,7 +38,6 @@ export class ObjectList extends Component {
         this.setState({objectRecord: null}) // resets object record
         var output = [], objects = this.props.objects, i
 
-        // might refactor to make more efficient
         if (selection === 'green') {
             objects.map(object => {
                 if (object.score >= 0.6)
@@ -56,7 +55,6 @@ export class ObjectList extends Component {
                 }
             })
         }
-
         this.setState({objectRecord: output})
     }
 
