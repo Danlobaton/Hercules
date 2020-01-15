@@ -11,7 +11,7 @@ export class Header extends Component {
         const {master, changeAdAccount} = this.props
         if (master.length > 0) { 
             return (
-                <NavDropdown.Item onClick={changeAdAccount.bind(this, adAccount.id, adAccount.level)} key={adAccount.id}>
+                <NavDropdown.Item onClick={changeAdAccount.bind(this, adAccount.id, adAccount.level, adAccount.name)} key={adAccount.id}>
                     {adAccount.name}
                 </NavDropdown.Item>
             )

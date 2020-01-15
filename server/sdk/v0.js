@@ -122,26 +122,46 @@ module.exports.get_view_kpis = function(object_id, view, token) {
 
         request.get(uri, params,(err, res, body) => {
             try {
+                let response = JSON.parse(body).data;
                 let data = JSON.parse(body).data[0];
+                if (response.length === 0) {
+                    let noload = {
+                        name: null,
+                        impressions: 0,
+                        clicks: 0,
+                        reach: 0,
+                        spend: 0,
+                        level: null,
+                        cost_per_purchase: 0,
+                        roas: 0,
+                        purchases: 0,
+                        revenue: 0
+                    };
+                    resolve(noload)
+                } else {
+                    let roas = data.purchase_roas ? parseFloat(parseFloat(data.purchase_roas[0].value).toFixed(2)) : 0;
+                    let purchases = data.actions ? getPurchases(data.actions) : 0;
+                    let revenue = parseFloat((roas * data.spend).toFixed(2));
+                    let cost_per_purchase = parseFloat((data.spend / purchases).toFixed(2));
+                    let payload = {
+                        name: data[name_param],
+                        impressions: data.impressions,
+                        clicks: data.clicks,
+                        reach: data.reach,
+                        spend: data.spend,
+                        level: ad_view_map[view][1],
+                        cost_per_purchase: (cost_per_purchase) ? cost_per_purchase : 0,
+                        roas,
+                        purchases,
+                        revenue
+                    };
+                    resolve(payload);
+                }
+               
                 // a bit werid, but the double ternary is used to deal with Facebook's data formatting patterns
                 // I have no idea why I need the the double parseFloat(), but it wont work otherwise
-                let roas = data.purchase_roas ? parseFloat(parseFloat(data.purchase_roas[0].value).toFixed(2)) : 0;
-                let purchases = data.actions ? getPurchases(data.actions) : 0;
-                let revenue = parseFloat((roas * data.spend).toFixed(2));
-                let cost_per_purchase = parseFloat((data.spend / purchases).toFixed(2));
-                let payload = {
-                    name: data[name_param],
-                    impressions: data.impressions,
-                    clicks: data.clicks,
-                    reach: data.reach,
-                    spend: data.spend,
-                    level: ad_view_map[view][1],
-                    cost_per_purchase: (cost_per_purchase) ? cost_per_purchase : 0,
-                    roas,
-                    purchases,
-                    revenue
-                };
-                resolve(payload);
+                
+                
             } catch (e) {
                 let error = {
                     sys_error: e,
