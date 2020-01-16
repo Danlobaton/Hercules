@@ -1,15 +1,10 @@
 'use stric';
 
 const request = require('request-promise');
-<<<<<<< HEAD
 const {build_uri, get_obj_score, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
 const {check_user_id} = require('../util/db')
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
-=======
-const {build_uri, get_obj_score} = require('../util/fb');
-const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
->>>>>>> dev
 
 module.exports.get_view_children_data = function(object_id, view, token) {
     view = view.toLowerCase();
@@ -22,7 +17,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
         method: 'get',
         fields: ["id", "name", "status", "insights{purchase_roas, actions, spend, impressions,reach}"]
     }
-    if(view === "adaccount"){
+    if(view === "adaccount") {
         // get only that last 60 days worth of data if it on the ad account level
         let dateObj = new Date();
         const todayDate = dateObj.toISOString().split('T')[0];
@@ -59,11 +54,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                     let purchases = d.insights ? ( d.insights.data[0].actions ? getPurchases(d.insights.data[0].actions) : 0) : 0;
                     let revenue = parseFloat((roas * spend).toFixed(2));
                     let score_metrics = d.insights ? Object.assign(d.insights.data[0], {spend, roas, purchases, revenue}) : {};
-<<<<<<< HEAD
-                    let raw_score = 0;
-=======
                     let raw_score = get_obj_score(score_metrics);
->>>>>>> dev
                     return data_point = {
                         name: d.name,
                         id: d.id,
@@ -77,15 +68,9 @@ module.exports.get_view_children_data = function(object_id, view, token) {
                     }
                 });
                 let nonzero_score_objs = payload.filter(function(elem) { return elem.raw_score != 0; }),
-<<<<<<< HEAD
                     zero_score_objs = payload.filter(function(elem) { return elem.raw_score == 0; }),
                     scored_objs = ranker(nonzero_score_objs.sort(compare_raw_score));
-                zero_score_objs.forEach(elem => elem.score = 0);
-=======
-                    zero_score_objs = payload.filter(function(elem) { return elem.raw_score == 0}),
-                    scored_objs = ranker(nonzero_score_objs.sort(compare_raw_score));
                 zero_score_objs.forEach(elem => elem.score = false);
->>>>>>> dev
                 payload = [...scored_objs, ...zero_score_objs];
                 payload.sort(compare_revenue).reverse();
                 resolve(payload);
@@ -109,9 +94,9 @@ module.exports.get_view_kpis = function(object_id, view, token) {
         "campaign": [object_id, "Campaign"],
         "adset": [object_id, "Ad Set"]
     };
-    if (view === "adaccount"){
+    if (view === "adaccount") {
         name_param = "account_name";
-    } else if (view === "campaign"){
+    } else if (view === "campaign") {
         name_param = "campaign_name";
     } else {
         name_param = "adset_name";
@@ -120,7 +105,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
         method: 'get',
         fields: [name_param, "spend", "impressions", "reach", "clicks", "actions", "purchase_roas"]
     }
-    if (view === "adaccount"){
+    if (view === "adaccount") {
         // get only that last 60 days worth of data if it on the ad account level
         let dateObj = new Date();
         const todayDate = dateObj.toISOString().split('T')[0];
@@ -224,7 +209,6 @@ module.exports.get_adaccounts = function(user_id, token) {
 }
 
 module.exports.check_perm_token = function(user_id, tempToken) {
-<<<<<<< HEAD
    return new Promise((resolve, reject) => {
         check_user_id(user_id, function(user_status) {
             if(user_status.user_exists) {
@@ -251,33 +235,4 @@ module.exports.check_perm_token = function(user_id, tempToken) {
             }
         })
    })
-=======
-    /*
-        Step 1: Does user exist on the DB- DONE
-            - If token does exist on DB
-                * isTokenValid ? doNothing : getNewToken;
-            - Else
-                * Get a new perm token and store users in DB - DONE
-                * Start polling ad data
-    */
-   check_user_id(user_id, function(user_status){
-       if(user_status.user_exists){
-            // check if the user access token is still valid
-            isTokenValid(user_status.permToken)
-            .then(r => {
-                r.valid ? 0 : getNewToken();
-            })
-            .catch(r => {
-                console.log(r)
-                return {fail: r};
-            })
-       } 
-       else {
-            // creating new users
-            // telemetry data point here
-            onboardUser(user_id, "EAAhtRUgS5gQBANGv3EBIVu0F9WprMAzbedp2EQPieZAQydKPNw4S6Mcmw4SBH4Mv6AlEZARhrZB2ZBopBzUZCULzMZCfqdEQYteePHTwSiTeKZCl8ip5NrnzeuFF36JQq3wkntPZCtz7wsubhR2644FxS6Mp72T0WskygB4iu3bJHYaLapmFpW6aOmxUIKHsydWEaM6gBZAHEhUC47QQ1vWMX");
-            // start polling for ad data if user was onboarded successfully
-        }
-   });
->>>>>>> dev
 }

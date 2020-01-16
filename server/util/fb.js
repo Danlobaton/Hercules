@@ -31,7 +31,7 @@ module.exports.onboardUser = function(user_id, tempToken) {
       request.get(uri, params,(err, res, body) => {
           try {
             let access_token = JSON.parse(body).access_token;
-            add_new_user(user_id, access_token, function(status){
+            add_new_user(user_id, access_token, function(status) {
               status.success ? console.log("User successfully onboarded!") : console.log(`Error onboarding userID: ${user_id} permToken: ${access_token}`);
               resolve(status);
             });
@@ -57,7 +57,6 @@ module.exports.isTokenValid = function(permToken) {
         let data = JSON.parse(body);
         data.error ? (data.error.type === "OAuthException" ? resolve({valid:false}): resolve({valid : true, message: data.error})) : resolve({valid:true});
       }
-<<<<<<< HEAD
       catch (e) {
         let error = {
           sys_error: e,
@@ -99,10 +98,7 @@ module.exports.getNewToken = function(userID, tempToken){
       });
   });
 }
-=======
-      return uri + query;
-    },
-    get_obj_score(raw_metrics){
+module.exports.get_obj_score = function(raw_metrics) {
       // parse score metrics and place them all under a single object
       let score_metrics;
       let score;
@@ -195,6 +191,4 @@ module.exports.getNewToken = function(userID, tempToken){
         }
         return score;
       }
-    }
-  }
->>>>>>> dev
+}

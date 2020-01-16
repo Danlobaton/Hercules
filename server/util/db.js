@@ -20,8 +20,8 @@ module.exports.check_user_id = function(userID, getData) {
           });
       });
   }
-  catch(e){
-    return {db_error : true, message: e}
+  catch(e) {
+    return { db_error : true, message: e }
   }
 }
 

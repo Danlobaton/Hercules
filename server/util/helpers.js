@@ -32,6 +32,7 @@ module.exports.ranker = function(ad_objects){
         lower_percentile = ad_objects.slice(0 , percentile_space),
         middle_percentile = ad_objects.slice(percentile_space, percentile_space * 2);
         upper_percentile =  ad_objects.slice(percentile_space * 2, (percentile_space * 3) + offset);
+        
     // assign an under-performing score to the lower-percentiles
     lower_percentile.forEach(elem => elem.score = 0.2);
     // assign an neutral-performing score to the middle-percentiles
