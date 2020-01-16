@@ -40,21 +40,6 @@ module.exports.add_new_user = function(userID, permToken, checkInsert) {
   }
 }
 
-module.exports.add_new_user = function(userID, permToken, checkInsert) {
-  let sql = `INSERT INTO Facebook_Ads.HerculesUsers (userID, permToken, newUser) VALUES (${userID}, '${permToken}', 1)`;
-  try {
-    con.query(sql, function (err, result) {
-        if (err){
-          throw err;
-        }
-          checkInsert({success:true, valid: true, message: "Registered new user to ADM"});
-    });
-  }
-  catch(e){
-    return {db_error : true, message: e, success: false}
-  }
-}
-
 module.exports.update_user_token = function(userID, permToken, checkInsert) {
   let sql = `UPDATE Facebook_Ads.HerculesUsers SET permToken = '${permToken}' WHERE userID = '${userID}'`;
   try {

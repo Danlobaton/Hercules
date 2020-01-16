@@ -222,7 +222,10 @@ module.exports.check_perm_token = function(user_id, tempToken) {
                 // creating new users
                 // telemetry data point here
                 onboardUser(user_id, tempToken)
-                .then(r => resolve(JSON.parse(r)))
+                .then(r => {
+                    console.log(r);
+                    resolve(r)
+                })
                 .catch(r => {
                     console.log(r)
                     resolve({error: r});
