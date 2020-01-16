@@ -47,7 +47,8 @@ const buttonStyle = {
 const titleStyle = {
     fontWeight: '600', 
     color: 'white', 
-    textAlign: 'left'
+    textAlign: 'left',
+    fontSize: 15
 }
 const infoContainerStyle = {
     display: 'flex', 
@@ -56,7 +57,7 @@ const infoContainerStyle = {
     flexWrap: 'wrap'
 }
 const pStyle = {
-    fontSize: '12px',  
+    fontSize: '11px',  
     color: 'white', 
     textAlign: 'left', 
     transform: 'translateY(-5px)', 

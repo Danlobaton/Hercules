@@ -95,7 +95,7 @@ const moduleStyle = {
 }
 
 const textBox = {
-    color: '#6749B7',
+    color: '#6648B7',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-end',
@@ -106,11 +106,11 @@ const textBox = {
 const titleStyle = {
     fontSize: 11,
     letterSpacing: 1,
-    fontWeight: 500
+    fontWeight: 350
 }
 
 const valueStyle = {
-    fontSize: 21,
+    fontSize: 25,
     fontWeight: 650
 }
 

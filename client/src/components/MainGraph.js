@@ -73,8 +73,8 @@ export class MainGraph extends Component {
                             <CartesianGrid stroke='#f5f5f5'/>
                             <defs>
                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="1%" stopColor="#6648B7" stopOpacity={0.8}/>
-                                    <stop offset="85%" stopColor="#6648B7" stopOpacity={0}/>
+                                    <stop offset="1%" stopColor="#A989FF" stopOpacity={1}/>
+                                    <stop offset="85%" stopColor="#A989FF" stopOpacity={0}/>
                                 </linearGradient>
                                 <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="1%" stopColor="#55C2E8" stopOpacity={0.8}/>
