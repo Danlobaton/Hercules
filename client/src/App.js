@@ -16,13 +16,7 @@ export class App extends Component {
       userID: userID,
       accessToken: accessToken
     })
-<<<<<<< HEAD
-    console.log(accessToken);
-    console.log(userID);
-    this.state.userID ? this.setState({loggedIn: true}) : console.log('error')
-=======
     this.setState({loggedIn: loginStatus})
->>>>>>> dev
   }
 
   showApp = () => {
