@@ -4,13 +4,15 @@ import PropTypes from 'prop-types'
 
 export class ProfitGraph extends Component {
     state = {
-        height: 0 // height of graph
+        height: 0, // height of graph
+        data: this.props.data,
+        level: this.props.level
     }
 
     getGraphData = () => {
         var dData = []
-        var data = this.props.data ? this.props.data.sort((a,b) => a.score - b.score) : [] // sorts data from least to best performing
-        if (this.props.level !== 'Ad') { // TODO check redundancy
+        var data = this.state.data ? this.state.data.sort((a,b) => a.revenue - b.revenue) : [] // sorts data from least to best performing
+        if (this.state.level !== 'Ad') { // TODO check redundancy
             /* returns top 4 best performing ad objects in the sublist if there are more than 4,
                 else it just returns the ad objects available */
             if (data.length >= 4) {
@@ -21,7 +23,6 @@ export class ProfitGraph extends Component {
                     dData.push({'Name': data[i].name, 'Amount Spent': data[i].spend, 'Revenue': data[i].revenue})
             }
         }
-
         return dData.reverse()
     }
 
@@ -85,6 +86,15 @@ export class ProfitGraph extends Component {
         this.setState({height: height})
     }
 
+    // updates state of the component
+    componentWillReceiveProps(nextProps) {
+        switch (true) {
+            case (nextProps.data !== this.state.data) : this.setState({data: nextProps.data})
+            case (nextProps.level !== this.state.level) : this.setState({level: nextProps.level})
+            default : break
+        }
+    }
+
     render() {
         const data = this.getGraphData() // live data
         return (
@@ -100,7 +110,7 @@ export class ProfitGraph extends Component {
                         <Bar type='monotone' dataKey='Revenue' stroke='#55C2E8' strokeWidth={3} barSize={35}>
                             <LabelList dataKey='Revenue' position='' stroke='white' content={this.generalLabel}/>
                         </Bar>
-                        <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} />
+                        <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]} />
                         <XAxis dataKey='Name' tick={false} height={0} />
                     </BarChart>
                 </ResponsiveContainer>

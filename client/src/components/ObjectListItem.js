@@ -8,10 +8,10 @@ export class ObjectListItem extends Component {
         var score = this.props.object.score
         switch (true) {
             case (score >= .6) : setting = '10px solid #3CC480'; break
+            case (score === false) : setting = '10px solid #FAFA5B'; break
             case (score <= .3) : setting = '10px solid #FF7474'; break
             default : setting = '10px solid #FAFA5B'; break
         }
-        
         return {
             display: 'flex',
             padding: '15px',
@@ -21,22 +21,15 @@ export class ObjectListItem extends Component {
         }
     }
 
-    // changes between budget and ROAS depending no the current level
-    getText = (object) => {
-        const nextLevel = this.props.nextLevel
-        return (nextLevel === 'Campaign') ?
-        (<p style={pStyle}>ROAS: {object.ROAS}</p>) : (<p style={pStyle}>Budget: {object.ROAS}</p>)
-    }
-
     render() {
         const {changeData, nextLevel, object} = this.props
         return (
             <div style={this.getStyle(object.score)}>
-                <button onClick={changeData.bind(this, object.id, nextLevel)} style={buttonStyle}>
+                <button onClick={changeData.bind(this, object.id, nextLevel, object.name, object)} style={buttonStyle}>
                     <p style={titleStyle}>{object.name}</p>
                     <div style={infoContainerStyle}>                        
-                        <p style={pStyle}>Purchases: {object.purchases}</p>            
-                        {this.getText(object)}
+                        <p style={pStyle}>Purchases: {object.purchases}</p>         
+                        <p style={pStyle}>ROAS: {object.roas}</p>   
                     </div>
                 </button>    
             </div>

@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname,'client','build')));
 const port = process.env.PORT || 5000;
 
+<<<<<<< HEAD
 if(process.env.DEV_ENV == "false") {
     app.listen(port, function() { 
         console.log(`Listening to port ${port}`);
@@ -26,6 +27,18 @@ if(process.env.DEV_ENV == "false") {
         console.log(`Listening to port ${port}`)
     })
 }
+=======
+app.listen(port, function() { 
+  console.log(`Listening to port ${port}`);
+});
+
+// https.createServer({
+//     key: fs.readFileSync('server.key'),
+//     cert: fs.readFileSync('server.crt')
+//   }, app).listen(port, () => {
+//     console.log(`Listening to port ${port}`)
+// })
+>>>>>>> dev
 
 // routes
 app.get('/getKpis', getKpis);

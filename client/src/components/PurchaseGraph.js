@@ -4,13 +4,15 @@ import PropTypes from 'prop-types'
 
 export class PurchaseGraph extends Component {
     state = {
-        height: 0
+        height: 0,
+        data: this.props.data,
+        level: this.props.level
     }
    
     getGraphData = () => {
         var dData = []
-        var data = this.props.data ? this.props.data.sort((a,b) => a.score - b.score) : [] // sorts data from least to best performing
-        if (this.props.level !== 'Ad') { // TODO check redundancy
+        var data = this.state.data ? this.state.data.sort((a,b) => a.revenue - b.revenue) : [] // sorts data from least to best performing
+        if (this.state.level !== 'Ad') { // TODO check redundancy
             /* returns top 4 best performing ad objects in the sublist if there are more than 4,
                 else it just returns the ad objects available */
             if (data.length >= 4) { 
@@ -45,6 +47,15 @@ export class PurchaseGraph extends Component {
     componentDidMount() {
         var height = document.getElementById('pGraph').clientHeight
         this.setState({height: height})
+    }
+
+    // updates state of the component
+    componentWillReceiveProps(nextProps) {
+        switch (true) {
+            case (nextProps.data !== this.state.data) : this.setState({data: nextProps.data})
+            case (nextProps.level !== this.state.level) : this.setState({level: nextProps.level})
+            default : break
+        }
     }
 
     showGraph = () => {

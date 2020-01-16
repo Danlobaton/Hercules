@@ -30,15 +30,41 @@ export class App extends Component {
     liveAdAccounts: [],
     id: this.props.id,
     token: this.props.token,
-    master: Data, // remove when ad account becomes array
-    history: [Data[0]], // restructure history to work with api after ad account becomes array
-    loggedIn: this.props.loggedIn,
-    objectRecord: null
+    history: [], 
+    objectRecord: null, // this stays null
   }
 
   // makes state the origin ad account
-  goHome = () => {
-    this.changeView(this.state.liveAdAccounts[0].id, this.state.liveAdAccounts[0].level)
+  goHome = () => this.changeView(this.state.history[0].id, this.state.history[0].level, this.state.history[0].name)
+  
+  // changes view to previous object in history
+  goBack = () => {
+    var history = this.state.history
+    
+    history.pop()
+    this.changeView(history[history.length-1].id, history[history.length-1].level, history[history.length-1].name)
+  }
+
+  // defines state only when all call responses are loaded
+  loadState = (incoming) => {  
+    if (incoming.subLoaded && incoming.kpiLoaded) {
+      this.setState({
+        liveSub: incoming.sub,
+        liveLevel: incoming.level,
+        liveNextLevel: incoming.nextLevel,
+        liveName: incoming.name,
+        history: incoming.history,
+        liveKPI: {
+          clicks: incoming.KPI.clicks,
+          impressions: incoming.KPI.impressions,
+          purchases: incoming.KPI.purchases,
+          reach: incoming.KPI.reach,
+          revenue: incoming.KPI.revenue,
+          spent: incoming.KPI.spent,
+          costPerPurchase: incoming.KPI.costPerPurchase
+        },
+      })
+    } 
   }
 
   // gets children's level
@@ -51,7 +77,7 @@ export class App extends Component {
     }
   }
   
-  // returns raw level for api changes
+  // returns appropriate view variable for API call
   getRawLevel = (level) => {
     switch (true) {
       case (level === 'Ad Account') : return 'adaccount'
@@ -62,55 +88,101 @@ export class App extends Component {
   }
 
   // changes the ad object in the view
-  changeView = (id, level) => {
+  changeView = (id, level, name, subMessage) => {
+    // remove later
+    if (subMessage) console.log(subMessage)
+    // the incoming response object that will be loaded
+    var incoming = {
+      kpiLoaded: false,
+      subLoaded: false,
+      loadedMessage: '',
+      sub: [],
+      level: '',
+      nextLevel: '',
+      name: '',
+      history: [],
+      KPI: {
+        clicks: '',
+        impressions: '',
+        purchases: '',
+        reach: '',
+        revenue: '',
+        spent: '',
+        costPerPurchase: ''
+      }
+    }
+
+    if (level === 'Ad Account') 
+      incoming.history = [{id: id, level: level, name: name}]
+    else if (level !== this.state.history[this.state.history.length-1].level) {
+        incoming.history = [...this.state.history, {id: id, level: level, name: name}]
+    } else {
+      incoming.history = this.state.history
+    }
     var rawLevel = this.getRawLevel(level)
-    this.state.history.push({id: id, level: level})
+
+
+    // gets current ad objects children
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
-    .then((data) => {
-        this.setState({  
-          liveSub: data,
-        })
+    .then((data) => { 
+      incoming.sub = data
+      incoming.subLoaded = true 
+      this.loadState(incoming)
     })
+
+    // gets current ad objects Kpis
     fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
-      this.setState({
-        liveLevel: data.level,
-        liveNextLevel: this.getNextLevel(data.level),
-        liveName: data.name,
-        liveKPI: {
-          clicks: data.clicks,
-          impressions: data.impressions,
-          purchases: data.purchases,
-          reach: data.reach,
-          revenue: data.revenue,
-          spent: data.spend,
-          costPerPurchase: data.cost_per_purchase
+      incoming.level = data.level
+      incoming.nextLevel = this.getNextLevel(data.level)
+      incoming.name = data.name
+      incoming.KPI = {
+        clicks: data.clicks,
+        impressions: data.impressions,
+        purchases: data.purchases,
+        reach: data.reach,
+        revenue: data.revenue,
+        spent: data.spend,
+        costPerPurchase: data.cost_per_purchase
       }
-      })
+      incoming.kpiLoaded = true
+      this.loadState(incoming)
     })
   }
 
-  // TODO test functionality
-  // handles lists when they are null
-  nullListHandle = (object) => {
-    if (object) 
-      return object
-    else return []
-  }
-
-  // TODO might have to look over this when ad account endpoint returns array
-  // initial call to get default data, always first ad account in array
+  // Initializes the ad account list and changes view to first ad account in list
   componentDidMount() {
-    var adAccounts = this.state.liveAdAccounts
     fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
     .then(res => res.json())
     .then((data) => {
-        console.log(data)
-        this.setState({liveAdAccounts: data}) //makes live ad accounts equal to array of ad account info
-        this.changeView(data[0].id, data[0].level)
+        this.setState({
+          liveAdAccounts: data,
+          history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
+        }) 
+        this.changeView(data[0].id, data[0].level, data[0].name) 
     })
+  }
+
+  // Temporary Fucntion
+  passDownName = () => {
+    const history = this.state.history
+    if (history[0]) {
+      if (history[history.length-1].level) {
+        return history[history.length-1].name
+      } else { return 'Name' }
+    } else { return 'Name' }
+  }
+
+  // Temporary Function
+  passDownLevel = (isNext) => {
+    const history = this.state.history
+    if (history[0]) {
+      if(history[history.length-1].level) {
+        return isNext ? this.getNextLevel(history[history.length-1].level) : history[history.length-1].level
+      }
+    } else { return null }
   }
 
   render() {
@@ -128,7 +200,7 @@ export class App extends Component {
             <div className='scroll'>
               <ObjectList 
                 objects={liveSub}
-                nextLevel={liveNextLevel}
+                nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel(true)}
                 changeData={this.changeView}
                 objectRecord={this.state.object}
               />
@@ -137,7 +209,7 @@ export class App extends Component {
               <div className='box'>
                 <div id='title'>
                   <p id='normFont'>PREDICTIVE MODEL:</p>
-                  <p id='mainFont'>{(liveName ? liveName : 'Name').toUpperCase()}</p>
+                  <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
                 </div>
                 <div className='actionBar'>
                   <MainDropdown />
@@ -148,8 +220,8 @@ export class App extends Component {
                   <div className='leftGraph'>
                     <div id='graph'>
                       <div id='graphContent'>
-                        <p>WEBSITE PURCHASES BY {liveNextLevel? (liveNextLevel).toUpperCase() : null} NAME</p>
-                        <PurchaseGraph data={this.nullListHandle(liveSub)} level={liveLevel}/>
+                        <p>WEBSITE PURCHASES BY {liveNextLevel ? (liveNextLevel).toUpperCase() : null} NAME</p>
+                        <PurchaseGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
                   </div>
@@ -157,7 +229,7 @@ export class App extends Component {
                     <div id='graph'>
                       <div id='graphContent'>
                         <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
-                        <ProfitGraph data={this.nullListHandle(liveSub)} level={liveLevel}/>
+                        <ProfitGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
                   </div>
@@ -165,6 +237,7 @@ export class App extends Component {
               </div>
             </div>
             <div className='specBar'> 
+              {(liveLevel ? liveLevel : this.passDownLevel()) !== 'Ad Account' ? (<button onClick={this.goBack}>Back</button>) : false}
               <InfoCol liveKPI={liveKPI}/>
             </div>
           </div>
