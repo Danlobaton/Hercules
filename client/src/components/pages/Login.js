@@ -11,9 +11,17 @@ export class Login extends Component {
 
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
-          this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus)
+            this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
+            // gets current ad objects children
+            fetch(`/getView?token=${resultObject.authResponse.accessToken}&user_id=${resultObject.authResponse.userID}`)
+            .then(res => res.json())
+            .then((data) => { 
+                incoming.sub = data
+                incoming.subLoaded = true 
+                this.loadState(incoming)
+            });
         } else {
-          console.log('Not logged in')
+          console.log('Not logged in');
         }
       }
 
