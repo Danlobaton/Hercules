@@ -16,13 +16,13 @@ export class ObjectList extends Component {
         var objects = this.props.objects
 
         if (selection === 'green') {
-            this.setState({objectRecord: objects.sort((a, b) => b.score - a.score)})
+            this.setState({objectRecord: objects.sort((a, b) => (b.score === false ? 0.4 : b.score) - (a.score === false ? 0.4 : a.score))})
         } else if (selection === 'red') {
-            this.setState({objectRecord: objects.sort((a, b) => a.score - b.score)})
+            this.setState({objectRecord: objects.sort((a, b) => (a.score === false ? 0.4 : a.score) - (b.score === false ? 0.4 : b.score))})
         } else if(selection === 'yellow') {
             var count = 0, target = objects[count]
             for (var i = 0; i < objects.length; i++) {
-                if (objects[i].score > .3 && objects[i].score < .6) {
+                if (objects[i].score > .3 && objects[i].score < .6 || objects[i].score === false) {
                     objects[count] = objects[i]
                     objects[i] = target
                     count++
@@ -38,23 +38,23 @@ export class ObjectList extends Component {
         this.setState({objectRecord: null}) // resets object record
         var output = [], objects = this.props.objects, i
 
-        // might refactor to make more efficient
-        for (i = 0; i < objects.length; i++) {
-            if (selection === 'green') {
-                if (objects[i].score >= .6) {
-                    output.push(objects[i])
+        if (selection === 'green') {
+            objects.map(object => {
+                if (object.score >= 0.6)
+                    output.push(object)
+            })
+        } else if (selection === 'yellow') {
+            objects.map(object => {
+                if (object.score > 0.3 && object.score < 0.6 || object.score === false)
+                    output.push(object)
+            }) 
+        } else if (selection === 'red') {
+            objects.map(object => {
+                if (object.score <= 0.3 && object.score !== false) {
+                    output.push(object)
                 }
-            } else if (selection === 'yellow') {
-                if (objects[i].score < .6 && objects[i].score > .3) {
-                    output.push(objects[i])
-                } 
-            } else if (selection === 'red') {
-                if (objects[i].score <= .3) {
-                    output.push(objects[i])
-                }
-            }
+            })
         }
-
         this.setState({objectRecord: output})
     }
 
