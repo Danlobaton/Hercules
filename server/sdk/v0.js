@@ -25,11 +25,11 @@ module.exports.get_view_children_data = function(object_id, view, token) {
         const pastDate = dateObj.toISOString().split('T')[0];
 
         params = Object.assign({
-            filtering: [{
-              "field": "campaign.delivery_info",
-              "operator": "IN",
-               "value": ['active', 'inactive', 'not_delivering'],
-            }],
+            // filtering: [{
+            //   "field": "campaign.delivery_info",
+            //   "operator": "IN",
+            //    "value": ['active', 'inactive', 'not_delivering'],
+            // }],
             time_range: {since: pastDate, until: todayDate}
           }, params)
     } else {
