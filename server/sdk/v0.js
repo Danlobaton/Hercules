@@ -30,7 +30,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
             //   "operator": "IN",
             //    "value": ['active', 'inactive', 'not_delivering'],
             // }],
-            // time_range: {since: pastDate, until: todayDate}
+            // time_range: {since: pastDate, until: todayDate} 
           }, params)
     } else {
         params.data_preset = "lifetime";
