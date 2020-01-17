@@ -11,6 +11,7 @@ var app = express();
 
 // set up the middleware
 app.use(cors());
+app.use(requireHTTPS);
 app.use(express.static(path.join(__dirname,'client','build')));
 const port = process.env.PORT || 5000;
 
@@ -75,3 +76,12 @@ function checkUser(req, res) {
       res.json({fail: r});
   })
 }
+
+// enforece https
+function requireHTTPS(req, res, next) {
+    // The 'x-forwarded-proto' check is for Heroku
+    if (!req.secure && req.get('x-forwarded-proto') !== 'https') {
+      return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+  }
