@@ -15,7 +15,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
     };
     let params = {
         method: 'get',
-        fields: ["id", "name", "status", "insights{purchase_roas, actions, spend, impressions,reach}"]
+        fields: ["id", "name", "status", "insights.date_preset(lifetime){purchase_roas, actions, spend, impressions,reach}"]
     }
     if(view === "adaccount") {
         // get only that last 60 days worth of data if it on the ad account level
@@ -37,7 +37,7 @@ module.exports.get_view_children_data = function(object_id, view, token) {
     }
     let path = `${ad_view_map[view][0]}/${ad_view_map[view][1]}`;
     let uri = build_uri(path, params, token);
-
+    console.log(uri)
     return new Promise((resolve, reject) => {
         request.get(uri, params,(err, res, body) => {
             try {
