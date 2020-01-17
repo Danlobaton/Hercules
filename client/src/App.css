@@ -93,7 +93,7 @@ body {
   flex-direction: row;
   justify-content: space-around;
   min-width: 400px;
-  min-height: 350px;
+  min-height: 330px;
   padding-top: 15px
 }
 .rightGraph {
@@ -102,7 +102,7 @@ body {
   flex-direction: row;
   justify-content: space-around;
   min-width: 505px;
-  min-height: 350px;
+  min-height: 330px;
   padding-top: 15px
 }
 #graph {
