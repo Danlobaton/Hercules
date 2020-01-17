@@ -1,4 +1,5 @@
 'use strict';
+
 const request = require('request-promise');
 const {add_new_user, update_user_token} = require('../util/db');
 
