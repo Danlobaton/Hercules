@@ -11,6 +11,7 @@ import MainGraph from '../MainGraph'
 import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
 import ProfitGraph from '../ProfitGraph'
+import GraphIcon from '../../graph.png'
 
 export class App extends Component {
   state = {
@@ -186,6 +187,7 @@ export class App extends Component {
   }
 
   render() {
+    
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
     return (
         <div className='app'>
@@ -220,7 +222,10 @@ export class App extends Component {
                   <div className='leftGraph'>
                     <div id='graph'>
                       <div id='graphContent'>
-                        <p>WEBSITE PURCHASES BY {liveNextLevel ? (liveNextLevel).toUpperCase() : null} NAME</p>
+                        <div id='gTitle'>
+                          <p>WEBSITE PURCHASES BY {liveNextLevel ? (liveNextLevel).toUpperCase() : null} NAME</p>
+                          <img src={GraphIcon} height='16' alt='G' />
+                        </div>
                         <PurchaseGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
@@ -228,7 +233,10 @@ export class App extends Component {
                   <div className='rightGraph'>
                     <div id='graph'>
                       <div id='graphContent'>
-                        <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
+                        <div id='gTitle'>
+                          <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
+                          <img src={GraphIcon} height='16' alt='G'/>
+                        </div>
                         <ProfitGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>

@@ -17,7 +17,7 @@ export class ObjectListItem extends Component {
             padding: '15px',
             borderLeft: setting,
             flexDirection: 'row',
-            borderBottom: '1px solid #000'
+            borderBottom: '1px solid #353535'
         }
     }
 

@@ -38,7 +38,7 @@ export class PurchaseGraph extends Component {
             angle={-90}
             style={{fontSize: 10, fontWeight: 300}}
             >
-                {e.value}
+                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value}
             </Text>
         )
     }

@@ -19,7 +19,7 @@ body {
   font-family: sofia-pro, sans-serif;
 }
 .contentBox {
-  background-color: #EBEBEC;
+  background-color: #FFFFFF;
   height: 100%;
   width: 100%;
   display: flex;
@@ -85,14 +85,15 @@ body {
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: wrap;
+  z-index: 1;
 }
 .leftGraph {
   flex: 4;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  min-width: 325px;
-  min-height: 230px;
+  min-width: 400px;
+  min-height: 350px;
   padding-top: 15px
 }
 .rightGraph {
@@ -100,8 +101,8 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  min-width: 450px;
-  min-height: 230px;
+  min-width: 505px;
+  min-height: 350px;
   padding-top: 15px
 }
 #graph {
@@ -126,8 +127,18 @@ body {
   font-weight: 500;
   letter-spacing: 1px;
 }
+#gTitle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: baseline;
+}
+#gTitle img {
+  transform: translate(-10px, 7px)
+}
 .scroll {
   flex: 1.6;
   position: relative;
   min-width: 275px;
+  z-index: 2;
 }

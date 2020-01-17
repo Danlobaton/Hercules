@@ -9,6 +9,16 @@ export class ProfitGraph extends Component {
         level: this.props.level
     }
 
+    letterRound = (num) => {
+        let numStr = num.toString()
+        numStr = numStr.indexOf('.') === -1 ? numStr : numStr.substring(0, numStr.indexOf('.'))
+        switch (true) {
+            case(numStr.length >= 7) : return Math.round((num / 1000000), 1).toString() + 'M'
+            case(numStr.length >= 4) : return Math.round((num / 1000), 1).toString() + 'K'
+            default : return numStr
+        }
+    }
+
     getGraphData = () => {
         var dData = []
         var data = this.state.data ? this.state.data.sort((a,b) => a.revenue - b.revenue) : [] // sorts data from least to best performing
@@ -38,7 +48,7 @@ export class ProfitGraph extends Component {
             angle={-90}
             style={{fontSize: 10, fontWeight: 300}}
             >
-                {e.value}
+                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value}
             </Text>
         )
     }
@@ -60,7 +70,7 @@ export class ProfitGraph extends Component {
                 fill='white'
                 style={{fontWeight: 300}}
                 >
-                    {'$' + e.value}
+                    {'$' + this.letterRound(e.value)}
                 </Text>
             )
         } else {
@@ -74,7 +84,7 @@ export class ProfitGraph extends Component {
                 fill='white'
                 style={{fontWeight: 300}}
                 >
-                    {'$' + e.value}
+                    {'$' + this.letterRound(e.value)}
                 </Text>
             )
         }

@@ -84,7 +84,7 @@ const infoColStyle = {
 const moduleStyle = {
     height: 80,
     width: '90%',
-    background: '#FFFFFF',
+    background: '#FAF9F7',
     lineHeight: .5,
     borderRadius: '5px 0 0 5px',
     marginTop: 5,

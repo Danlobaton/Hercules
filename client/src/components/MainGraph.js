@@ -77,11 +77,11 @@ export class MainGraph extends Component {
                                     <stop offset="85%" stopColor="#A989FF" stopOpacity={0}/>
                                 </linearGradient>
                                 <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="1%" stopColor="#55C2E8" stopOpacity={0.8}/>
-                                    <stop offset="85%" stopColor="#55C2E8" stopOpacity={0}/>
+                                    <stop offset="1%" stopColor="#45C0E6" stopOpacity={1}/>
+                                    <stop offset="85%" stopColor="#45C0E6" stopOpacity={0}/>
                                 </linearGradient>
                             </defs>
-                            <Area dot={this.displayDotPredicted} type='monotone' dataKey='Predicted' stroke='#6648B7' fill='url(#colorUv)' strokeDasharray="5 5" strokeWidth={3}/>
+                            <Area dot={this.displayDotPredicted} type='monotone' dataKey='Predicted' stroke='#6648B7' fill='url(#colorUv)' strokeDasharray="9 5" strokeWidth={3}/>
                             <Area dot={this.displayDotActual} type='monotone' dataKey='Actual' fill='url(#colorPv)' stroke='#55C2E8' strokeWidth={3}/>
                             <YAxis tick={{fill: '#A4A4A4', fontSize: 11 }} stroke={{}}/>
                             <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval={0} />
