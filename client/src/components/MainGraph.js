@@ -6,20 +6,22 @@ export class MainGraph extends Component {
     // combines data from both lines to one structure 
     getCombinedData = () => {
         var graphData = []
-        if (this.props.level !== 'Ad') {
-            for (var i = (this.props.predicted.length - 10); i < this.props.predicted.length; i++) {
-                if (i < this.props.actual.length) {
-                    graphData.push({
-                        'Day': this.props.predicted[i]['x'],
-                        'Predicted': this.props.predicted[i]['y'],
-                        'Actual': this.props.actual[i]['y']
-                    })
-                } else {
-                    graphData.push({
-                        'Day': this.props.predicted[i]['x'],
-                        'Predicted': this.props.predicted[i]['y'],
-                        'Actual': null
-                    })
+        if (this.props.actual) {
+            if (this.props.level !== 'Ad') {
+                for (var i = (this.props.predicted.length - 10); i < this.props.predicted.length; i++) {
+                    if (i < this.props.actual.length) {
+                        graphData.push({
+                            'Day': this.props.predicted[i]['x'],
+                            'Predicted': this.props.predicted[i]['y'],
+                            'Actual': this.props.actual[i]['y']
+                        })
+                    } else {
+                        graphData.push({
+                            'Day': this.props.predicted[i]['x'],
+                            'Predicted': this.props.predicted[i]['y'],
+                            'Actual': null
+                        })
+                    }
                 }
             }
         }
@@ -63,8 +65,7 @@ export class MainGraph extends Component {
     }
 
     // shows graph until the object displayed is at the ad level
-    showGraph = () => {
-        const data = this.getCombinedData()
+    showGraph = (data) => {
         if (this.props.level !== 'Ad') {
             return( 
                 <div style={{width: '100%', margin: '0 auto', height: '100%'}}>
@@ -94,9 +95,10 @@ export class MainGraph extends Component {
     }
 
     render() {
+        const data = this.getCombinedData()
         return (
             <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)'}}>
-                {this.showGraph()}
+                {data.length !== 0 && this.showGraph(data)}
             </div>
         )
     }

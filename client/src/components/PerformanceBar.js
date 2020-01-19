@@ -27,15 +27,15 @@ export class PerformanceBar extends Component {
                 <div style={{display: 'flex'}}>
                     <div  style={pStyle}>
                         <div style={gBadgeStyle}>{performance[0]}</div>
-                        <p style={{padding: '0 15px 0 5px'}}>Over-Performing</p>
+                        Over-Performing
                     </div>
                     <div  style={pStyle}>
                         <div style={yBadgeStyle}>{performance[1]}</div>
-                        <p style={{padding: '0 15px 0 5px'}}>Neutral-Performing</p>
+                        Neutral-Performing
                     </div>
                     <div  style={pStyle}>
                         <div style={rBadgeStyle}>{performance[2]}</div>
-                        <p style={{padding: '0 15px 0 5px'}}>Under-Performing</p>
+                        Under-Performing
                     </div>
                 </div>
             )
@@ -56,32 +56,29 @@ export class PerformanceBar extends Component {
 
 const gBadgeStyle = {
     padding: '2px 6px',
-    height: '70%',
     background: '#3CC480',
     fontSize: 11,
     color: 'white',
     fontWeight: 650,
-    transform: 'translateY(-3px)'
+    transform: 'translate(-5px, -3px)'
 }
 
 const rBadgeStyle = {
     padding: '2px 6px',
-    height: '70%',
     background: '#FF7474',
     fontSize: 11,
     color: 'white',
     fontWeight: 650,
-    transform: 'translateY(-3px)'
+    transform: 'translate(-5px, -3px)'
 }
 
 const yBadgeStyle = {
     padding: '2px 6px',
-    height: '70%',
     background: '#FAFA5B',
     fontSize: 11,
     color: 'black',
     fontWeight: 650,
-    transform: 'translateY(-3px)'
+    transform: 'translate(-5px, -3px)'
 }
 
 const pStyle = {
@@ -89,7 +86,8 @@ const pStyle = {
     fontSize: 11,
     fontWeight: 650,
     color: '#8B8B8B',
-    alignContent: 'baseline'
+    alignContent: 'baseline',
+    padding: 15
 }
 
 PerformanceBar.propTypes = {

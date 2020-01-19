@@ -16,7 +16,7 @@ import AppHeader from '../AppHeader'
 
 export class App extends Component {
   state = {
-    data: Data[0], // remove when MainGraph info is available
+    data: [], // remove when MainGraph info is available
     liveSub: [],
     liveKPI: {
         clicks: '',
@@ -66,6 +66,7 @@ export class App extends Component {
           spent: incoming.KPI.spent,
           costPerPurchase: incoming.KPI.costPerPurchase
         },
+        data: Data[0]
       })
     } 
   }
