@@ -108,7 +108,7 @@ export class ProfitGraph extends Component {
     render() {
         const data = this.getGraphData() // live data
         return (
-            <div style={{height: '80%', width: '100%', transform: 'translateX(-20px)'}}>
+            <div style={{height: '76%', width: '100%', transform: 'translateX(-20px)'}}>
                 <ResponsiveContainer>
                     <BarChart data={data}>
                         <CartesianGrid vertical={false} stroke='#333028'/>

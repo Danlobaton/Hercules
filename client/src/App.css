@@ -127,11 +127,36 @@ body {
   font-weight: 500;
   letter-spacing: 1px;
 }
+.legend {
+  display: flex;
+  position: absolute;
+  font-size: 10px;
+  color: #FFFFFF;
+  transform: translate(8px, -25px)
+}
+#legendModule {
+  padding-left: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.revenueIcon {
+  background: #55C2E8;
+  width: 8px;
+  height: 3px;
+  transform: translate(-3px, -2px)
+}
+.amountIcon {
+  background: #6648B7;
+  width: 8px;
+  height: 3px;
+  transform: translate(-3px, -2px)
+}
 #gTitle {
   display: flex;
   justify-content: space-between;
   width: 100%;
   align-items: baseline;
+  height: 60px
 }
 #gTitle img {
   transform: translate(-10px, 7px)

@@ -82,7 +82,7 @@ export class PurchaseGraph extends Component {
 
     render() {
         return (
-            <div id='pGraph' style={{height: '80%', width: '100%', transform: 'translateX(-20px)'}}>
+            <div id='pGraph' style={{height: '76%', width: '100%', transform: 'translateX(-20px)'}}>
                 {this.showGraph()}
             </div>
         )

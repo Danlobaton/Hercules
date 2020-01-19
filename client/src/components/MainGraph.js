@@ -68,8 +68,19 @@ export class MainGraph extends Component {
     showGraph = (data) => {
         if (this.props.level !== 'Ad') {
             return( 
-                <div style={{width: '100%', margin: '0 auto', height: '100%'}}>
-                    <ResponsiveContainer>
+                <div style={{width: '100%', margin: '0 auto', height: '100%', zIndex: 1}}>
+                    <div style={legendStyle}>
+                        <div style={legendModule}>
+                            <div style={legendIconBlue}/>Current Purchases
+                        </div>
+                        <div style={legendModule}>
+                            <div style={legendIconPurpleContainer}>
+                                <div style={legendIconPurple}/>
+                                <div style={legendIconPurple}/>
+                            </div>28 Day Prediction
+                        </div>
+                    </div>
+                    <ResponsiveContainer style={{zIndex: 3}}>
                         <AreaChart height={270} width={800} data={data}>
                             <CartesianGrid stroke='#f5f5f5'/>
                             <defs>
@@ -102,6 +113,40 @@ export class MainGraph extends Component {
             </div>
         )
     }
+}
+
+const legendStyle = {
+    fontSize: 13,
+    color: '#A4A4A4',
+    position: 'absolute', 
+    display: 'flex',
+    textAlign: 'left',
+    transform: 'translate(57px, -15px)',
+    zIndex: 2
+}
+const legendModule = {
+    paddingLeft: 15,
+    display: 'flex',
+    alignItems: 'baseline'
+}
+const legendIconBlue= {
+    width: 22,
+    height: 6,
+    borderRadius: 5,
+    background: '#45C0E6',
+    transform: 'translate(-5px, -2px)',
+}
+const legendIconPurpleContainer = {
+    display: 'flex',
+    width: 22,
+    justifyContent: 'space-between'
+}
+const legendIconPurple = {
+    width: 10,
+    height: 6,
+    borderRadius: 2,
+    background: '#6648B7',
+    transform: 'translate(-5px, -2px)'
 }
 
 MainGraph.propTypes = {

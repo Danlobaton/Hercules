@@ -241,6 +241,14 @@ export class App extends Component {
                           <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
                           <img src={GraphIcon} height='16' alt='G'/>
                         </div>
+                        <div className='legend'>
+                          <div id='legendModule'>
+                            <div className='amountIcon'/>Amount Spent
+                          </div>
+                          <div id='legendModule'>
+                            <div className='revenueIcon'/>Revenue
+                          </div>
+                        </div>
                         <ProfitGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
