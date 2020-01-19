@@ -142,3 +142,26 @@ body {
   min-width: 275px;
   z-index: 2;
 }
+#dropMenu {
+  background: white;
+  padding: 5px;
+  border: 0;
+  font-size: 11px
+}
+#dropMenu:hover {
+  background: rgb(171, 154, 218);
+  color: white;
+}
+#hDropMenu {
+  background: white;
+  padding: 5px 5px 5px 15px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+  text-align: start;
+}
+#hDropMenu:hover{
+  background: rgb(171, 154, 218);
+  color: white;
+}

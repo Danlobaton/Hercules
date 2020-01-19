@@ -12,6 +12,7 @@ import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
 import ProfitGraph from '../ProfitGraph'
 import GraphIcon from '../../graph.png'
+import AppHeader from '../AppHeader'
 
 export class App extends Component {
   state = {
@@ -33,6 +34,7 @@ export class App extends Component {
     token: this.props.token,
     history: [], 
     objectRecord: null, // this stays null
+    loaded: false // use for loading state
   }
 
   // makes state the origin ad account
@@ -188,14 +190,15 @@ export class App extends Component {
 
   render() {
     
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts, objectRecord, history} = this.state
     return (
         <div className='app'>
-          <Header 
+          <AppHeader 
             goHome={this.goHome}
             level={liveLevel}
             master={liveAdAccounts}
             changeAdAccount={this.changeView}
+            history={history}
           />
           <div className='contentBox'>
             
@@ -204,7 +207,7 @@ export class App extends Component {
                 objects={liveSub}
                 nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel(true)}
                 changeData={this.changeView}
-                objectRecord={this.state.object}
+                objectRecord={objectRecord}
               />
             </div>
             <div className='mainBox'>
