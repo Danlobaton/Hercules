@@ -26,7 +26,7 @@ export class ObjectListItem extends Component {
         return (
             <div style={this.getStyle(object.score)}>
                 <button onClick={changeData.bind(this, object.id, nextLevel, object.name, object)} style={buttonStyle}>
-                    <p style={titleStyle}>{object.name}</p>
+                    <p style={titleStyle}>{object.name.length > 60 ? object.name.substring(0, 60) + '...' : object.name}</p>
                     <div style={infoContainerStyle}>                        
                         <p style={pStyle}>Purchases: {object.purchases}</p>         
                         <p style={pStyle}>ROAS: {object.roas}</p>   
