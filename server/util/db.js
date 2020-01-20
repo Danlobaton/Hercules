@@ -54,3 +54,34 @@ module.exports.update_user_token = function(userID, permToken, checkInsert) {
     return {db_error : true, message: e, success: false}
   }
 }
+
+module.exports.check_if_current = function(view, object_id) {
+  let sql = `SELECT * FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} AND Date = NOW();`;
+  try {
+    con.query(sql, function(err, result) {
+      if(err) {
+        throw err;
+      } else {
+        return result.length ? true : false;
+      }
+    })
+  }
+  catch(e) {
+    return {db_error: true, message: e, success: false}
+  }
+}
+
+module.exports.campaign_current = function(camp_id, getData) {
+  let sql = `SELECT Purchases FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${camp_id} AND Date BETWEEN DATE_SUB(NOW(), INTERVAL 60 DAY) AND NOW();`;
+  try {
+    con.query(sql, function(err, result) {
+      if (err)
+        throw err;
+      else 
+        getData({purchases: result})
+    })
+  }
+  catch(e) {
+    return {db_error: true, message: 3, success: false}
+  }
+}

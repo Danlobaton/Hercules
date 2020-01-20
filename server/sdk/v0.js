@@ -2,7 +2,7 @@
 
 const request = require('request-promise');
 const {build_uri, get_obj_score, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
-const {check_user_id} = require('../util/db')
+const {check_user_id, check_if_current, campaign_current} = require('../util/db')
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 
@@ -207,15 +207,15 @@ module.exports.check_perm_token = function(user_id, tempToken) {
    return new Promise((resolve, reject) => {
         check_user_id(user_id, function(user_status) {
             if(user_status.user_exists) {
-                 // check if the user access token is still valid
-                 isTokenValid(user_status.permToken)
-                 .then(r => {
-                     r.valid ?  resolve({valid: true}) : resolve(getNewToken(user_id, tempToken));
-                 })
-                 .catch(r => {
-                     console.log(r)
-                     resolve({error: r});
-                 })
+                // check if the user access token is still valid
+                isTokenValid(user_status.permToken)
+                .then(r => {
+                   r.valid ?  resolve({valid: true}) : resolve(getNewToken(user_id, tempToken));
+                })
+                .catch(r => {
+                   console.log(r)
+                   resolve({error: r});
+                })
              }
             else {
                 // creating new users
@@ -233,4 +233,24 @@ module.exports.check_perm_token = function(user_id, tempToken) {
             }
         })
    })
+}
+
+module.exports.returnCurrent = function(object_id, view) {
+    return new Promise ((resolve, reject) => {
+        // checks if data is current
+        if (check_if_current(view, object_id)) { 
+            // gets the last 60 days from current or any data that is available in that time frame
+            campaign_current(object_id, function(campaign) {
+                var coordinates = [], counter = 0
+                // formats into desired coordinates
+                campaign.purchases.map(camp => {
+                    coordinates.push({'x': counter, 'y': camp.Purchases});
+                    counter += 1;
+                })
+                resolve(coordinates)
+            })
+        } else {
+            resolve([])
+        }
+    })
 }
