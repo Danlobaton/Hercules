@@ -16,9 +16,10 @@ body {
   height: 100vh;
   max-height: 100%;
   width: 100%;
+  font-family: sofia-pro, sans-serif;
 }
 .contentBox {
-  background-color: #EBEBEC;
+  background-color: #FFFFFF;
   height: 100%;
   width: 100%;
   display: flex;
@@ -56,13 +57,16 @@ body {
 }
 #normFont {
   letter-spacing: 3px;
-  font-weight: 350;
+  font-weight: 300;
+  font-size: 18px;
+  color: #333028
 }
 #mainFont {
   letter-spacing: 1px;
   font-weight: 750;
-  color: #7F68C2;
+  color: #6648B7;
   padding-left: 5px;
+  font-size: 18px;
 }
 .actionBar {
   display: flex;
@@ -81,14 +85,15 @@ body {
   justify-content: space-between;
   flex-direction: row;
   flex-wrap: wrap;
+  z-index: 1;
 }
 .leftGraph {
   flex: 4;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  min-width: 325px;
-  min-height: 230px;
+  min-width: 400px;
+  min-height: 330px;
   padding-top: 15px
 }
 .rightGraph {
@@ -96,8 +101,8 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  min-width: 450px;
-  min-height: 230px;
+  min-width: 505px;
+  min-height: 330px;
   padding-top: 15px
 }
 #graph {
@@ -116,13 +121,72 @@ body {
   bottom: 0;
 }
 #graphContent p {
-  color: #D0D0D0;
-  font-size: 14px;
+  color: #FFFFFF;
+  font-size: 13px;
   padding: 10px 0 0 15px;
   font-weight: 500;
   letter-spacing: 1px;
 }
+.legend {
+  display: flex;
+  position: absolute;
+  font-size: 10px;
+  color: #FFFFFF;
+  transform: translate(8px, -25px)
+}
+#legendModule {
+  padding-left: 10px;
+  display: flex;
+  align-items: baseline;
+}
+.revenueIcon {
+  background: #55C2E8;
+  width: 8px;
+  height: 3px;
+  transform: translate(-3px, -2px)
+}
+.amountIcon {
+  background: #6648B7;
+  width: 8px;
+  height: 3px;
+  transform: translate(-3px, -2px)
+}
+#gTitle {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: baseline;
+  height: 60px
+}
+#gTitle img {
+  transform: translate(-10px, 7px)
+}
 .scroll {
   flex: 1.6;
   position: relative;
+  min-width: 275px;
+  z-index: 2;
+}
+#dropMenu {
+  background: white;
+  padding: 5px;
+  border: 0;
+  font-size: 11px
+}
+#dropMenu:hover {
+  background: rgb(171, 154, 218);
+  color: white;
+}
+#hDropMenu {
+  background: white;
+  padding: 5px 5px 5px 15px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  width: 100%;
+  text-align: start;
+}
+#hDropMenu:hover{
+  background: rgb(171, 154, 218);
+  color: white;
 }

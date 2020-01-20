@@ -17,7 +17,7 @@ export class ObjectListItem extends Component {
             padding: '15px',
             borderLeft: setting,
             flexDirection: 'row',
-            borderBottom: '1px solid #000'
+            borderBottom: '1px solid #353535'
         }
     }
 
@@ -26,7 +26,7 @@ export class ObjectListItem extends Component {
         return (
             <div style={this.getStyle(object.score)}>
                 <button onClick={changeData.bind(this, object.id, nextLevel, object.name, object)} style={buttonStyle}>
-                    <p style={titleStyle}>{object.name}</p>
+                    <p style={titleStyle}>{object.name.length > 60 ? object.name.substring(0, 60) + '...' : object.name}</p>
                     <div style={infoContainerStyle}>                        
                         <p style={pStyle}>Purchases: {object.purchases}</p>         
                         <p style={pStyle}>ROAS: {object.roas}</p>   
@@ -47,7 +47,8 @@ const buttonStyle = {
 const titleStyle = {
     fontWeight: '600', 
     color: 'white', 
-    textAlign: 'left'
+    textAlign: 'left',
+    fontSize: 15
 }
 const infoContainerStyle = {
     display: 'flex', 
@@ -56,7 +57,7 @@ const infoContainerStyle = {
     flexWrap: 'wrap'
 }
 const pStyle = {
-    fontSize: '12px',  
+    fontSize: '11px',  
     color: 'white', 
     textAlign: 'left', 
     transform: 'translateY(-5px)', 

@@ -106,7 +106,6 @@ const scrollStyle = {
     margin: '0 auto',
     position: 'absolute',
     bottom: '0px',
-    left: '2%',
     borderRadius: '5px 0',
     display: 'flex',
     flexDirection: 'column',
@@ -114,8 +113,8 @@ const scrollStyle = {
 
 const titleStyle = {
     height: '6em',
-    backgroundImage: 'linear-gradient(#6648B7, #7452D1)',
-    borderRadius: '5px 0 0 0',
+    backgroundImage: 'linear-gradient(#6648B7, #7654D6)',
+    borderRadius: '5px 5px 0 0',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around'
@@ -125,14 +124,14 @@ const pStyle = {
     color: 'white',
     margin: '0 auto',
     fontSize: '18px',
-    fontWeight: 350,
+    fontWeight: 300,
     transform: 'translateY(20%)',
     letterSpacing: '2px'
 }
 
 const selectionStyle = {
     height: '4.25em',
-    background: '#7452D1',
+    background: '#7654D6',
     borderTop: '1px solid #6749ba',
     borderBottom: '1px solid #6749ba'
 }

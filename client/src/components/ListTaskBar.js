@@ -19,10 +19,9 @@ export class ListTaskBar extends Component {
             <div>
                 <form style={taskBarStyle} onSubmit={this.onSubmit}>
                     <button style={filterStyle} onClick={filter.bind(this, selection)}>
-                        <p style={{lineHeight: '0px', fontSize: '11px', transform: 'translateY(7px)'}}>FILTER</p>
+                        <p style={{lineHeight: '0px', fontSize: '11px', transform: 'translateY(9px)'}}>FILTER</p>
                         <img alt='f' src={filterLogo} height='15px'/>
                     </button>
-
                     <div style={{display: 'flex', alignItems: 'center'}}>
                         <input type='radio' id='perfChoice1' name='performance' value='green' onChange={this.onMark}/>
                         <label for='perfChoice1' style={labelStyle}>
@@ -41,9 +40,8 @@ export class ListTaskBar extends Component {
                             <div style={{background: '#FF7474', height: '100%', width: '100%', transform: 'translateX(3px)'}}/>
                         </label>
                     </div>
-
                     <button style={filterStyle} type='submit' onClick={sort.bind(this, selection)}> 
-                        <p style={{lineHeight: '0px', fontSize: '11px', transform: 'translateY(7px)'}}>SORT</p>
+                        <p style={{lineHeight: '0px', fontSize: '11px', transform: 'translateY(9px)'}}>SORT</p>
                         <img alt='s' src={sortLogo} height='13px'style={{transform: 'translateY(1.5px)'}}/>
                     </button>
                 </form>

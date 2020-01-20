@@ -11,10 +11,12 @@ import MainGraph from '../MainGraph'
 import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
 import ProfitGraph from '../ProfitGraph'
+import GraphIcon from '../../graph.png'
+import AppHeader from '../AppHeader'
 
 export class App extends Component {
   state = {
-    data: Data[0], // remove when MainGraph info is available
+    data: [], // remove when MainGraph info is available
     liveSub: [],
     liveKPI: {
         clicks: '',
@@ -32,6 +34,7 @@ export class App extends Component {
     token: this.props.token,
     history: [], 
     objectRecord: null, // this stays null
+    loaded: false // use for loading state
   }
 
   // makes state the origin ad account
@@ -63,6 +66,7 @@ export class App extends Component {
           spent: incoming.KPI.spent,
           costPerPurchase: incoming.KPI.costPerPurchase
         },
+        data: Data[0]
       })
     } 
   }
@@ -186,14 +190,16 @@ export class App extends Component {
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts} = this.state
+    
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts, objectRecord, history} = this.state
     return (
         <div className='app'>
-          <Header 
+          <AppHeader 
             goHome={this.goHome}
             level={liveLevel}
             master={liveAdAccounts}
             changeAdAccount={this.changeView}
+            history={history}
           />
           <div className='contentBox'>
             
@@ -202,7 +208,7 @@ export class App extends Component {
                 objects={liveSub}
                 nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel(true)}
                 changeData={this.changeView}
-                objectRecord={this.state.object}
+                objectRecord={objectRecord}
               />
             </div>
             <div className='mainBox'>
@@ -220,7 +226,10 @@ export class App extends Component {
                   <div className='leftGraph'>
                     <div id='graph'>
                       <div id='graphContent'>
-                        <p>WEBSITE PURCHASES BY {liveNextLevel ? (liveNextLevel).toUpperCase() : null} NAME</p>
+                        <div id='gTitle'>
+                          <p>WEBSITE PURCHASES BY {liveNextLevel ? (liveNextLevel).toUpperCase() : null} NAME</p>
+                          <img src={GraphIcon} height='16' alt='G' />
+                        </div>
                         <PurchaseGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>
@@ -228,7 +237,18 @@ export class App extends Component {
                   <div className='rightGraph'>
                     <div id='graph'>
                       <div id='graphContent'>
-                        <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
+                        <div id='gTitle'>
+                          <p>AMOUNT SPENT & REVENUE BY {liveNextLevel ? (liveNextLevel).toUpperCase(): null} NAME</p>
+                          <img src={GraphIcon} height='16' alt='G'/>
+                        </div>
+                        <div className='legend'>
+                          <div id='legendModule'>
+                            <div className='amountIcon'/>Amount Spent
+                          </div>
+                          <div id='legendModule'>
+                            <div className='revenueIcon'/>Revenue
+                          </div>
+                        </div>
                         <ProfitGraph data={liveSub} level={liveLevel}/>
                       </div>
                     </div>

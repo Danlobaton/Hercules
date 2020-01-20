@@ -37,7 +37,6 @@ module.exports.get_view_children_data = function(object_id, view, token) {
     }
     let path = `${ad_view_map[view][0]}/${ad_view_map[view][1]}`;
     let uri = build_uri(path, params, token);
-    console.log(uri)
     return new Promise((resolve, reject) => {
         request.get(uri, params,(err, res, body) => {
             try {
