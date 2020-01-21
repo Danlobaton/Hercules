@@ -2,7 +2,7 @@
 
 const request = require('request-promise');
 const {build_uri, get_obj_score, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
-const {check_user_id, check_if_current, campaign_current} = require('../util/db')
+const {check_user_id, check_if_current, campaign_current, get_last_date} = require('../util/db')
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 
@@ -235,22 +235,43 @@ module.exports.check_perm_token = function(user_id, tempToken) {
    })
 }
 
-module.exports.returnCurrent = function(object_id, view) {
+module.exports.returnCurrent = function(object_id, view, user_id) {
     return new Promise ((resolve, reject) => {
+        var coordinates = [], counter = 0
         // checks if data is current
-        if (check_if_current(view, object_id)) { 
-            // gets the last 60 days from current or any data that is available in that time frame
-            campaign_current(object_id, function(campaign) {
-                var coordinates = [], counter = 0
-                // formats into desired coordinates
-                campaign.purchases.map(camp => {
-                    coordinates.push({'x': counter, 'y': camp.Purchases});
-                    counter += 1;
+        check_if_current(view, object_id, function(isValid) {
+            if (isValid) {
+                campaign_current(object_id, function(campaign) {
+                    // formats into desired coordinates
+                    campaign.purchases.map(camp => {
+                        coordinates.push({'x': counter, 'y': camp.Purchases});
+                        counter += 1;
+                    })
+                    resolve(coordinates)
                 })
-                resolve(coordinates)
-            })
-        } else {
-            resolve([])
-        }
+            } else {
+                get_last_date(view, object_id, function(date) {
+                    let params = {
+                        obj_id: object_id,
+                        user_id,
+                        last_date: date
+                    }
+                    let path = 'https://hercdata.herokuapp.com/fill_values';
+                    request.get(path, params , (err, res, body) => {
+                        let updated = JSON.parse(body)
+                        if (updated.success) {
+                            campaign_current(object_id, function(campaign) {
+                                // formats into desired coordinates
+                                campaign.purchases.map(camp => {
+                                    coordinates.push({'x': counter, 'y': camp.Purchases});
+                                    counter += 1;
+                                })
+                                resolve(coordinates)
+                            })
+                        } else { resolve([]) }
+                    })
+                })
+            }
+        })
     })
 }

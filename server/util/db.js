@@ -55,14 +55,30 @@ module.exports.update_user_token = function(userID, permToken, checkInsert) {
   }
 }
 
-module.exports.check_if_current = function(view, object_id) {
+module.exports.check_if_current = function(view, object_id, getData) {
   let sql = `SELECT * FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} AND Date = NOW();`;
   try {
     con.query(sql, function(err, result) {
       if(err) {
         throw err;
       } else {
-        return result.length ? true : false;
+        getData(result.length);
+      }
+    })
+  }
+  catch(e) {
+    return {db_error: true, message: e, success: false}
+  }
+}
+
+module.exports.get_last_date = function(view, object_id, getData) {
+  let sql = `SELECT Date FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} ORDER BY Date DESC LIMIT 1;`;
+  try {
+    con.query(sql, function(err, result) {
+      if(err) {
+        throw err;
+      } else {
+        getData(result[0].Date)
       }
     })
   }
