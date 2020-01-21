@@ -79,7 +79,7 @@ function checkUser(req, res) {
 }
 
 function getCurrent(req, res) {
-  let {object_id, view, user_id} = req.query;
+  let {object_id, view, user_id, parent_id} = req.query;
   sdk.returnCurrent(object_id, view, user_id)
   .then(r => res.json(r))
   .catch(r => {

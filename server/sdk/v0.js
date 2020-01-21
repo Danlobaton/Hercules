@@ -235,7 +235,7 @@ module.exports.check_perm_token = function(user_id, tempToken) {
    })
 }
 
-module.exports.returnCurrent = function(object_id, view, user_id) {
+module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
     return new Promise ((resolve, reject) => {
         var coordinates = [], counter = 0
         // checks if data is current
@@ -254,11 +254,13 @@ module.exports.returnCurrent = function(object_id, view, user_id) {
                     let params = {
                         obj_id: object_id,
                         user_id,
-                        last_date: date
+                        last_date: date,
+                        parent_id
                     }
                     let path = 'https://hercdata.herokuapp.com/fill_values';
                     request.get(path, params , (err, res, body) => {
                         let updated = JSON.parse(body)
+                        coordinates = [{'date': date}]
                         if (updated.success) {
                             campaign_current(object_id, function(campaign) {
                                 // formats into desired coordinates
