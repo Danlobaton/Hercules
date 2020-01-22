@@ -95,7 +95,7 @@ module.exports.get_last_date = function(view, object_id, getData) {
 }
 
 module.exports.campaign_current = function(camp_id, getData) {
-  let sql = `SELECT Purchases FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${camp_id} AND Date BETWEEN DATE_SUB(NOW(), INTERVAL 60 DAY) AND NOW();`;
+  let sql = `SELECT Purchases FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${camp_id} ORDER BY Date DESC LIMIT 60;`;
   try {
     con.query(sql, function(err, result) {
       if (err)
