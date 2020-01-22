@@ -83,7 +83,6 @@ module.exports.get_last_date = function(view, object_id, getData) {
           let dateBegin = date.substring(0, 6)
           let day = (parseInt(date.substring(6, 9)) + 1).toString()
           let adjustedDate = '20' + dateBegin + day
-          console.log(date)
           getData(adjustedDate)
         } else { getData(false) }
       }

@@ -42,7 +42,7 @@ export class MainGraph extends Component {
                     if (coordinate.x > current.length-9) {
                         graphData.push({
                             'Day': coordinate.x,
-                            'Predicted': 0,
+                            'Predicted': null,
                             'Current': coordinate.y
                         })
                         count+=1
@@ -52,7 +52,7 @@ export class MainGraph extends Component {
                 current.map(coordinate => {
                     graphData.push({
                         'Day': coordinate.x,
-                        'Predicted': 0,
+                        'Predicted': null,
                         'Current': coordinate.y
                     })
                 })
@@ -158,7 +158,7 @@ export class MainGraph extends Component {
 
     render() {
         this.showLive()
-        const data = this.props.current.length ? this.showLive() : this.getCombinedData() 
+        const data = this.props.currentActive ? this.showLive() : this.getCombinedData() 
         return (
             <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)'}}>
                 {data.length !== 0 && this.showGraph(data)}
