@@ -251,27 +251,24 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                 })
             } else {
                 get_last_date(view, object_id, function(date) {
-                    let params = {
-                        obj_id: object_id,
-                        user_id,
-                        last_date: date,
-                        parent_id
-                    }
-                    let path = 'https://hercdata.herokuapp.com/fill_values';
-                    request.get(path, params , (err, res, body) => {
-                        let updated = JSON.parse(body)
-                        coordinates = [{'date': date}]
-                        if (updated.success) {
-                            campaign_current(object_id, function(campaign) {
-                                // formats into desired coordinates
-                                campaign.purchases.map(camp => {
-                                    coordinates.push({'x': counter, 'y': camp.Purchases});
-                                    counter += 1;
-                                })
-                                resolve(coordinates)
-                            })
-                        } else { resolve([]) }
-                    })
+                    if(date) {
+                        let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}`
+                        request.get(fullPath, (err, res, body) => {
+                            let updated = JSON.parse(body)
+                            console.log(updated)
+                            coordinates = [{'date': date}]
+                            if (updated.success) {
+                                campaign_current(object_id, function(campaign) {
+                                    // formats into desired coordinates
+                                    campaign.purchases.map(camp => {
+                                        coordinates.push({'x': counter, 'y': camp.Purchases});
+                                        counter += 1;
+                                    })
+                                    resolve(coordinates)
+                                })                      
+                            } else { resolve([]) }
+                        })
+                    } else { resolve([]) }
                 })
             }
         })

@@ -80,7 +80,7 @@ function checkUser(req, res) {
 
 function getCurrent(req, res) {
   let {object_id, view, user_id, parent_id} = req.query;
-  sdk.returnCurrent(object_id, view, user_id)
+  sdk.returnCurrent(object_id, view, user_id, parent_id)
   .then(r => res.json(r))
   .catch(r => {
     console.log(r);

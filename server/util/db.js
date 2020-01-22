@@ -74,11 +74,18 @@ module.exports.check_if_current = function(view, object_id, getData) {
 module.exports.get_last_date = function(view, object_id, getData) {
   let sql = `SELECT DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} ORDER BY Date DESC LIMIT 1;`;
   try {
-    con.query(sql, function(err, result) {
+      con.query(sql, function(err, result) {
       if(err) {
         throw err;
       } else {
-        getData(result[0]['DATE_FORMAT(Date, "%y-%m-%d")'])
+        if (result.length !== 0) {
+          let date = result[0]['DATE_FORMAT(Date, "%y-%m-%d")']
+          let dateBegin = date.substring(0, 6)
+          let day = (parseInt(date.substring(6, 9)) + 1).toString()
+          let adjustedDate = '20' + dateBegin + day
+          console.log(date)
+          getData(adjustedDate)
+        } else { getData(false) }
       }
     })
   }

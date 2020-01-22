@@ -34,7 +34,8 @@ export class App extends Component {
     token: this.props.token,
     history: [], 
     objectRecord: null, // this stays null
-    loaded: false // use for loading state
+    loaded: false, // use for loading state
+    liveCurrent: []
   }
 
   // makes state the origin ad account
@@ -50,13 +51,14 @@ export class App extends Component {
 
   // defines state only when all call responses are loaded
   loadState = (incoming) => {  
-    if (incoming.subLoaded && incoming.kpiLoaded) {
+    if (incoming.subLoaded && incoming.kpiLoaded && incoming.currentLoaded) {
       this.setState({
         liveSub: incoming.sub,
         liveLevel: incoming.level,
         liveNextLevel: incoming.nextLevel,
         liveName: incoming.name,
         history: incoming.history,
+        liveCurrent: incoming.liveCurrent,
         liveKPI: {
           clicks: incoming.KPI.clicks,
           impressions: incoming.KPI.impressions,
@@ -99,12 +101,14 @@ export class App extends Component {
     var incoming = {
       kpiLoaded: false,
       subLoaded: false,
+      currentLoaded: false,
       loadedMessage: '',
       sub: [],
       level: '',
       nextLevel: '',
       name: '',
       history: [],
+      liveCurrent: [],
       KPI: {
         clicks: '',
         impressions: '',
@@ -125,6 +129,17 @@ export class App extends Component {
     }
     var rawLevel = this.getRawLevel(level)
 
+    if (rawLevel === 'campaign') {
+      fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[0].id}`)
+      .then(res => res.json())
+      .then(data => {
+        incoming.currentLoaded = true
+        incoming.liveCurrent = data
+        this.loadState(incoming)
+      })
+    } else {
+      incoming.currentLoaded = true
+    }
 
     // gets current ad objects children
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
@@ -190,8 +205,9 @@ export class App extends Component {
   }
 
   render() {
-    
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, liveAdAccounts, objectRecord, history} = this.state
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, 
+          liveAdAccounts, objectRecord, history, liveCurrent} = this.state
+    console.log(history[0] ? history[0].id : null, liveCurrent)
     return (
         <div className='app'>
           <AppHeader 
@@ -221,7 +237,10 @@ export class App extends Component {
                   <MainDropdown />
                   <PerformanceBar level={liveLevel} sub={liveSub}/>
                 </div>
-                <MainGraph actual={this.state.data.actual} predicted={this.state.data.predicted} level={this.state.data.level}/>
+                <MainGraph 
+                  actual={this.state.data.actual} 
+                  predicted={this.state.data.predicted} 
+                  level={this.state.data.level}/>
                 <div className='subGraphs'>
                   <div className='leftGraph'>
                     <div id='graph'>

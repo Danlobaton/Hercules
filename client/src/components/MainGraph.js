@@ -27,6 +27,9 @@ export class MainGraph extends Component {
         }
         return graphData
     }
+    showLive = () => {
+        
+    }
 
     // Custom dot for actual line
     // TODO make dot automatically go to the last point
