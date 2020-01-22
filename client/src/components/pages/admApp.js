@@ -240,7 +240,9 @@ export class App extends Component {
                 <MainGraph 
                   actual={this.state.data.actual} 
                   predicted={this.state.data.predicted} 
-                  level={this.state.data.level}/>
+                  level={this.state.data.level}
+                  current={liveCurrent}
+                  />
                 <div className='subGraphs'>
                   <div className='leftGraph'>
                     <div id='graph'>

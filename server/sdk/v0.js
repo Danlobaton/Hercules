@@ -256,7 +256,7 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                         request.get(fullPath, (err, res, body) => {
                             let updated = JSON.parse(body)
                             console.log(updated)
-                            coordinates = [{'date': date}]
+                            coordinates = []
                             if (updated.success) {
                                 campaign_current(object_id, function(campaign) {
                                     // formats into desired coordinates
