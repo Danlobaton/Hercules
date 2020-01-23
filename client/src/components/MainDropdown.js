@@ -65,7 +65,7 @@ const filterStyle = {
 
 const dropdown = {
     position: 'absolute', 
-    top: '100%', 
+    top: '65%', 
     left: 0, 
     width: '100%', 
     zIndex: 2, 
