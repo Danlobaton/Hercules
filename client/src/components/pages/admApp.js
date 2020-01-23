@@ -200,6 +200,7 @@ export class App extends Component {
             master={liveAdAccounts}
             changeAdAccount={this.changeView}
             history={history}
+            goBack={this.goBack}
           />
           <div className='contentBox'>
             
@@ -257,7 +258,6 @@ export class App extends Component {
               </div>
             </div>
             <div className='specBar'> 
-              {(liveLevel ? liveLevel : this.passDownLevel()) !== 'Ad Account' ? (<button onClick={this.goBack}>Back</button>) : false}
               <InfoCol liveKPI={liveKPI}/>
             </div>
           </div>

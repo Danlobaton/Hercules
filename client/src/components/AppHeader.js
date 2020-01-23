@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import logo from '../logo.png'
+import back from '../back.png'
 import PropTypes from 'prop-types'
 
 export class AppHeader extends Component {
@@ -53,12 +54,20 @@ export class AppHeader extends Component {
     }
 
     render() {
-        const {goHome, history} = this.props
+        const {goHome, goBack, history} = this.props
         const master = this.props.master ? this.props.master : []
         this.state.first && this.listener()
         return (
             <div style={headerStyle}>
                 <div style={innerHeaderStyle} >
+                    { history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 
+                    (<button 
+                        style={{background: 'none', outline:'none', border: 'none', width: 60, height: 60, borderRight: '1px solid #707070', transform: 'translateX(-10px)'}}
+                        onClick={goBack}    
+                    >
+                        <img src={back} height='30' style={{transform: 'rotate(180deg) translateX(8px)'}} />
+                    </button>)
+                    : null }
                     <button style={homeButton} onClick={goHome}>
                         <img src={logo} height='30' alt='ADM'/>
                     </button>
@@ -84,6 +93,7 @@ export class AppHeader extends Component {
 const headerStyle = {
     width: '100%',
     height: 60,
+    minHeight: 60,
     background: 'black',
     display: 'flex',
     alignItems: 'center'
