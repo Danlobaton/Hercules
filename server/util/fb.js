@@ -20,7 +20,7 @@ let build_uri = module.exports.build_uri = function(path, params = {}, fb_token)
   return uri + query;
 }
 
-module.exports.onboardUser = function(user_id, tempToken) {
+module.exports.onboardUser = function(user_id, tempToken, name, email) {
   let params = {
     grant_type: "fb_exchange_token",
     fb_exchange_token: tempToken,
@@ -32,7 +32,7 @@ module.exports.onboardUser = function(user_id, tempToken) {
       request.get(uri, params,(err, res, body) => {
           try {
             let access_token = JSON.parse(body).access_token;
-            add_new_user(user_id, access_token, function(status) {
+            add_new_user(user_id, access_token, name, email, function(status) {
               status.success ? console.log("User successfully onboarded!") : console.log(`Error onboarding userID: ${user_id} permToken: ${access_token}`);
               resolve(status);
             });

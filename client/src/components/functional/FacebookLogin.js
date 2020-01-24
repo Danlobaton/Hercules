@@ -50,14 +50,15 @@ export default class FacebookLogin extends Component {
    */
   facebookLoginHandler = response => {
     if (response.status === 'connected') {
-      // this.FB.api('/me', userData => {
-      //   let result = {
-      //     ...response,
-      //     user: userData
-      //   };
-      //   this.props.onLogin(true, result);
+      this.FB.api('/me?fields=email,name,id', userData => {
+        let result = {
+          ...response,
+          user: userData
+        };
+        this.props.onLogin(true, result);
+      });
       // });
-      this.props.onLogin(true, response)
+      // this.props.onLogin(true, result)
     } else {
       this.props.onLogin(false);
     }

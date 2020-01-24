@@ -68,8 +68,8 @@ function getAccounts(req, res) {
 }
 
 function checkUser(req, res) {
-  let {user_id, token} = req.query;
-  sdk.check_perm_token(user_id, token)
+  let {user_id, token, name, email} = req.query;
+  sdk.check_perm_token(user_id, token, name, email)
   .then(r => res.json(r))
   .catch(r => {
       console.log(r);
