@@ -56,7 +56,7 @@ module.exports.update_user_token = function(userID, permToken, checkInsert) {
 }
 
 module.exports.check_if_current = function(view, object_id, getData) {
-  let sql = `SELECT * FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} AND Date = NOW();`;
+  let sql = `SELECT * FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} AND Date = DATE_SUB(CURDATE(), INTERVAL 1 DAY);`;
   try {
     con.query(sql, function(err, result) {
       if(err) {
@@ -83,6 +83,7 @@ module.exports.get_last_date = function(view, object_id, getData) {
           let dateBegin = date.substring(0, 6)
           let day = (parseInt(date.substring(6, 9)) + 1).toString()
           let adjustedDate = '20' + dateBegin + day
+          console.log(adjustedDate)
           getData(adjustedDate)
         } else { getData(false) }
       }
@@ -94,13 +95,13 @@ module.exports.get_last_date = function(view, object_id, getData) {
 }
 
 module.exports.campaign_current = function(camp_id, getData) {
-  let sql = `SELECT Purchases FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${camp_id} ORDER BY Date DESC LIMIT 60;`;
+  let sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${camp_id} ORDER BY Date ASC LIMIT 60;`;
   try {
     con.query(sql, function(err, result) {
       if (err)
         throw err;
       else 
-        getData({purchases: result})
+        getData({result: result})
     })
   }
   catch(e) {

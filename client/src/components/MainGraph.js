@@ -36,12 +36,32 @@ export class MainGraph extends Component {
     showLive = () => {
         const current = this.props.current
         var graphData = [], count = 0
+        let month = ''
+        let day = ''
         if(current[0]) {
             if (current.length >= 8) {
                 current.map(coordinate => {
                     if (coordinate.x > current.length-9) {
+                        switch (coordinate.day.substring(6, 7)) {
+                            case('0') : day = coordinate.day.substring(7); break
+                            default : day = coordinate.day.substring(6); break
+                        }
+                        switch(coordinate.day.substring(3,5)) {
+                            case('01') : month = 'Jan '; break
+                            case('02') : month = 'Feb '; break
+                            case('03') : month = 'Mar '; break
+                            case('04') : month = 'Apr '; break
+                            case('05') : month = 'May '; break
+                            case('06') : month = 'Jun '; break
+                            case('07') : month = 'Jul '; break
+                            case('08') : month = 'Aug '; break
+                            case('09') : month = 'Sept '; break
+                            case('10') : month = 'Oct '; break
+                            case('11') : month = 'Nov '; break
+                            case('12') : month = 'Dec '; break  
+                        }
                         graphData.push({
-                            'Day': coordinate.x,
+                            'Day': month + day,
                             'Predicted': null,
                             'Current': coordinate.y
                         })
@@ -50,8 +70,26 @@ export class MainGraph extends Component {
                 })
             } else {
                 current.map(coordinate => {
+                    switch (coordinate.day.substring(6, 7)) {
+                        case('0') : day = coordinate.day.substring(7); break
+                        default : day = coordinate.day.substring(6); break
+                    }
+                    switch(coordinate.day.substring(3,5)) {
+                        case('01') : month = 'Jan '; break
+                        case('02') : month = 'Feb '; break
+                        case('03') : month = 'Mar '; break
+                        case('04') : month = 'Apr '; break
+                        case('05') : month = 'May '; break
+                        case('06') : month = 'Jun '; break
+                        case('07') : month = 'Jul '; break
+                        case('08') : month = 'Aug '; break
+                        case('09') : month = 'Sept '; break
+                        case('10') : month = 'Oct '; break
+                        case('11') : month = 'Nov '; break
+                        case('12') : month = 'Dec '; break  
+                    }
                     graphData.push({
-                        'Day': coordinate.x,
+                        'Day': month + day,
                         'Predicted': null,
                         'Current': coordinate.y
                     })
@@ -147,7 +185,7 @@ export class MainGraph extends Component {
                             <Area dot={this.displayDotPredicted} type='monotone' dataKey='Predicted' stroke='#6648B7' fill='url(#colorUv)' strokeDasharray="9 5" strokeWidth={3}/>
                             <Area dot={this.displayDotActual} type='monotone' dataKey='Current' fill='url(#colorPv)' stroke='#55C2E8' strokeWidth={3}/>
                             <YAxis tick={{fill: '#A4A4A4', fontSize: 11 }} stroke={{}} domain={['auto', dataMax=>(dataMax*1.2)]}/>
-                            <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval={0} tickCount={6} />
+                            <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval="preserveStartEnd" tickCount={6} width='110%'/>
                             <Tooltip labelFormatter={function(value) {return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}} />
                         </AreaChart>
                     </ResponsiveContainer>

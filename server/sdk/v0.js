@@ -243,8 +243,8 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
             if (isValid) {
                 campaign_current(object_id, function(campaign) {
                     // formats into desired coordinates
-                    campaign.purchases.map(camp => {
-                        coordinates.push({'x': counter, 'y': camp.Purchases});
+                    campaign.result.map(camp => {
+                        coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
                         counter += 1;
                     })
                     resolve(coordinates)
@@ -255,20 +255,35 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                         let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}`
                         request.get(fullPath, (err, res, body) => {
                             let updated = JSON.parse(body)
-                            console.log(updated)
                             coordinates = []
                             if (updated.success) {
                                 campaign_current(object_id, function(campaign) {
                                     // formats into desired coordinates
-                                    campaign.purchases.map(camp => {
-                                        coordinates.push({'x': counter, 'y': camp.Purchases});
+                                    campaign.result.map(camp => {
+                                        coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
                                         counter += 1;
                                     })
                                     resolve(coordinates)
                                 })                      
                             } else { resolve([]) }
                         })
-                    } else { resolve([]) }
+                    } else { 
+                        
+                        let path = `https://hercdata.herokuapp.com/add_ad_object?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}`
+                        request.get(path, (err, res, body) => {
+                            let updated = JSON.parse(body);
+                            if (updated.success) {
+                                campaign_current(object_id, function(campaign) {
+                                    // formats into desired coordinates
+                                    campaign.result.map(camp => {
+                                        coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
+                                        counter += 1;
+                                    })
+                                    resolve(coordinates)
+                                })                      
+                            } else { resolve([]) }
+                        })
+                    }
                 })
             }
         })
