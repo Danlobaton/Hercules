@@ -11,13 +11,13 @@ export class Login extends Component {
 
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
-            this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
             console.log(resultObject)
             // gets current ad objects children
             fetch(`/checkUser?token=${resultObject.authResponse.accessToken}&user_id=${resultObject.authResponse.userID}&name=${resultObject.user.name}&email=${resultObject.user.email}`)
             .then(res => res.json())
             .then((data) => { 
                 console.log(data);
+                this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
             });
         } else {
           console.log('Not logged in');

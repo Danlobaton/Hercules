@@ -207,25 +207,29 @@ module.exports.check_perm_token = function(user_id, tempToken, name, email) {
    return new Promise((resolve, reject) => {
         check_user_id(user_id, function(user_status) {
             if(user_status.user_exists) {
-                 // check if the user access token is still valid
+                // updates last-login
                 update_last_login(user_id, function(user_status) {
                     if (user_status.success) {
-                        console.log(user_status.message)
+                        console.log(user_status.message);
                     } else {
-                        console.log('Something went wrong :(')
+                        console.log('Something went wrong :(');
                     }
                 })
+
+                // updates personal information
                 check_personal(user_id, function(upToDate) {
                     if (upToDate) {
-                        console.log('User info up-to-date')
+                        console.log('User info up-to-date');
                     } else {
                         update_personal(user_id, name, email, function(user_status) {
                             if(user_status.success) {
-                                console.log(user_status.message)
+                                console.log(user_status.message);
                             }
                         })
                     }
                 })
+
+                // check if the user access token is still valid
                 isTokenValid(user_status.permToken)
                 .then(r => {
                     r.valid ?  resolve({valid: true}) : resolve(getNewToken(user_id, tempToken));
@@ -240,6 +244,13 @@ module.exports.check_perm_token = function(user_id, tempToken, name, email) {
                 // telemetry data point here
                 onboardUser(user_id, tempToken, name, email)
                 .then(r => {
+                    update_last_login(user_id, function(user_status) {
+                        if (user_status.success) {
+                            console.log(user_status.message);
+                        } else {
+                            console.log('Something went wrong :(');
+                        }
+                    })
                     console.log(r);
                     resolve(r)
                 })

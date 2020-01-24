@@ -56,24 +56,24 @@ module.exports.update_user_token = function(userID, permToken, checkInsert) {
 }
 // temporary, while there ares till users without name and email
 module.exports.check_personal = function(userID, getData) {
-  let sql = `SELECT userName FROM Facebook_Ads.HerculesUsers WHERE userID = '${userID}'`
+  let sql = `SELECT userName FROM Facebook_Ads.HerculesUsers WHERE userID = '${userID}'`;
   try {
     con.query(sql, function(err, result){
       if(err) {
         throw err;
       } else {
-        getData(result[0].userName.length)
+        getData(result[0].userName.length);
       }
     })
   }
   catch(e) {
-    return {db_error: true, message: e, success: false}
+    return {db_error: true, message: e, success: false};
   }
 }
 
 // temporary, while there are still users without name and email
 module.exports.update_personal = function(userID, name, email, checkInsert) {
-  let sql = `UPDATE Facebook_Ads.HerculesUsers SET userName = '${name}', userEmail = '${email}' WHERE userID = '${userID}'`
+  let sql = `UPDATE Facebook_Ads.HerculesUsers SET userName = '${name}', userEmail = '${email}' WHERE userID = '${userID}'`;
   try {
     con.query(sql, function(err, result) {
       if (err) {
@@ -84,22 +84,22 @@ module.exports.update_personal = function(userID, name, email, checkInsert) {
     })
   }
   catch(e) {
-    return {db_error: true, message: e, success: false}
+    return {db_error: true, message: e, success: false};
   }
 }
 
 module.exports.update_last_login = function(userID, checkInsert) {
-  let sql = `UPDATE Facebook_Ads.HerculesUsers SET lastLogin = DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 5 HOUR) WHERE userID = ${userID}`
+  let sql = `UPDATE Facebook_Ads.HerculesUsers SET lastLogin = DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 5 HOUR) WHERE userID = ${userID}`;
   try {
     con.query(sql, function(err, result) {
       if (err) {
         throw err;
       } else {
-        checkInsert({success: true, message: 'Updated Last Login'})
+        checkInsert({success: true, message: 'Updated Last Login'});
       }
     })
   }
   catch(e) {
-    return {db_error: true, message: e, success: false}
+    return {db_error: true, message: e, success: false};
   }
 }

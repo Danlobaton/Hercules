@@ -57,8 +57,6 @@ export default class FacebookLogin extends Component {
         };
         this.props.onLogin(true, result);
       });
-      // });
-      // this.props.onLogin(true, result)
     } else {
       this.props.onLogin(false);
     }
