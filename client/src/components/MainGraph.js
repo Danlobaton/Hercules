@@ -3,6 +3,11 @@ import {AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContain
 import PropTypes from 'prop-types'
 
 export class MainGraph extends Component {
+    state = {
+        count: 0,
+        dots: []
+    }
+
     // combines data from both lines to one structure 
     getCombinedData = () => {
         var graphData = []
@@ -13,13 +18,13 @@ export class MainGraph extends Component {
                         graphData.push({
                             'Day': this.props.predicted[i]['x'],
                             'Predicted': this.props.predicted[i]['y'],
-                            'Actual': this.props.actual[i]['y']
+                            'Current': this.props.actual[i]['y']
                         })
                     } else {
                         graphData.push({
                             'Day': this.props.predicted[i]['x'],
                             'Predicted': this.props.predicted[i]['y'],
-                            'Actual': null
+                            'Current': null
                         })
                     }
                 }
@@ -28,21 +33,105 @@ export class MainGraph extends Component {
         return graphData
     }
 
+    showLive = () => {
+        const current = this.props.current
+        var graphData = [], count = 0
+        let month = ''
+        let day = ''
+        if(current[0]) {
+            // if (current.length >= 8) {
+            //     current.map(coordinate => {
+            //         if (coordinate.x > current.length-9) {
+            //             switch (coordinate.day.substring(6, 7)) {
+            //                 case('0') : day = coordinate.day.substring(7); break
+            //                 default : day = coordinate.day.substring(6); break
+            //             }
+            //             switch(coordinate.day.substring(3,5)) {
+            //                 case('01') : month = 'Jan '; break
+            //                 case('02') : month = 'Feb '; break
+            //                 case('03') : month = 'Mar '; break
+            //                 case('04') : month = 'Apr '; break
+            //                 case('05') : month = 'May '; break
+            //                 case('06') : month = 'Jun '; break
+            //                 case('07') : month = 'Jul '; break
+            //                 case('08') : month = 'Aug '; break
+            //                 case('09') : month = 'Sept '; break
+            //                 case('10') : month = 'Oct '; break
+            //                 case('11') : month = 'Nov '; break
+            //                 case('12') : month = 'Dec '; break  
+            //             }
+            //             graphData.push({
+            //                 'Day': month + day,
+            //                 'Predicted': null,
+            //                 'Current': coordinate.y
+            //             })
+            //             count+=1
+            //         }
+            //     })
+            // } else {
+                current.map(coordinate => {
+                    switch (coordinate.day.substring(6, 7)) {
+                        case('0') : day = coordinate.day.substring(7); break
+                        default : day = coordinate.day.substring(6); break
+                    }
+                    switch(coordinate.day.substring(3,5)) {
+                        case('01') : month = 'Jan '; break
+                        case('02') : month = 'Feb '; break
+                        case('03') : month = 'Mar '; break
+                        case('04') : month = 'Apr '; break
+                        case('05') : month = 'May '; break
+                        case('06') : month = 'Jun '; break
+                        case('07') : month = 'Jul '; break
+                        case('08') : month = 'Aug '; break
+                        case('09') : month = 'Sept '; break
+                        case('10') : month = 'Oct '; break
+                        case('11') : month = 'Nov '; break
+                        case('12') : month = 'Dec '; break  
+                    }
+                    graphData.push({
+                        'Day': month + day,
+                        'Predicted': null,
+                        'Current': coordinate.y
+                    })
+                })
+                count+=1
+            // }
+        }
+        return graphData
+    }
+
     // Custom dot for actual line
     // TODO make dot automatically go to the last point
     displayDotActual = (e) => {
-        if (e.key === 'dot-7') {
-            return (
-                <circle 
-                    key={e.key}
-                    r={4}
-                    cx={e.cx}
-                    cy={e.cy}
-                    stroke={e.stroke}
-                    strokeWidth={2}
-                    fill={'white'}
-                />
-            )
+        let dot = 'dot-' + '0'
+        if (this.state.count) {
+            if (e.key === dot) {
+                return (
+                    <circle 
+                        key={e.key}
+                        r={4}
+                        cx={e.cx}
+                        cy={e.cy}
+                        stroke={e.stroke}
+                        strokeWidth={2}
+                        fill={'white'}
+                    />
+                )
+            }
+        } else {
+            if (e.key === 'dot-7') {
+                return (
+                    <circle 
+                        key={e.key}
+                        r={4}
+                        cx={e.cx}
+                        cy={e.cy}
+                        stroke={e.stroke}
+                        strokeWidth={2}
+                        fill={'white'}
+                    />
+                )
+            }
         }
     }
 
@@ -94,10 +183,10 @@ export class MainGraph extends Component {
                                 </linearGradient>
                             </defs>
                             <Area dot={this.displayDotPredicted} type='monotone' dataKey='Predicted' stroke='#6648B7' fill='url(#colorUv)' strokeDasharray="9 5" strokeWidth={3}/>
-                            <Area dot={this.displayDotActual} type='monotone' dataKey='Actual' fill='url(#colorPv)' stroke='#55C2E8' strokeWidth={3}/>
-                            <YAxis tick={{fill: '#A4A4A4', fontSize: 11 }} stroke={{}}/>
-                            <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval={0} />
-                            <Tooltip labelFormatter={function(value){return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}}/>
+                            <Area dot={this.displayDotActual} type='monotone' dataKey='Current' fill='url(#colorPv)' stroke='#55C2E8' strokeWidth={3}/>
+                            <YAxis tick={{fill: '#A4A4A4', fontSize: 11 }} stroke={{}} domain={['auto', dataMax=>(dataMax*1.2)]}/>
+                            <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval="preserveStartEnd" tickCount={6} width='110%'/>
+                            <Tooltip labelFormatter={function(value) {return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}} />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -106,7 +195,8 @@ export class MainGraph extends Component {
     }
 
     render() {
-        const data = this.getCombinedData()
+        this.showLive()
+        const data = this.props.currentActive ? this.showLive() : this.getCombinedData() 
         return (
             <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)'}}>
                 {data.length !== 0 && this.showGraph(data)}

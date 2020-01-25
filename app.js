@@ -33,6 +33,7 @@ app.get('/getKpis', getKpis);
 app.get('/getView', getView);
 app.get('/getAccounts', getAccounts);
 app.get('/checkUser', checkUser);
+app.get('/getCurrent', getCurrent)
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname,'client' ,'build', 'index.html'));
 });
@@ -74,6 +75,16 @@ function checkUser(req, res) {
   .catch(r => {
       console.log(r);
       res.json({fail: r});
+  })
+}
+
+function getCurrent(req, res) {
+  let {object_id, view, user_id, parent_id} = req.query;
+  sdk.returnCurrent(object_id, view, user_id, parent_id)
+  .then(r => res.json(r))
+  .catch(r => {
+    console.log(r);
+    res.json({fail: r});
   })
 }
 
