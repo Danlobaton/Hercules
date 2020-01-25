@@ -39,36 +39,36 @@ export class MainGraph extends Component {
         let month = ''
         let day = ''
         if(current[0]) {
-            if (current.length >= 8) {
-                current.map(coordinate => {
-                    if (coordinate.x > current.length-9) {
-                        switch (coordinate.day.substring(6, 7)) {
-                            case('0') : day = coordinate.day.substring(7); break
-                            default : day = coordinate.day.substring(6); break
-                        }
-                        switch(coordinate.day.substring(3,5)) {
-                            case('01') : month = 'Jan '; break
-                            case('02') : month = 'Feb '; break
-                            case('03') : month = 'Mar '; break
-                            case('04') : month = 'Apr '; break
-                            case('05') : month = 'May '; break
-                            case('06') : month = 'Jun '; break
-                            case('07') : month = 'Jul '; break
-                            case('08') : month = 'Aug '; break
-                            case('09') : month = 'Sept '; break
-                            case('10') : month = 'Oct '; break
-                            case('11') : month = 'Nov '; break
-                            case('12') : month = 'Dec '; break  
-                        }
-                        graphData.push({
-                            'Day': month + day,
-                            'Predicted': null,
-                            'Current': coordinate.y
-                        })
-                        count+=1
-                    }
-                })
-            } else {
+            // if (current.length >= 8) {
+            //     current.map(coordinate => {
+            //         if (coordinate.x > current.length-9) {
+            //             switch (coordinate.day.substring(6, 7)) {
+            //                 case('0') : day = coordinate.day.substring(7); break
+            //                 default : day = coordinate.day.substring(6); break
+            //             }
+            //             switch(coordinate.day.substring(3,5)) {
+            //                 case('01') : month = 'Jan '; break
+            //                 case('02') : month = 'Feb '; break
+            //                 case('03') : month = 'Mar '; break
+            //                 case('04') : month = 'Apr '; break
+            //                 case('05') : month = 'May '; break
+            //                 case('06') : month = 'Jun '; break
+            //                 case('07') : month = 'Jul '; break
+            //                 case('08') : month = 'Aug '; break
+            //                 case('09') : month = 'Sept '; break
+            //                 case('10') : month = 'Oct '; break
+            //                 case('11') : month = 'Nov '; break
+            //                 case('12') : month = 'Dec '; break  
+            //             }
+            //             graphData.push({
+            //                 'Day': month + day,
+            //                 'Predicted': null,
+            //                 'Current': coordinate.y
+            //             })
+            //             count+=1
+            //         }
+            //     })
+            // } else {
                 current.map(coordinate => {
                     switch (coordinate.day.substring(6, 7)) {
                         case('0') : day = coordinate.day.substring(7); break
@@ -95,7 +95,7 @@ export class MainGraph extends Component {
                     })
                 })
                 count+=1
-            }
+            // }
         }
         return graphData
     }
