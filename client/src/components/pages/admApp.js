@@ -132,10 +132,11 @@ export class App extends Component {
       incoming.history = this.state.history
     }
     var rawLevel = this.getRawLevel(level)
-    
+    console.log(rawLevel)
+
     // gets current data
-    if (rawLevel === 'campaign') {
-      fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[0].id}`)
+    if (rawLevel !== 'ad') {
+      fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[this.state.history.length-1].id}`)
       .then(res => res.json())
       .then(data => {
         incoming.currentLoaded = true
@@ -213,7 +214,6 @@ export class App extends Component {
   render() {
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, 
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
-    console.log(history[0] ? history[0].id : null, liveCurrent)
     return (
         <div className='app'>
           <AppHeader 
@@ -249,7 +249,7 @@ export class App extends Component {
                   level={this.state.data.level}
                   current={liveCurrent}
                   currentActive={currentActive}
-                  />
+                />
                 <div className='subGraphs'>
                   <div className='leftGraph'>
                     <div id='graph'>
