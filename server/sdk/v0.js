@@ -2,7 +2,7 @@
 
 const request = require('request-promise');
 const {build_uri, get_obj_score, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
-const {check_user_id} = require('../util/db')
+const {check_user_id, check_if_current, ad_object_current, get_last_date, check_personal, update_personal, update_last_login} = require('../util/db')
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 
@@ -203,25 +203,54 @@ module.exports.get_adaccounts = function(user_id, token) {
     });
 }
 
-module.exports.check_perm_token = function(user_id, tempToken) {
+module.exports.check_perm_token = function(user_id, tempToken, name, email) {
    return new Promise((resolve, reject) => {
         check_user_id(user_id, function(user_status) {
             if(user_status.user_exists) {
-                 // check if the user access token is still valid
-                 isTokenValid(user_status.permToken)
-                 .then(r => {
-                     r.valid ?  resolve({valid: true}) : resolve(getNewToken(user_id, tempToken));
-                 })
-                 .catch(r => {
-                     console.log(r)
-                     resolve({error: r});
-                 })
+                // updates last-login
+                update_last_login(user_id, function(user_status) {
+                    if (user_status.success) {
+                        console.log(user_status.message);
+                    } else {
+                        console.log('Something went wrong :(');
+                    }
+                })
+
+                // updates personal information
+                check_personal(user_id, function(upToDate) {
+                    if (upToDate) {
+                        console.log('User info up-to-date');
+                    } else {
+                        update_personal(user_id, name, email, function(user_status) {
+                            if(user_status.success) {
+                                console.log(user_status.message);
+                            }
+                        })
+                    }
+                })
+
+                // check if the user access token is still valid
+                isTokenValid(user_status.permToken)
+                .then(r => {
+                    r.valid ?  resolve({valid: true}) : resolve(getNewToken(user_id, tempToken));
+                })
+                .catch(r => {
+                    console.log(r)
+                    resolve({error: r});
+                })
              }
             else {
                 // creating new users
                 // telemetry data point here
-                onboardUser(user_id, tempToken)
+                onboardUser(user_id, tempToken, name, email)
                 .then(r => {
+                    update_last_login(user_id, function(user_status) {
+                        if (user_status.success) {
+                            console.log(user_status.message);
+                        } else {
+                            console.log('Something went wrong :(');
+                        }
+                    })
                     console.log(r);
                     resolve(r)
                 })
@@ -233,4 +262,65 @@ module.exports.check_perm_token = function(user_id, tempToken) {
             }
         })
    })
+}
+
+module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
+    return new Promise ((resolve, reject) => {
+        var coordinates = [], counter = 0
+        // checks if data is current
+        check_if_current(view, object_id, function(isValid) {
+            if (isValid) {
+                ad_object_current(view, object_id, function(campaign) {
+                    // formats into desired coordinates
+                    campaign.result.map(camp => {
+                        coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
+                        counter += 1;
+                    })
+                    resolve(coordinates)
+                })
+            } else {
+                get_last_date(view, object_id, function(date) {
+                    if(date) {
+                        let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}obj_level=${view}`
+                        request.get(fullPath,(err, res, body) => {
+                            let updated = JSON.parse(body)
+                            coordinates = []
+                            if (updated.success) {
+                                ad_object_current(view, object_id, function(campaign) {
+                                    // formats into desired coordinates
+                                    campaign.result.map(camp => {
+                                        coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
+                                        counter += 1;
+                                    })
+                                    resolve(coordinates)
+                                })                      
+                            } else { 
+                                console.log(updated.message)
+                                resolve([])
+                            }
+                        })
+                    } else { 
+                        let path = `https://hercdata.herokuapp.com/populate_ad_object?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&obj_level=${view}`
+                        request.get(path, (err, res, body) => {
+                            let updated = JSON.parse(body);
+                            console.log(updated.message)
+                            if (updated.success) {
+                                ad_object_current(view, object_id, function(campaign) {
+                                    // formats into desired coordinates
+                                    campaign.result.map(camp => {
+                                        coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
+                                        counter += 1;
+                                    })
+                                    resolve(coordinates)
+                                })                      
+                            } else { 
+                                console.log(update.message)
+                                resolve([]) 
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    })
 }

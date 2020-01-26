@@ -57,17 +57,19 @@ export class AppHeader extends Component {
         const {goHome, goBack, history} = this.props
         const master = this.props.master ? this.props.master : []
         this.state.first && this.listener()
+        let width = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 75 : 0
+        let bWidth = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 15 : 0
+        let border = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? '1px solid #707070' : 'none'
+        let cursor = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 'pointer' : 'default'
         return (
             <div style={headerStyle}>
                 <div style={innerHeaderStyle} >
-                    { history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 
-                    (<button 
-                        style={{background: 'none', outline:'none', border: 'none', width: 60, height: 60, borderRight: '1px solid #707070', transform: 'translateX(-10px)'}}
-                        onClick={goBack}    
+                    <button 
+                        style={{...backButton, width: width, borderRight: border, cursor: cursor}}
+                        onClick={history.length > 0 && history[history.length-1].level !== 'Ad Account' ? goBack : null}    
                     >
-                        <img src={back} height='30' style={{transform: 'rotate(180deg) translateX(8px)'}} />
-                    </button>)
-                    : null }
+                        <img src={back} height='30' style={{transition: 'width 350ms', width: bWidth, transform: 'rotate(180deg) translateX(-3px)'}} />
+                    </button>
                     <button style={homeButton} onClick={goHome}>
                         <img src={logo} height='30' alt='ADM'/>
                     </button>
@@ -96,17 +98,23 @@ const headerStyle = {
     minHeight: 60,
     background: 'black',
     display: 'flex',
-    alignItems: 'center'
 } 
 const innerHeaderStyle = {
     display: 'flex',
     width: 600,
     alignItems: 'baseline',
-    paddingLeft: 20,
 }
 const homeButton = {
     background: 'none',
-    border: 'none'
+    border: 'none',
+}
+const backButton = {
+    background: 'none', 
+    outline:'none', 
+    border: 'none', 
+    height: 60,  
+    transform: 'translateX(-10px)',
+    transition: 'width 350ms'
 }
 const headerDropdown = {
     position: 'relaitve',
