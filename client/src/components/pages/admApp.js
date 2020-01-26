@@ -213,7 +213,6 @@ export class App extends Component {
   render() {
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, 
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
-    console.log(history[0] ? history[0].id : null, liveCurrent)
     return (
         <div className='app'>
           <AppHeader 
