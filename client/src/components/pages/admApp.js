@@ -132,10 +132,19 @@ export class App extends Component {
       incoming.history = this.state.history
     }
     var rawLevel = this.getRawLevel(level)
-    
+    console.log(rawLevel)
     // gets current data
-    if (rawLevel === 'campaign') {
+    if (rawLevel === 'adaccount') {
       fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[0].id}`)
+      .then(res => res.json())
+      .then(data => {
+        incoming.currentLoaded = true
+        incoming.currentActive = true
+        incoming.liveCurrent = data
+        this.loadState(incoming)
+      })
+    } else if (rawLevel !== 'ad') {
+      fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[this.state.history.length-2].id}`)
       .then(res => res.json())
       .then(data => {
         incoming.currentLoaded = true

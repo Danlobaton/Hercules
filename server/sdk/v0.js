@@ -2,7 +2,7 @@
 
 const request = require('request-promise');
 const {build_uri, get_obj_score, onboardUser, isTokenValid, getNewToken} = require('../util/fb');
-const {check_user_id, check_if_current, campaign_current, get_last_date, check_personal, update_personal, update_last_login} = require('../util/db')
+const {check_user_id, check_if_current, ad_object_current, get_last_date, check_personal, update_personal, update_last_login} = require('../util/db')
 const {getPurchases, compare_revenue, compare_raw_score, ranker} = require('../util/helpers');
 
 
@@ -270,7 +270,7 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
         // checks if data is current
         check_if_current(view, object_id, function(isValid) {
             if (isValid) {
-                campaign_current(object_id, function(campaign) {
+                ad_object_current(view, object_id, function(campaign) {
                     // formats into desired coordinates
                     campaign.result.map(camp => {
                         coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
@@ -281,12 +281,12 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
             } else {
                 get_last_date(view, object_id, function(date) {
                     if(date) {
-                        let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}`
+                        let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}obj_level${view}`
                         request.get(fullPath,(err, res, body) => {
                             let updated = JSON.parse(body)
                             coordinates = []
                             if (updated.success) {
-                                campaign_current(object_id, function(campaign) {
+                                ad_object_current(view, object_id, function(campaign) {
                                     // formats into desired coordinates
                                     campaign.result.map(camp => {
                                         coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
@@ -305,7 +305,7 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                             let updated = JSON.parse(body);
                             console.log(updated.message)
                             if (updated.success) {
-                                campaign_current(object_id, function(campaign) {
+                                ad_object_current(view, object_id, function(campaign) {
                                     // formats into desired coordinates
                                     campaign.result.map(camp => {
                                         coordinates.push({'x': counter, 'y': camp.Purchases, 'day': camp['DATE_FORMAT(Date, "%y-%m-%d")']});
