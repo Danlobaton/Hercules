@@ -282,7 +282,7 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                 get_last_date(view, object_id, function(date) {
                     if(date) {
                         let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}`
-                        request.get(fullPath, (err, res, body) => {
+                        request.get(fullPath,(err, res, body) => {
                             let updated = JSON.parse(body)
                             coordinates = []
                             if (updated.success) {
@@ -294,13 +294,16 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                                     })
                                     resolve(coordinates)
                                 })                      
-                            } else { resolve([]) }
+                            } else { 
+                                console.log(updated.message)
+                                resolve([])
+                            }
                         })
                     } else { 
-                        
-                        let path = `https://hercdata.herokuapp.com/add_ad_object?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}`
+                        let path = `https://hercdata.herokuapp.com/populate_ad_object?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&obj_level=${view}`
                         request.get(path, (err, res, body) => {
                             let updated = JSON.parse(body);
+                            console.log(updated.message)
                             if (updated.success) {
                                 campaign_current(object_id, function(campaign) {
                                     // formats into desired coordinates
@@ -310,7 +313,10 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                                     })
                                     resolve(coordinates)
                                 })                      
-                            } else { resolve([]) }
+                            } else { 
+                                console.log(update.message)
+                                resolve([]) 
+                            }
                         })
                     }
                 })

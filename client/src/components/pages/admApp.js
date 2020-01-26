@@ -249,7 +249,7 @@ export class App extends Component {
                   level={this.state.data.level}
                   current={liveCurrent}
                   currentActive={currentActive}
-                  />
+                />
                 <div className='subGraphs'>
                   <div className='leftGraph'>
                     <div id='graph'>

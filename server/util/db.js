@@ -105,7 +105,7 @@ module.exports.update_last_login = function(userID, checkInsert) {
 }
 
 module.exports.check_if_current = function(view, object_id, getData) {
-  let sql = `SELECT * FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} AND Date = DATE_SUB(CURDATE(), INTERVAL 1 DAY);`;
+  let sql = `SELECT * FROM Facebook_Ads.CampaignDBreakdown WHERE CampaignID = ${object_id} AND Date = DATE_SUB(CURDATE(), INTERVAL 1 DAY);`;
   try {
     con.query(sql, function(err, result) {
       if(err) {
@@ -121,19 +121,19 @@ module.exports.check_if_current = function(view, object_id, getData) {
 }
 
 module.exports.get_last_date = function(view, object_id, getData) {
-  let sql = `SELECT DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${object_id} ORDER BY Date DESC LIMIT 1;`;
+  let sql = `SELECT DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.CampaignDBreakdown WHERE CampaignID = ${object_id} ORDER BY Date DESC LIMIT 1;`;
   try {
       con.query(sql, function(err, result) {
       if(err) {
         throw err;
       } else {
-        if (result.length !== 0) {
-          let date = result[0]['DATE_FORMAT(Date, "%y-%m-%d")']
+        if (result.length) {
+          let date = result[0]['DATE_FORMAT(Date, "%y-%m-%d")'] 
           let dateBegin = date.substring(0, 6)
           let day = (parseInt(date.substring(6, 9)) + 1).toString()
           let adjustedDate = '20' + dateBegin + day
           getData(adjustedDate)
-        } else { getData(false) }
+        } else getData(false)
       }
     })
   }
@@ -143,7 +143,7 @@ module.exports.get_last_date = function(view, object_id, getData) {
 }
 
 module.exports.campaign_current = function(camp_id, getData) {
-  let sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.DailyBreakdown WHERE CampaignID = ${camp_id} ORDER BY Date ASC LIMIT 60;`;
+  let sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.CampaignDBreakdown WHERE CampaignID = ${camp_id} ORDER BY Date ASC LIMIT 60;`;
   try {
     con.query(sql, function(err, result) {
       if (err)
