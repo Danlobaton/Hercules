@@ -68,8 +68,14 @@ body {
   padding-left: 5px;
   font-size: 18px;
 }
+.dropdowns { 
+  display: flex;
+  width: 400px;
+  justify-content: space-between;
+}
 .actionBar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between; 
   width: 90%;
   position: relative;
@@ -93,7 +99,7 @@ body {
   flex-direction: row;
   justify-content: space-around;
   min-width: 400px;
-  min-height: 330px;
+  min-height: 300px;
   padding-top: 15px
 }
 .rightGraph {
@@ -102,7 +108,7 @@ body {
   flex-direction: row;
   justify-content: space-around;
   min-width: 505px;
-  min-height: 330px;
+  min-height: 300px;
   padding-top: 15px
 }
 #graph {
@@ -178,7 +184,7 @@ body {
   color: white;
 }
 #hDropMenu {
-  background: white;
+  background-color: white;
   padding: 5px 5px 5px 15px;
   border: none;
   font-size: 15px;
@@ -186,7 +192,7 @@ body {
   width: 100%;
   text-align: start;
 }
-#hDropMenu:hover{
-  background: rgb(171, 154, 218);
+#hDropMenu:hover {
+  background-color: rgb(171, 154, 218);
   color: white;
 }

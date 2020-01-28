@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Data from '../data.json' // dummy data
 
 // component imports
-import Header from '../Header'
+import DateDropdown from '../DateDropdown'
 import ObjectList from '../ObjectList'
 import MainDropdown from '../MainDropdown'
 import PerformanceBar from '../PerformanceBar'
@@ -36,7 +36,7 @@ export class App extends Component {
     objectRecord: null, // this stays null
     loaded: false, // use for loading state
     liveCurrent: [],
-    currentActive: false
+    currentActive: false,
   }
 
   // makes state the origin ad account
@@ -212,7 +212,7 @@ export class App extends Component {
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, 
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
     return (
         <div className='app'>
@@ -240,16 +240,15 @@ export class App extends Component {
                   <p id='normFont'>PREDICTIVE MODEL:</p>
                   <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
                 </div>
-                <div className='actionBar'>
-                  <MainDropdown />
-                  <PerformanceBar level={liveLevel} sub={liveSub}/>
-                </div>
+                
                 <MainGraph 
                   actual={this.state.data.actual} 
                   predicted={this.state.data.predicted} 
                   level={this.state.data.level}
                   current={liveCurrent}
                   currentActive={currentActive}
+                  liveLevel={liveLevel}
+                  liveSub={liveSub}
                 />
                 <div className='subGraphs'>
                   <div className='leftGraph'>

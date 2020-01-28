@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
 import {AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer} from 'recharts'
+import MainDropdown from './MainDropdown'
+import DateDropdown from './DateDropdown'
+import PerformanceBar from './PerformanceBar'
 import PropTypes from 'prop-types'
 
 export class MainGraph extends Component {
     state = {
-        count: 0,
+        timeRange: 'Last 7 Days',
         dots: []
+    }
+
+    changeTimeRange = (timeRange) => {
+        this.setState({timeRange: timeRange})
     }
 
     // combines data from both lines to one structure 
@@ -33,69 +40,43 @@ export class MainGraph extends Component {
         return graphData
     }
 
+    formatCoordinate = (coordinate) => {
+        let month = ''
+        let day = ''
+        switch (coordinate.day.substring(6, 7)) {
+            case('0') : day = coordinate.day.substring(7); break
+            default : day = coordinate.day.substring(6); break
+        }
+        switch(coordinate.day.substring(3,5)) {
+            case('01') : month = 'Jan '; break
+            case('02') : month = 'Feb '; break
+            case('03') : month = 'Mar '; break
+            case('04') : month = 'Apr '; break
+            case('05') : month = 'May '; break
+            case('06') : month = 'Jun '; break
+            case('07') : month = 'Jul '; break
+            case('08') : month = 'Aug '; break
+            case('09') : month = 'Sept '; break
+            case('10') : month = 'Oct '; break
+            case('11') : month = 'Nov '; break
+            case('12') : month = 'Dec '; break  
+        }
+        return month + day
+    }
+
     showLive = () => {
         const current = this.props.current
         var graphData = [], count = 0
-        let month = ''
-        let day = ''
         if(current[0]) {
-            // if (current.length >= 8) {
-            //     current.map(coordinate => {
-            //         if (coordinate.x > current.length-9) {
-            //             switch (coordinate.day.substring(6, 7)) {
-            //                 case('0') : day = coordinate.day.substring(7); break
-            //                 default : day = coordinate.day.substring(6); break
-            //             }
-            //             switch(coordinate.day.substring(3,5)) {
-            //                 case('01') : month = 'Jan '; break
-            //                 case('02') : month = 'Feb '; break
-            //                 case('03') : month = 'Mar '; break
-            //                 case('04') : month = 'Apr '; break
-            //                 case('05') : month = 'May '; break
-            //                 case('06') : month = 'Jun '; break
-            //                 case('07') : month = 'Jul '; break
-            //                 case('08') : month = 'Aug '; break
-            //                 case('09') : month = 'Sept '; break
-            //                 case('10') : month = 'Oct '; break
-            //                 case('11') : month = 'Nov '; break
-            //                 case('12') : month = 'Dec '; break  
-            //             }
-            //             graphData.push({
-            //                 'Day': month + day,
-            //                 'Predicted': null,
-            //                 'Current': coordinate.y
-            //             })
-            //             count+=1
-            //         }
-            //     })
-            // } else {
-                current.map(coordinate => {
-                    switch (coordinate.day.substring(6, 7)) {
-                        case('0') : day = coordinate.day.substring(7); break
-                        default : day = coordinate.day.substring(6); break
-                    }
-                    switch(coordinate.day.substring(3,5)) {
-                        case('01') : month = 'Jan '; break
-                        case('02') : month = 'Feb '; break
-                        case('03') : month = 'Mar '; break
-                        case('04') : month = 'Apr '; break
-                        case('05') : month = 'May '; break
-                        case('06') : month = 'Jun '; break
-                        case('07') : month = 'Jul '; break
-                        case('08') : month = 'Aug '; break
-                        case('09') : month = 'Sept '; break
-                        case('10') : month = 'Oct '; break
-                        case('11') : month = 'Nov '; break
-                        case('12') : month = 'Dec '; break  
-                    }
-                    graphData.push({
-                        'Day': month + day,
-                        'Predicted': null,
-                        'Current': coordinate.y
-                    })
+            if ()
+            current.map(coordinate => {
+                graphData.push({
+                    'Day': this.formatCoordinate(coordinate),
+                    'Predicted': null,
+                    'Current': coordinate.y
                 })
-                count+=1
-            // }
+            })
+            count+=1
         }
         return graphData
     }
@@ -154,10 +135,17 @@ export class MainGraph extends Component {
     }
 
     // shows graph until the object displayed is at the ad level
-    showGraph = (data) => {
+    showGraph = (data, timeRange) => {
         if (this.props.level !== 'Ad') {
             return( 
-                <div style={{width: '100%', margin: '0 auto', height: '100%', zIndex: 1}}>
+                <div style={{width: '100%', margin: '0 auto', height: '83%', zIndex: 2}}>
+                    <div className='actionBar'>
+                      <div className='dropdowns'>
+                        <MainDropdown />
+                        <DateDropdown timeRange={timeRange} changeTimeRange={this.changeTimeRange} />
+                      </div>
+                      <PerformanceBar level={this.props.liveLevel} sub={this.props.liveSub}/>
+                    </div>
                     <div style={legendStyle}>
                         <div style={legendModule}>
                             <div style={legendIconBlue}/>Current Purchases
@@ -196,10 +184,12 @@ export class MainGraph extends Component {
 
     render() {
         this.showLive()
+        const {timeRange} = this.state
+        const {liveLevel} = this.props
         const data = this.props.currentActive ? this.showLive() : this.getCombinedData() 
         return (
-            <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)'}}>
-                {data.length !== 0 && this.showGraph(data)}
+            <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)',  minHeight: 325}}>
+                {liveLevel && this.showGraph(data, timeRange)}
             </div>
         )
     }

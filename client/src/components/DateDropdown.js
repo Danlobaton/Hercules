@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import Dropdown from 'react-bootstrap/Dropdown'
 
-export class MainDropdown extends Component {
+export class DateDropdown extends Component {
     container = React.createRef(); // reference to the container of the DOM element
     state = {
-        filterOption: 'Purchases',
-        open: false
+        open: false,
+        possibleItems: ['Last 7 Days', 'Last 14 Days', 'Last 28 Days', 'Last 2 Months']
     }
 
     // sets up event listener to check when outside clicks occur to close dropdown
@@ -23,18 +23,31 @@ export class MainDropdown extends Component {
     handleButtonClick = () => {
         this.setState({open: !this.state.open})
     }
+
+    renderListItems = (item) => {
+        if (this.props.timeRange) {
+            return (
+                <li id='dropMenu' onClick={this.props.changeTimeRange.bind(this, item)}>{item}</li>
+            )
+        } else {
+            return null
+        }
+    }
     
     render() {
+        const {possibleItems, open} = this.state
+        const {timeRange} = this.props
         return (
             <div style={{display: 'flex'}}>
                 <div style={container} ref={this.container}>
                     <button type="button" style={filterStyle} onClick={this.handleButtonClick}>
-                        {this.state.filterOption}<div style={{fontSize: 6, fontWeight: 750}}>▼</div>
+                        {timeRange}<div style={{fontSize: 6, fontWeight: 750}}>▼</div>
                     </button>
-                    {this.state.open && (
+                    {open && (
                     <div style={dropdown}>
                     <ul style={ul} onClick={this.handleButtonClick}>
-                        <li id='dropMenu'>Option 1</li>
+                        {possibleItems.filter(item => item !== timeRange)
+                        .map(item => this.renderListItems(item))}
                     </ul>
                     </div>)}
                 </div>
@@ -48,7 +61,7 @@ const container = {
 }
 
 const filterStyle = {
-    width: 200,
+    width: 175,
     border: '1px solid #7F68C2',
     textAlign: 'left',
     display: 'flex',
@@ -89,4 +102,4 @@ const ilHovered = {
     background: '#6648B7'
 }
 
-export default MainDropdown
+export default DateDropdown

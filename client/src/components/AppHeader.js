@@ -91,7 +91,6 @@ export class AppHeader extends Component {
         )
     }
 }
-
 const headerStyle = {
     width: '100%',
     height: 60,
