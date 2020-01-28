@@ -59,7 +59,6 @@ export class ProfitGraph extends Component {
         // if the label is at the upper 75% of the graph, then it will display a vertical label
         // else the label will be displayed on the top of the bar graph
         if(e.y < this.state.height * .75) {
-            console.log(e.fill)
             return(
                 <Text height={e.height} 
                 width={110} 
@@ -114,7 +113,7 @@ export class ProfitGraph extends Component {
                 <ResponsiveContainer>
                     <BarChart data={data}>
                         <CartesianGrid vertical={false} stroke='#e3e3e3'/>
-                        <Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}} />
+                        {this.state.data.length !== 0 && (<Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}} />)}
                         <Bar type='monotone' dataKey='Amount Spent' stroke='#6648B7' fill='#FAF9F7' strokeWidth={3} barSize={35}>
                             <LabelList dataKey='Name' position='outside' stroke='#707070' fill='#707070' content={this.titleLabel}/>
                             <LabelList dataKey='Amount Spent' position='' stroke='#6648B7' fill='#6648B7' content={this.generalLabel}/>
@@ -124,6 +123,7 @@ export class ProfitGraph extends Component {
                         </Bar>
                         <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]} />
                         <XAxis dataKey='Name' tick={false} height={0} />
+                        
                     </BarChart>
                 </ResponsiveContainer>
             </div>

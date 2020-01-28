@@ -17,7 +17,7 @@ export class InfoCol extends Component {
 
     // Rounds a double
     roundDouble = (num) => {
-        var strDub = num ? num.toString() : '0.0'
+        var strDub = num ? num.toString() : '0'
         return strDub.substring(0, strDub.indexOf('.') + 3)
     }
 

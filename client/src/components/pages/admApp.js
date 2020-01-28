@@ -240,7 +240,6 @@ export class App extends Component {
                   <p id='normFont'>PREDICTIVE MODEL:</p>
                   <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
                 </div>
-                
                 <MainGraph 
                   actual={this.state.data.actual} 
                   predicted={this.state.data.predicted} 

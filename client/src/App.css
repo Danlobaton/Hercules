@@ -177,7 +177,8 @@ body {
   background: white;
   padding: 5px;
   border: 0;
-  font-size: 11px
+  font-size: 11px;
+  cursor: pointer;
 }
 #dropMenu:hover {
   background: rgb(171, 154, 218);

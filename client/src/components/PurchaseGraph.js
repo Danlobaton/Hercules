@@ -66,7 +66,7 @@ export class PurchaseGraph extends Component {
                     <ResponsiveContainer>
                         <BarChart data={data}>
                             <CartesianGrid vertical={false} stroke='#e3e3e3'/>
-                            <Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}}/>
+                            {this.state.data.length !== 0 && (<Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}}/>)}
                             <Bar type='monotone' dataKey='Purchases' stroke='#6648B7' fill='#FAF9F7' strokeWidth={3} barSize={40}>
                                 <LabelList dataKey='Purchases' position='top' stroke='#6648B7' fill='#6648B7' />
                                 <LabelList dataKey='Name' position='outside' stroke='#707070' fill='#707070' content={this.titleLabel}/>

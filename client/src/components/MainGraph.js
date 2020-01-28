@@ -65,18 +65,35 @@ export class MainGraph extends Component {
     }
 
     showLive = () => {
-        const current = this.props.current
-        var graphData = [], count = 0
-        if(current[0]) {
-            if ()
-            current.map(coordinate => {
-                graphData.push({
-                    'Day': this.formatCoordinate(coordinate),
-                    'Predicted': null,
-                    'Current': coordinate.y
+        const current = this.props.current, currentLength = current.length
+        const timeRange = this.state.timeRange
+        let upperLimit, graphData = [];
+        switch (timeRange) {
+            case ('Last 7 Days') : upperLimit = 7; break
+            case ('Last 14 Days') : upperLimit = 14; break
+            case ('Last 28 Days') : upperLimit = 28; break
+            case ('Last 2 Months') : upperLimit = 60; break
+        }   
+        if (current[0]) {
+            if (currentLength >= upperLimit) {
+                current.forEach(coordinate => {
+                    if (coordinate.x >= currentLength - upperLimit) {
+                        graphData.push({
+                            'Day': this.formatCoordinate(coordinate),
+                            'Predicted': null,
+                            'Current': coordinate.y
+                        })
+                    }
                 })
-            })
-            count+=1
+            } else {
+                current.forEach(coordinate => {
+                    graphData.push({
+                        'Day': this.formatCoordinate(coordinate),
+                        'Predicted': null,
+                        'Current': coordinate.y
+                    })
+                })
+            }
         }
         return graphData
     }
@@ -84,42 +101,16 @@ export class MainGraph extends Component {
     // Custom dot for actual line
     // TODO make dot automatically go to the last point
     displayDotActual = (e) => {
-        let dot = 'dot-' + '0'
-        if (this.state.count) {
-            if (e.key === dot) {
-                return (
-                    <circle 
-                        key={e.key}
-                        r={4}
-                        cx={e.cx}
-                        cy={e.cy}
-                        stroke={e.stroke}
-                        strokeWidth={2}
-                        fill={'white'}
-                    />
-                )
-            }
-        } else {
-            if (e.key === 'dot-7') {
-                return (
-                    <circle 
-                        key={e.key}
-                        r={4}
-                        cx={e.cx}
-                        cy={e.cy}
-                        stroke={e.stroke}
-                        strokeWidth={2}
-                        fill={'white'}
-                    />
-                )
-            }
+        let timeRange = this.state.timeRange, current = this.props.current
+        let upperLimit, dot;
+        switch (timeRange) {
+            case('Last 7 Days') : upperLimit = 7; break
+            case('Last 14 Days') : upperLimit = 14; break
+            case('Last 28 Days') : upperLimit = 28; break
+            case('Last 2 Months') : upperLimit = 60; break
         }
-    }
-
-    // Custom dot for predicted line
-    // TODO make last two dots automatically go to the last points
-    displayDotPredicted = (e) => {
-        if(e.key === 'dot-7' || e.key === 'dot-9') {
+        dot = current.length >= upperLimit ? 'dot-' + (upperLimit-1) : 'dot-' + (current.length-1)
+        if (e.key === dot) {
             return (
                 <circle 
                     key={e.key}
@@ -133,6 +124,24 @@ export class MainGraph extends Component {
             )
         }
     }
+
+    // Custom dot for predicted line
+    // TODO make last two dots automatically go to the last points
+    // displayDotPredicted = (e) => {
+    //     if(e.key === 'dot-7' || e.key === 'dot-9') {
+    //         return (
+    //             <circle 
+    //                 key={e.key}
+    //                 r={4}
+    //                 cx={e.cx}
+    //                 cy={e.cy}
+    //                 stroke={e.stroke}
+    //                 strokeWidth={2}
+    //                 fill={'white'}
+    //             />
+    //         )
+    //     }
+    // }
 
     // shows graph until the object displayed is at the ad level
     showGraph = (data, timeRange) => {
@@ -174,7 +183,7 @@ export class MainGraph extends Component {
                             <Area dot={this.displayDotActual} type='monotone' dataKey='Current' fill='url(#colorPv)' stroke='#55C2E8' strokeWidth={3}/>
                             <YAxis tick={{fill: '#A4A4A4', fontSize: 11 }} stroke={{}} domain={['auto', dataMax=>(dataMax*1.2)]}/>
                             <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval="preserveStartEnd" tickCount={6} width='110%'/>
-                            <Tooltip labelFormatter={function(value) {return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}} />
+                            <Tooltip labelFormatter={function(value) {return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}} animationEasing='linear'/>
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -185,11 +194,11 @@ export class MainGraph extends Component {
     render() {
         this.showLive()
         const {timeRange} = this.state
-        const {liveLevel} = this.props
+        const {liveLevel, liveSub} = this.props
         const data = this.props.currentActive ? this.showLive() : this.getCombinedData() 
         return (
             <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)',  minHeight: 325}}>
-                {liveLevel && this.showGraph(data, timeRange)}
+                {liveSub && this.showGraph(data, timeRange)}
             </div>
         )
     }
