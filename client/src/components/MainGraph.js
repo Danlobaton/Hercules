@@ -64,6 +64,38 @@ export class MainGraph extends Component {
         return month + day
     }
 
+    getDateRange = (firstDate, upperLimit) => {
+        let day = parseInt(firstDate.substring(6));
+        let month = parseInt(firstDate.substring(3,5))
+        let year = parseInt(firstDate.substring(0,2))
+        let fillerDays = [], count = 0
+        for (let i = upperLimit; i > 0; i--) {
+            count++
+            day--
+            if (day === 0) {
+                month--
+                if (month === 0) {
+                    month = 12; 
+                    year--;
+                }
+                switch (true) {
+                    case (month <= 6 && month % 2 === 0 && month !== 2) : day = 30; break
+                    case (month <= 6 && month !== 2) : day = 31; break
+                    case (month > 6 && month % 2 === 0) : day = 31; break
+                    case (month > 6) : day = 30; break
+                    case (month === 2 && year % 4 === 0) : day = 29; break 
+                    default : day = 28; break
+                }
+                
+            }
+            fillerDays.push({
+                'day': `${year}-${month}-${day}`,
+                'y': 0
+            })
+        }
+        return fillerDays.reverse()
+    }
+
     showLive = () => {
         const current = this.props.current, currentLength = current.length
         const timeRange = this.state.timeRange
@@ -86,7 +118,8 @@ export class MainGraph extends Component {
                     }
                 })
             } else {
-                current.forEach(coordinate => {
+                let adjusted = [...this.getDateRange(current[0].day, upperLimit-currentLength), ...current]
+                adjusted.forEach(coordinate => {
                     graphData.push({
                         'Day': this.formatCoordinate(coordinate),
                         'Predicted': null,
@@ -109,7 +142,7 @@ export class MainGraph extends Component {
             case('Last 28 Days') : upperLimit = 28; break
             case('Last 2 Months') : upperLimit = 60; break
         }
-        dot = current.length >= upperLimit ? 'dot-' + (upperLimit-1) : 'dot-' + (current.length-1)
+        dot = 'dot-' + (upperLimit-1)
         if (e.key === dot) {
             return (
                 <circle 
@@ -124,24 +157,6 @@ export class MainGraph extends Component {
             )
         }
     }
-
-    // Custom dot for predicted line
-    // TODO make last two dots automatically go to the last points
-    // displayDotPredicted = (e) => {
-    //     if(e.key === 'dot-7' || e.key === 'dot-9') {
-    //         return (
-    //             <circle 
-    //                 key={e.key}
-    //                 r={4}
-    //                 cx={e.cx}
-    //                 cy={e.cy}
-    //                 stroke={e.stroke}
-    //                 strokeWidth={2}
-    //                 fill={'white'}
-    //             />
-    //         )
-    //     }
-    // }
 
     // shows graph until the object displayed is at the ad level
     showGraph = (data, timeRange) => {

@@ -48,7 +48,7 @@ const container = {
 }
 
 const filterStyle = {
-    width: 200,
+    width: 215,
     border: '1px solid #7F68C2',
     textAlign: 'left',
     display: 'flex',
