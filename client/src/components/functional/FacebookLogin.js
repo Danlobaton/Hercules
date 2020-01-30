@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 
 export default class FacebookLogin extends Component {
+  state = {
+    FBSession: window.FB
+  }
+
   componentDidMount() {
-    if (window.FB) {
+    if (this.state.FBSession) {
       this.initializeFacebookLogin()
-    } else
+    } else {
       document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
+    }
   }
 
   componentWillUnmount() {
@@ -16,7 +21,6 @@ export default class FacebookLogin extends Component {
    * Init FB object and check Facebook Login status
    */
   initializeFacebookLogin = () => {
-    this.setState({listenerActive: true})
     this.FB = window.FB;
     this.checkLoginStatus();
   }
@@ -58,11 +62,16 @@ export default class FacebookLogin extends Component {
         this.props.onLogin(true, result);
       });
     } else {
+      console.log('login failure')
       this.props.onLogin(false);
     }
   }
 
   render() {
+    // re-initialize facebook login if failure 
+    if (this.state.FBSession) {
+      this.initializeFacebookLogin()
+    }
     let {children} = this.props;
     return (
       <div onClick={this.facebookLogin} >
