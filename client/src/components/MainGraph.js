@@ -11,6 +11,7 @@ export class MainGraph extends Component {
         dots: []
     }
 
+    // current upper limit for main graph
     changeTimeRange = (timeRange) => {
         this.setState({timeRange: timeRange})
     }
@@ -40,14 +41,18 @@ export class MainGraph extends Component {
         return graphData
     }
 
-    formatCoordinate = (coordinate) => {
+    formatDate = (date) => {
         let month = ''
         let day = ''
-        switch (coordinate.day.substring(6, 7)) {
-            case('0') : day = coordinate.day.substring(7); break
-            default : day = coordinate.day.substring(6); break
+
+        // adds 0 to single digit days  
+        switch (date.substring(6, 7)) {
+            case('0') : day = date.substring(7); break
+            default : day = date.substring(6); break
         }
-        switch(coordinate.day.substring(3,5)) {
+
+        // add month abbreviation 
+        switch(date.substring(3,5)) {
             case('01') : month = 'Jan '; break
             case('02') : month = 'Feb '; break
             case('03') : month = 'Mar '; break
@@ -64,20 +69,24 @@ export class MainGraph extends Component {
         return month + day
     }
 
-    getDateRange = (firstDate, upperLimit) => {
-        let day = parseInt(firstDate.substring(6));
-        let month = parseInt(firstDate.substring(3,5))
-        let year = parseInt(firstDate.substring(0,2))
-        let fillerDays = [], count = 0
-        for (let i = upperLimit; i > 0; i--) {
-            count++
+    fillDateRange = (coordinates, limit) => {
+        let date = new Date().toJSON().slice(0,10).substring(2)
+        let year = parseInt(date.substring(0,2))
+        let month = parseInt(date.substring(3,5))
+        let day = parseInt(date.substring(6))
+        let adjustedDates = [], coordIndex = coordinates.length
+
+        for (let i = limit; i > 0; i--) {
             day--
             if (day === 0) {
                 month--
+                // resets month when year is subtracted
                 if (month === 0) {
                     month = 12; 
                     year--;
                 }
+
+                // handles different amount of days in month
                 switch (true) {
                     case (month <= 6 && month % 2 === 0 && month !== 2) : day = 30; break
                     case (month <= 6 && month !== 2) : day = 31; break
@@ -86,53 +95,53 @@ export class MainGraph extends Component {
                     case (month === 2 && year % 4 === 0) : day = 29; break 
                     default : day = 28; break
                 }
-                
             }
-            fillerDays.push({
-                'day': `${year}-${month}-${day}`,
-                'y': 0
-            })
+
+            // sets date to current (in scope of for-loop)
+            date = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
+            
+            // handles gaps in time range
+            if(coordIndex > 0 && date === coordinates[coordIndex-1].day) {
+                adjustedDates.push(coordinates[coordIndex-1])
+                coordIndex--
+            } else {
+                adjustedDates.push({
+                    'day': date,
+                    'y': 0
+                })
+            }
         }
-        return fillerDays.reverse()
+        return adjustedDates.reverse()
     }
 
     showLive = () => {
-        const current = this.props.current, currentLength = current.length
+        const current = this.props.current
         const timeRange = this.state.timeRange
         let upperLimit, graphData = [];
+        
+        // sets limit according to drop-down option
         switch (timeRange) {
             case ('Last 7 Days') : upperLimit = 7; break
             case ('Last 14 Days') : upperLimit = 14; break
             case ('Last 28 Days') : upperLimit = 28; break
             case ('Last 2 Months') : upperLimit = 60; break
         }   
+
         if (current[0]) {
-            if (currentLength >= upperLimit) {
-                current.forEach(coordinate => {
-                    if (coordinate.x >= currentLength - upperLimit) {
-                        graphData.push({
-                            'Day': this.formatCoordinate(coordinate),
-                            'Predicted': null,
-                            'Current': coordinate.y
-                        })
-                    }
+            // fills gap in current data and iterates over it
+            let adjusted = this.fillDateRange(current, upperLimit) 
+            adjusted.forEach(coordinate => {
+                graphData.push({
+                    'Day': this.formatDate(coordinate.day),
+                    'Predicted': null,
+                    'Current': coordinate.y
                 })
-            } else {
-                let adjusted = [...this.getDateRange(current[0].day, upperLimit-currentLength), ...current]
-                adjusted.forEach(coordinate => {
-                    graphData.push({
-                        'Day': this.formatCoordinate(coordinate),
-                        'Predicted': null,
-                        'Current': coordinate.y
-                    })
-                })
-            }
+            })
         }
         return graphData
     }
 
-    // Custom dot for actual line
-    // TODO make dot automatically go to the last point
+    // Custom dot for Current line
     displayDotActual = (e) => {
         let timeRange = this.state.timeRange, current = this.props.current
         let upperLimit, dot;

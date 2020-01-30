@@ -97,6 +97,9 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
+    if (level === 'Ad') {
+      return;
+    }
     // remove later
     if (subMessage) console.log(subMessage)
     // the incoming response object that will be loaded
@@ -122,7 +125,7 @@ export class App extends Component {
         costPerPurchase: ''
       }
     }
-    
+
     // checks history to see what needs to be modified
     if (level === 'Ad Account') 
     incoming.history = [{id: id, level: level, name: name}]
