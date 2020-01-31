@@ -49,7 +49,7 @@ export class ProfitGraph extends Component {
             angle={-90}
             style={{fontSize: 12, fontWeight: 300}}
             >
-                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value}
+                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value /* Limits name length to 30 and ellipsis */}
             </Text>
         )
     }
@@ -123,7 +123,6 @@ export class ProfitGraph extends Component {
                         </Bar>
                         <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]} />
                         <XAxis dataKey='Name' tick={false} height={0} />
-                        
                     </BarChart>
                 </ResponsiveContainer>
             </div>

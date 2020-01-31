@@ -38,7 +38,7 @@ export class PurchaseGraph extends Component {
             angle={-90}
             style={{fontSize: 12, fontWeight: 300}}
             >
-                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value}
+                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value /* limits length to 30 and ellipsis */}
             </Text>
         )
     }
