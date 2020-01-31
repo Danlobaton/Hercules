@@ -112,14 +112,14 @@ export class ProfitGraph extends Component {
             <div style={{height: '76%', width: '100%', transform: 'translateX(-20px)'}}>
                 <ResponsiveContainer>
                     <BarChart data={data}>
-                        <CartesianGrid vertical={false} stroke='#e3e3e3'/>
+                        <CartesianGrid vertical={false} stroke='#333028'/>
                         {this.state.data.length !== 0 && (<Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}} />)}
-                        <Bar type='monotone' dataKey='Amount Spent' stroke='#6648B7' fill='#FAF9F7' strokeWidth={3} barSize={35}>
-                            <LabelList dataKey='Name' position='outside' stroke='#707070' fill='#707070' content={this.titleLabel}/>
-                            <LabelList dataKey='Amount Spent' position='' stroke='#6648B7' fill='#6648B7' content={this.generalLabel}/>
+                        <Bar type='monotone' dataKey='Amount Spent' stroke='#6648B7' strokeWidth={3} barSize={35}>
+                            <LabelList dataKey='Name' position='outside' stroke='#C2C2C2' fill='#C2C2C2' content={this.titleLabel}/>
+                            <LabelList dataKey='Amount Spent' position='' stroke='white' fill='white' content={this.generalLabel}/>
                         </Bar>
-                        <Bar type='monotone' dataKey='Revenue' stroke='#55C2E8' fill='#FAF9F7' strokeWidth={3} barSize={35}>
-                            <LabelList dataKey='Revenue' position='' stroke='#55C2E8' fill='#55C2E8' content={this.generalLabel}/>
+                        <Bar type='monotone' dataKey='Revenue' stroke='#55C2E8' strokeWidth={3} barSize={35}>
+                            <LabelList dataKey='Revenue' position='' stroke='white' fill='white' content={this.generalLabel}/>
                         </Bar>
                         <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]} />
                         <XAxis dataKey='Name' tick={false} height={0} />

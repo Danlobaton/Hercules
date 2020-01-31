@@ -65,11 +65,11 @@ export class PurchaseGraph extends Component {
                 <div style={{height: '100%', width: '100%'}}>
                     <ResponsiveContainer>
                         <BarChart data={data}>
-                            <CartesianGrid vertical={false} stroke='#e3e3e3'/>
+                            <CartesianGrid vertical={false} stroke='#333028'/>
                             {this.state.data.length !== 0 && (<Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}}/>)}
-                            <Bar type='monotone' dataKey='Purchases' stroke='#6648B7' fill='#FAF9F7' strokeWidth={3} barSize={40}>
-                                <LabelList dataKey='Purchases' position='top' stroke='#6648B7' fill='#6648B7' />
-                                <LabelList dataKey='Name' position='outside' stroke='#707070' fill='#707070' content={this.titleLabel}/>
+                            <Bar type='monotone' dataKey='Purchases' stroke='#6648B7' strokeWidth={3} barSize={40}>
+                                <LabelList dataKey='Purchases' position='top' stroke='white' fill='white' />
+                                <LabelList dataKey='Name' position='outside' stroke='#C2C2C2' fill='#C2C2C2' content={this.titleLabel}/>
                             </Bar> 
                             <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]}/>
                             <XAxis dataKey='Name' tick={false} height={0} />
