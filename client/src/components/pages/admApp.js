@@ -36,7 +36,7 @@ export class App extends Component {
     objectRecord: null, // this stays null
     loaded: false, // use for loading state
     liveCurrent: [],
-    currentActive: false,
+    currentActive: false
   }
 
   // makes state the origin ad account
@@ -186,11 +186,12 @@ export class App extends Component {
     fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
     .then(res => res.json())
     .then((data) => {
-        this.setState({
-          liveAdAccounts: data,
-          history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
-        }) 
-        this.changeView(data[0].id, data[0].level, data[0].name) 
+      data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+      this.setState({
+        liveAdAccounts: data,
+        history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
+      }) 
+      this.changeView(data[0].id, data[0].level, data[0].name) 
     })
   }
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import logo from '../logo.png'
-import back from '../back.png'
+import back from '../back_button.svg'
 import PropTypes from 'prop-types'
 
 export class AppHeader extends Component {
@@ -58,8 +58,8 @@ export class AppHeader extends Component {
         const master = this.props.master ? this.props.master : []
         this.state.first && this.listener()
         let width = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 75 : 0
-        let bWidth = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 15 : 0
-        let border = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? '1px solid #707070' : 'none'
+        let bWidth = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? '100%' : 0
+        let border = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? '1px solid #9e9e9e' : 'none'
         let cursor = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 'pointer' : 'default'
         return (
             <div style={headerStyle}>
@@ -68,7 +68,7 @@ export class AppHeader extends Component {
                         style={{...backButton, width: width, borderRight: border, cursor: cursor}}
                         onClick={history.length > 0 && history[history.length-1].level !== 'Ad Account' ? goBack : null}    
                     >
-                        <img src={back} height='30' style={{transition: 'width 350ms', width: bWidth, transform: 'rotate(180deg) translateX(-3px)'}} />
+                        <img src={back} style={{transition: 'width 350ms', width: bWidth, transform: ' translate(4px, -2px)'}} />
                     </button>
                     <button style={homeButton} onClick={goHome}>
                         <img src={logo} height='30' alt='ADM'/>

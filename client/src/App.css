@@ -112,7 +112,7 @@ body {
   padding-top: 15px
 }
 #graph {
-  background: #FAF9F7;
+  background: linear-gradient(#181818,#020202);
   width: 99%;
   height: 100%;
   border-radius: 5px 5px 0 0;
@@ -127,7 +127,7 @@ body {
   bottom: 0;
 }
 #graphContent p {
-  color: #6648B7;
+  color: white;
   font-size: 13px;
   padding: 10px 0 0 15px;
   font-weight: 500;
@@ -137,7 +137,7 @@ body {
   display: flex;
   position: absolute;
   font-size: 10px;
-  color: #707070;
+  color: white;
   transform: translate(8px, -25px)
 }
 #legendModule {
