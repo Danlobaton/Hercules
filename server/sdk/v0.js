@@ -152,6 +152,7 @@ module.exports.get_view_kpis = function(object_id, view, token) {
                         purchases,
                         revenue
                     };
+                    console.log(payload)
                     resolve(payload);
                 }
                

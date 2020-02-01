@@ -86,7 +86,7 @@ export class ObjectList extends Component {
                             key={object.id}
                             nextLevel={nextLevel}
                         />
-                    )) : objects.map((object) => (
+                    )) : objects.length && objects.map((object) => (
                         <ObjectListItem 
                             changeData={changeData} 
                             object={object}

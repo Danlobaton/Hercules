@@ -36,7 +36,8 @@ export class App extends Component {
     objectRecord: null, // this stays null
     loaded: false, // use for loading state
     liveCurrent: [],
-    currentActive: false
+    currentActive: false,
+    error: false
   }
 
   // makes state the origin ad account
@@ -50,6 +51,27 @@ export class App extends Component {
     this.changeView(history[history.length-1].id, history[history.length-1].level, history[history.length-1].name)
   }
   
+  renderErrorMessage = (isActive) => {
+    const errorStyle = {
+      position: 'absolute',
+      background: '#fc6060',
+      padding: '10px 25px',
+      width: 330,
+      color: 'white',
+      fontWeight: 600,
+      fontSize: 12,
+      left: '50%',
+      marginLeft: '-165px',
+      textAlign: 'center',
+      transition: 'top 350ms'
+    }
+    return (
+      <div style={{...errorStyle, top: isActive}}>
+        Something went wrong. Please try again later.
+      </div>
+    )
+  }
+
   // gets children's level
   getNextLevel = (level) => {
     switch (true) {
@@ -142,10 +164,15 @@ export class App extends Component {
       fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[this.state.history.length-1].id}`)
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         incoming.currentLoaded = true
         incoming.currentActive = true
         incoming.liveCurrent = data
         this.loadState(incoming)
+      })
+      .catch(err => {
+        console.log(err)
+        this.setState({error: true})
       })
     } else {
       incoming.currentLoaded = true
@@ -155,15 +182,21 @@ export class App extends Component {
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => { 
+      console.log(data)
       incoming.sub = data
       incoming.subLoaded = true 
       this.loadState(incoming)
+    })
+    .catch(err => {
+      console.log(err)
+      this.setState({error: true})
     })
     
     // gets current ad objects Kpis
     fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
+      console.log(data)
       incoming.level = data.level
       incoming.nextLevel = this.getNextLevel(data.level)
       incoming.name = data.name
@@ -179,11 +212,15 @@ export class App extends Component {
       incoming.kpiLoaded = true
       this.loadState(incoming)
     })
+    .catch(err => {
+      console.log(err)
+      this.setState({error: true})
+    })
   }
   
   // Initializes the ad account list and changes view to first ad account in list
   componentDidMount() {
-    fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
+    fetch(`/getAccounts?user_id=${this.state.id}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
       data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
@@ -192,6 +229,10 @@ export class App extends Component {
         history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
       }) 
       this.changeView(data[0].id, data[0].level, data[0].name) 
+    })
+    .catch(err => {
+      console.log(err)
+      this.setState({error: true})
     })
   }
 
@@ -216,10 +257,12 @@ export class App extends Component {
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub,
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, error,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
+    let errorActive = error ? '10px' : '-5%'
     return (
         <div className='app'>
+          {this.renderErrorMessage(errorActive)}
           <AppHeader 
             goHome={this.goHome}
             level={liveLevel}

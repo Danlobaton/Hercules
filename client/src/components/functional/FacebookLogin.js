@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default class FacebookLogin extends Component {
   state = {
-    FBSession: window.FB
+    FBSession: window.FB,
   }
 
   // initializes facebook login on component mount
@@ -24,6 +24,7 @@ export default class FacebookLogin extends Component {
 
   // handles connection to Facebook, and logs in when not connected
   facebookLogin = () => {
+    this.setState({firstInit: true})
     if (!this.FB) {
       alert('Facebook Object Initialization failure')
       return;
@@ -48,9 +49,11 @@ export default class FacebookLogin extends Component {
         };
         this.props.onLogin(true, result);
       });
-    } else {
+    } else if (response.status === 'not_authorized') {
       console.log('login failure')
-      this.props.onLogin(false);
+      this.props.onLogin(false, {error: true});
+    } else {
+      this.props.onLogin(false)
     }
   }
 
