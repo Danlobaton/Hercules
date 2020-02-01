@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Data from '../data.json' // dummy data
 
 // component imports
-import Header from '../Header'
+import DateDropdown from '../DateDropdown'
 import ObjectList from '../ObjectList'
 import MainDropdown from '../MainDropdown'
 import PerformanceBar from '../PerformanceBar'
@@ -97,6 +97,9 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
+    if (level === 'Ad') {
+      return;
+    }
     // remove later
     if (subMessage) console.log(subMessage)
     // the incoming response object that will be loaded
@@ -122,7 +125,7 @@ export class App extends Component {
         costPerPurchase: ''
       }
     }
-    
+
     // checks history to see what needs to be modified
     if (level === 'Ad Account') 
     incoming.history = [{id: id, level: level, name: name}]
@@ -183,11 +186,12 @@ export class App extends Component {
     fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
     .then(res => res.json())
     .then((data) => {
-        this.setState({
-          liveAdAccounts: data,
-          history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
-        }) 
-        this.changeView(data[0].id, data[0].level, data[0].name) 
+      data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+      this.setState({
+        liveAdAccounts: data,
+        history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
+      }) 
+      this.changeView(data[0].id, data[0].level, data[0].name) 
     })
   }
 
@@ -212,7 +216,7 @@ export class App extends Component {
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, 
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
     return (
         <div className='app'>
@@ -222,6 +226,7 @@ export class App extends Component {
             master={liveAdAccounts}
             changeAdAccount={this.changeView}
             history={history}
+            goBack={this.goBack}
           />
           <div className='contentBox'>
             
@@ -239,16 +244,14 @@ export class App extends Component {
                   <p id='normFont'>PREDICTIVE MODEL:</p>
                   <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
                 </div>
-                <div className='actionBar'>
-                  <MainDropdown />
-                  <PerformanceBar level={liveLevel} sub={liveSub}/>
-                </div>
                 <MainGraph 
                   actual={this.state.data.actual} 
                   predicted={this.state.data.predicted} 
                   level={this.state.data.level}
                   current={liveCurrent}
                   currentActive={currentActive}
+                  liveLevel={liveLevel}
+                  liveSub={liveSub}
                 />
                 <div className='subGraphs'>
                   <div className='leftGraph'>
@@ -285,7 +288,6 @@ export class App extends Component {
               </div>
             </div>
             <div className='specBar'> 
-              {(liveLevel ? liveLevel : this.passDownLevel()) !== 'Ad Account' ? (<button onClick={this.goBack}>Back</button>) : false}
               <InfoCol liveKPI={liveKPI}/>
             </div>
           </div>

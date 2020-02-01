@@ -43,12 +43,13 @@ export class ProfitGraph extends Component {
             width={300} 
             position={e.position} 
             stroke={e.stroke}  
+            fill={e.fill}
             x={e.x -8} y={this.state.height -10}
             offset={e.offset}
             angle={-90}
-            style={{fontSize: 10, fontWeight: 300}}
+            style={{fontSize: 12, fontWeight: 300}}
             >
-                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value}
+                {e.value.length > 25 ? e.value.substring(0, 30) + '...' : e.value /* Limits name length to 30 and ellipsis */}
             </Text>
         )
     }
@@ -63,11 +64,11 @@ export class ProfitGraph extends Component {
                 width={110} 
                 position={e.position} 
                 stroke={e.stroke}  
-                x={e.x + 23} y={e.y+ 5}
+                fill={e.fill}
+                x={e.x + 23} y={e.y + 5}
                 offset={e.offset}
                 angle={-90}
                 textAnchor='end'
-                fill='white'
                 style={{fontWeight: 300}}
                 >
                     {'$' + this.letterRound(e.value)}
@@ -79,9 +80,9 @@ export class ProfitGraph extends Component {
                 width={110} 
                 position={e.position} 
                 stroke={e.stroke}  
+                fill={e.fill}
                 x={e.x} y={e.y - 6}
                 offset={e.offset}
-                fill='white'
                 style={{fontWeight: 300}}
                 >
                     {'$' + this.letterRound(e.value)}
@@ -112,13 +113,13 @@ export class ProfitGraph extends Component {
                 <ResponsiveContainer>
                     <BarChart data={data}>
                         <CartesianGrid vertical={false} stroke='#333028'/>
-                        <Tooltip labelStyle={{color: '#7F68C2'}} />
+                        {this.state.data.length !== 0 && (<Tooltip labelStyle={{color: '#7F68C2'}} itemStyle={{color: '#181818'}} />)}
                         <Bar type='monotone' dataKey='Amount Spent' stroke='#6648B7' strokeWidth={3} barSize={35}>
-                            <LabelList dataKey='Name' position='outside' stroke='#C2C2C2' content={this.titleLabel}/>
-                            <LabelList dataKey='Amount Spent' position='' stroke='white' content={this.generalLabel}/>
+                            <LabelList dataKey='Name' position='outside' stroke='#C2C2C2' fill='#C2C2C2' content={this.titleLabel}/>
+                            <LabelList dataKey='Amount Spent' position='' stroke='white' fill='white' content={this.generalLabel}/>
                         </Bar>
                         <Bar type='monotone' dataKey='Revenue' stroke='#55C2E8' strokeWidth={3} barSize={35}>
-                            <LabelList dataKey='Revenue' position='' stroke='white' content={this.generalLabel}/>
+                            <LabelList dataKey='Revenue' position='' stroke='white' fill='white' content={this.generalLabel}/>
                         </Bar>
                         <YAxis tick={{fill: '#A4A4A4', fontSize: 11}} stroke='#45C0E6' tickCount={5} domain={['auto', dataMax=>(dataMax*1.2)]} />
                         <XAxis dataKey='Name' tick={false} height={0} />

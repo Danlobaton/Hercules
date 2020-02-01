@@ -24,7 +24,7 @@ export class PerformanceBar extends Component {
         const level = this.props.level
         if(level !== 'Ad') {
             return(
-                <div style={{display: 'flex'}}>
+                <div style={{display: 'flex', transform: 'translateY(-8px)'}}>
                     <div  style={pStyle}>
                         <div style={gBadgeStyle}>{performance[0]}</div>
                         Over-Performing
@@ -85,7 +85,7 @@ const pStyle = {
     display: 'flex', 
     fontSize: 11,
     fontWeight: 650,
-    color: '#8B8B8B',
+    color: '#707070',
     alignContent: 'baseline',
     padding: 15
 }

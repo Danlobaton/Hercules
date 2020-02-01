@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import {AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, ResponsiveContainer} from 'recharts'
+import MainDropdown from './MainDropdown'
+import DateDropdown from './DateDropdown'
+import PerformanceBar from './PerformanceBar'
 import PropTypes from 'prop-types'
 
 export class MainGraph extends Component {
     state = {
-        count: 0,
+        timeRange: 'Last 7 Days',
         dots: []
+    }
+
+    // current upper limit for main graph
+    changeTimeRange = (timeRange) => {
+        this.setState({timeRange: timeRange})
     }
 
     // combines data from both lines to one structure 
@@ -33,112 +41,118 @@ export class MainGraph extends Component {
         return graphData
     }
 
-    showLive = () => {
-        const current = this.props.current
-        var graphData = [], count = 0
+    formatDate = (date) => {
         let month = ''
         let day = ''
-        if(current[0]) {
-            // if (current.length >= 8) {
-            //     current.map(coordinate => {
-            //         if (coordinate.x > current.length-9) {
-            //             switch (coordinate.day.substring(6, 7)) {
-            //                 case('0') : day = coordinate.day.substring(7); break
-            //                 default : day = coordinate.day.substring(6); break
-            //             }
-            //             switch(coordinate.day.substring(3,5)) {
-            //                 case('01') : month = 'Jan '; break
-            //                 case('02') : month = 'Feb '; break
-            //                 case('03') : month = 'Mar '; break
-            //                 case('04') : month = 'Apr '; break
-            //                 case('05') : month = 'May '; break
-            //                 case('06') : month = 'Jun '; break
-            //                 case('07') : month = 'Jul '; break
-            //                 case('08') : month = 'Aug '; break
-            //                 case('09') : month = 'Sept '; break
-            //                 case('10') : month = 'Oct '; break
-            //                 case('11') : month = 'Nov '; break
-            //                 case('12') : month = 'Dec '; break  
-            //             }
-            //             graphData.push({
-            //                 'Day': month + day,
-            //                 'Predicted': null,
-            //                 'Current': coordinate.y
-            //             })
-            //             count+=1
-            //         }
-            //     })
-            // } else {
-                current.map(coordinate => {
-                    switch (coordinate.day.substring(6, 7)) {
-                        case('0') : day = coordinate.day.substring(7); break
-                        default : day = coordinate.day.substring(6); break
-                    }
-                    switch(coordinate.day.substring(3,5)) {
-                        case('01') : month = 'Jan '; break
-                        case('02') : month = 'Feb '; break
-                        case('03') : month = 'Mar '; break
-                        case('04') : month = 'Apr '; break
-                        case('05') : month = 'May '; break
-                        case('06') : month = 'Jun '; break
-                        case('07') : month = 'Jul '; break
-                        case('08') : month = 'Aug '; break
-                        case('09') : month = 'Sept '; break
-                        case('10') : month = 'Oct '; break
-                        case('11') : month = 'Nov '; break
-                        case('12') : month = 'Dec '; break  
-                    }
-                    graphData.push({
-                        'Day': month + day,
-                        'Predicted': null,
-                        'Current': coordinate.y
-                    })
+
+        // adds 0 to single digit days  
+        switch (date.substring(6, 7)) {
+            case('0') : day = date.substring(7); break
+            default : day = date.substring(6); break
+        }
+
+        // add month abbreviation 
+        switch(date.substring(3,5)) {
+            case('01') : month = 'Jan '; break
+            case('02') : month = 'Feb '; break
+            case('03') : month = 'Mar '; break
+            case('04') : month = 'Apr '; break
+            case('05') : month = 'May '; break
+            case('06') : month = 'Jun '; break
+            case('07') : month = 'Jul '; break
+            case('08') : month = 'Aug '; break
+            case('09') : month = 'Sept '; break
+            case('10') : month = 'Oct '; break
+            case('11') : month = 'Nov '; break
+            case('12') : month = 'Dec '; break  
+        }
+        return month + day
+    }
+
+    fillDateRange = (coordinates, limit) => {
+        let date = new Date().toJSON().slice(0,10).substring(2)
+        let year = parseInt(date.substring(0,2))
+        let month = parseInt(date.substring(3,5))
+        let day = parseInt(date.substring(6))
+        let adjustedDates = [], coordIndex = coordinates.length
+
+        for (let i = limit; i > 0; i--) {
+            day--
+            if (day === 0) {
+                month--
+                // resets month when year is subtracted
+                if (month === 0) {
+                    month = 12; 
+                    year--;
+                }
+
+                // handles different amount of days in month
+                switch (true) {
+                    case (month <= 6 && month % 2 === 0 && month !== 2) : day = 30; break
+                    case (month <= 6 && month !== 2) : day = 31; break
+                    case (month > 6 && month % 2 === 0) : day = 31; break
+                    case (month > 6) : day = 30; break
+                    case (month === 2 && year % 4 === 0) : day = 29; break 
+                    default : day = 28; break
+                }
+            }
+
+            // sets date to current (in scope of for-loop)
+            date = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
+            
+            // handles gaps in time range
+            if(coordIndex > 0 && date === coordinates[coordIndex-1].day) {
+                adjustedDates.push(coordinates[coordIndex-1])
+                coordIndex--
+            } else {
+                adjustedDates.push({
+                    'day': date,
+                    'y': 0
                 })
-                count+=1
-            // }
+            }
+        }
+        return adjustedDates.reverse()
+    }
+
+    showLive = () => {
+        const current = this.props.current
+        const timeRange = this.state.timeRange
+        let upperLimit, graphData = [];
+        
+        // sets limit according to drop-down option
+        switch (timeRange) {
+            case ('Last 7 Days') : upperLimit = 7; break
+            case ('Last 14 Days') : upperLimit = 14; break
+            case ('Last 28 Days') : upperLimit = 28; break
+            case ('Last 2 Months') : upperLimit = 60; break
+        }   
+
+        if (current[0]) {
+            // fills gap in current data and iterates over it
+            let adjusted = this.fillDateRange(current, upperLimit) 
+            adjusted.forEach(coordinate => {
+                graphData.push({
+                    'Day': this.formatDate(coordinate.day),
+                    'Predicted': null,
+                    'Current': coordinate.y
+                })
+            })
         }
         return graphData
     }
 
-    // Custom dot for actual line
-    // TODO make dot automatically go to the last point
+    // Custom dot for Current line
     displayDotActual = (e) => {
-        let dot = 'dot-' + '0'
-        if (this.state.count) {
-            if (e.key === dot) {
-                return (
-                    <circle 
-                        key={e.key}
-                        r={4}
-                        cx={e.cx}
-                        cy={e.cy}
-                        stroke={e.stroke}
-                        strokeWidth={2}
-                        fill={'white'}
-                    />
-                )
-            }
-        } else {
-            if (e.key === 'dot-7') {
-                return (
-                    <circle 
-                        key={e.key}
-                        r={4}
-                        cx={e.cx}
-                        cy={e.cy}
-                        stroke={e.stroke}
-                        strokeWidth={2}
-                        fill={'white'}
-                    />
-                )
-            }
+        let timeRange = this.state.timeRange, current = this.props.current
+        let upperLimit, dot;
+        switch (timeRange) {
+            case('Last 7 Days') : upperLimit = 7; break
+            case('Last 14 Days') : upperLimit = 14; break
+            case('Last 28 Days') : upperLimit = 28; break
+            case('Last 2 Months') : upperLimit = 60; break
         }
-    }
-
-    // Custom dot for predicted line
-    // TODO make last two dots automatically go to the last points
-    displayDotPredicted = (e) => {
-        if(e.key === 'dot-7' || e.key === 'dot-9') {
+        dot = 'dot-' + (upperLimit-1)
+        if (e.key === dot) {
             return (
                 <circle 
                     key={e.key}
@@ -154,10 +168,17 @@ export class MainGraph extends Component {
     }
 
     // shows graph until the object displayed is at the ad level
-    showGraph = (data) => {
+    showGraph = (data, timeRange) => {
         if (this.props.level !== 'Ad') {
             return( 
-                <div style={{width: '100%', margin: '0 auto', height: '100%', zIndex: 1}}>
+                <div style={{width: '100%', margin: '0 auto', height: '83%', zIndex: 2}}>
+                    <div className='actionBar'>
+                      <div className='dropdowns'>
+                        <MainDropdown />
+                        <DateDropdown timeRange={timeRange} changeTimeRange={this.changeTimeRange} />
+                      </div>
+                      <PerformanceBar level={this.props.liveLevel} sub={this.props.liveSub}/>
+                    </div>
                     <div style={legendStyle}>
                         <div style={legendModule}>
                             <div style={legendIconBlue}/>Current Purchases
@@ -186,7 +207,7 @@ export class MainGraph extends Component {
                             <Area dot={this.displayDotActual} type='monotone' dataKey='Current' fill='url(#colorPv)' stroke='#55C2E8' strokeWidth={3}/>
                             <YAxis tick={{fill: '#A4A4A4', fontSize: 11 }} stroke={{}} domain={['auto', dataMax=>(dataMax*1.2)]}/>
                             <XAxis dataKey="Day" tick={{fill: '#A4A4A4', fontSize: 11}} stroke={{}} interval="preserveStartEnd" tickCount={6} width='110%'/>
-                            <Tooltip labelFormatter={function(value) {return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}} />
+                            <Tooltip labelFormatter={function(value) {return `Day: ${value}`}} labelStyle={{textAlign: 'center', fontWeight: 550}} animationEasing='linear'/>
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -196,10 +217,12 @@ export class MainGraph extends Component {
 
     render() {
         this.showLive()
+        const {timeRange} = this.state
+        const {liveLevel, liveSub} = this.props
         const data = this.props.currentActive ? this.showLive() : this.getCombinedData() 
         return (
-            <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)'}}>
-                {data.length !== 0 && this.showGraph(data)}
+            <div style={{width: '97%', margin: '0 auto', height: '45%', transform: 'translateX(-25px)',  minHeight: 325}}>
+                {liveSub && this.showGraph(data, timeRange)}
             </div>
         )
     }

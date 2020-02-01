@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import logo from '../logo.png'
+import back from '../back_button.svg'
 import PropTypes from 'prop-types'
 
 export class AppHeader extends Component {
@@ -53,12 +54,22 @@ export class AppHeader extends Component {
     }
 
     render() {
-        const {goHome, history} = this.props
+        const {goHome, goBack, history} = this.props
         const master = this.props.master ? this.props.master : []
         this.state.first && this.listener()
+        let width = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 75 : 0
+        let bWidth = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? '100%' : 0
+        let border = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? '1px solid #9e9e9e' : 'none'
+        let cursor = history.length > 0 && history[history.length-1].level !== 'Ad Account' ? 'pointer' : 'default'
         return (
             <div style={headerStyle}>
                 <div style={innerHeaderStyle} >
+                    <button 
+                        style={{...backButton, width: width, borderRight: border, cursor: cursor}}
+                        onClick={history.length > 0 && history[history.length-1].level !== 'Ad Account' ? goBack : null}    
+                    >
+                        <img src={back} style={{transition: 'width 350ms', width: bWidth, transform: ' translate(4px, -2px)'}} />
+                    </button>
                     <button style={homeButton} onClick={goHome}>
                         <img src={logo} height='30' alt='ADM'/>
                     </button>
@@ -80,23 +91,29 @@ export class AppHeader extends Component {
         )
     }
 }
-
 const headerStyle = {
     width: '100%',
     height: 60,
+    minHeight: 60,
     background: 'black',
     display: 'flex',
-    alignItems: 'center'
 } 
 const innerHeaderStyle = {
     display: 'flex',
     width: 600,
     alignItems: 'baseline',
-    paddingLeft: 20,
 }
 const homeButton = {
     background: 'none',
-    border: 'none'
+    border: 'none',
+}
+const backButton = {
+    background: 'none', 
+    outline:'none', 
+    border: 'none', 
+    height: 60,  
+    transform: 'translateX(-10px)',
+    transition: 'width 350ms'
 }
 const headerDropdown = {
     position: 'relaitve',

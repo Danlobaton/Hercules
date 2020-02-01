@@ -68,8 +68,14 @@ body {
   padding-left: 5px;
   font-size: 18px;
 }
+.dropdowns { 
+  display: flex;
+  width: 400px;
+  justify-content: space-between;
+}
 .actionBar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between; 
   width: 90%;
   position: relative;
@@ -93,7 +99,7 @@ body {
   flex-direction: row;
   justify-content: space-around;
   min-width: 400px;
-  min-height: 330px;
+  min-height: 300px;
   padding-top: 15px
 }
 .rightGraph {
@@ -102,11 +108,11 @@ body {
   flex-direction: row;
   justify-content: space-around;
   min-width: 505px;
-  min-height: 330px;
+  min-height: 300px;
   padding-top: 15px
 }
 #graph {
-  background-image: linear-gradient(#181818,#020202);
+  background: linear-gradient(#181818,#020202);
   width: 99%;
   height: 100%;
   border-radius: 5px 5px 0 0;
@@ -121,7 +127,7 @@ body {
   bottom: 0;
 }
 #graphContent p {
-  color: #FFFFFF;
+  color: white;
   font-size: 13px;
   padding: 10px 0 0 15px;
   font-weight: 500;
@@ -131,7 +137,7 @@ body {
   display: flex;
   position: absolute;
   font-size: 10px;
-  color: #FFFFFF;
+  color: white;
   transform: translate(8px, -25px)
 }
 #legendModule {
@@ -171,14 +177,15 @@ body {
   background: white;
   padding: 5px;
   border: 0;
-  font-size: 11px
+  font-size: 11px;
+  cursor: pointer;
 }
 #dropMenu:hover {
   background: rgb(171, 154, 218);
   color: white;
 }
 #hDropMenu {
-  background: white;
+  background-color: white;
   padding: 5px 5px 5px 15px;
   border: none;
   font-size: 15px;
@@ -186,7 +193,7 @@ body {
   width: 100%;
   text-align: start;
 }
-#hDropMenu:hover{
-  background: rgb(171, 154, 218);
+#hDropMenu:hover {
+  background-color: rgb(171, 154, 218);
   color: white;
 }
