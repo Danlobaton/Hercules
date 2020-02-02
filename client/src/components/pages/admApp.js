@@ -3,10 +3,8 @@ import React, { Component } from 'react'
 import Data from '../data.json' // dummy data
 
 // component imports
-import DateDropdown from '../DateDropdown'
+import LoadingState from '../LoadingState'
 import ObjectList from '../ObjectList'
-import MainDropdown from '../MainDropdown'
-import PerformanceBar from '../PerformanceBar'
 import MainGraph from '../MainGraph'
 import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
@@ -37,7 +35,8 @@ export class App extends Component {
     loaded: false, // use for loading state
     liveCurrent: [],
     currentActive: false,
-    error: false
+    error: false,
+    loaded: false,
   }
 
   // makes state the origin ad account
@@ -112,13 +111,17 @@ export class App extends Component {
           spent: incoming.KPI.spent,
           costPerPurchase: incoming.KPI.costPerPurchase
         },
-        data: Data[0]
+        data: Data[0],
+        loaded: true
       })
-    } 
+    }
   }
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
+    if (this.state.loaded) {
+      this.setState({loaded: false})
+    }
     if (level === 'Ad') {
       return;
     }
@@ -164,7 +167,6 @@ export class App extends Component {
       fetch(`/getCurrent?view=${rawLevel}&object_id=${id}&user_id=${this.state.id}&parent_id=${this.state.history[this.state.history.length-1].id}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         incoming.currentLoaded = true
         incoming.currentActive = true
         incoming.liveCurrent = data
@@ -182,7 +184,6 @@ export class App extends Component {
     fetch(`/getView?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => { 
-      console.log(data)
       incoming.sub = data
       incoming.subLoaded = true 
       this.loadState(incoming)
@@ -196,7 +197,6 @@ export class App extends Component {
     fetch(`/getKpis?object_id=${id}&view=${rawLevel}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
-      console.log(data)
       incoming.level = data.level
       incoming.nextLevel = this.getNextLevel(data.level)
       incoming.name = data.name
@@ -257,11 +257,13 @@ export class App extends Component {
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, error,
+    console.log('App is loaded?: ' + this.state.loaded)
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, error, loaded,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
     let errorActive = error ? '10px' : '-5%'
     return (
         <div className='app'>
+          <LoadingState isLoaded={loaded} />
           {this.renderErrorMessage(errorActive)}
           <AppHeader 
             goHome={this.goHome}

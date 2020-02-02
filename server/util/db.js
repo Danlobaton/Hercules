@@ -155,9 +155,9 @@ module.exports.get_last_date = function(view, object_id, getData) {
 module.exports.ad_object_current = function(view, camp_id, getData) {
   let sql = '';
   switch (view) {
-    case('adaccount') : sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.AccountDBreakdown WHERE AccountID = "act_${camp_id}" ORDER BY Date ASC LIMIT 60;`; break;
-    case('campaign') : sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.CampaignDBreakdown WHERE CampaignID = ${camp_id} ORDER BY Date ASC LIMIT 60;`; break;
-    case('adset') : sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.AdSetDBreakdown WHERE AdsetID = ${camp_id} ORDER BY Date ASC LIMIT 60;`; break;
+    case('adaccount') : sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.AccountDBreakdown WHERE AccountID = "act_${camp_id}" AND Date BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 DAY);`; break;
+    case('campaign') : sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.CampaignDBreakdown WHERE CampaignID = ${camp_id} AND Date BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 DAY);`; break;
+    case('adset') : sql = `SELECT Purchases, DATE_FORMAT(Date, "%y-%m-%d") FROM Facebook_Ads.AdSetDBreakdown WHERE AdsetID = ${camp_id} AND Date BETWEEN DATE_SUB(CURDATE(), INTERVAL 60 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 DAY);`; break;
   }
   try {
     con.query(sql, function(err, result) {

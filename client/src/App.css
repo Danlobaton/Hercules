@@ -68,6 +68,18 @@ body {
   padding-left: 5px;
   font-size: 18px;
 }
+.loadBubble {
+  height: 12px;
+  width: 12px;
+  animation: loadBubble 3000ms infinite;
+  background: #6648B7;
+}
+@keyframes loadBubble {
+  25% {border-radius: 100%;}
+  50% {border-radius: 0%;}
+  75% {border-radius: 100%;}
+  100% {border-radius:0;}
+}
 .dropdowns { 
   display: flex;
   width: 400px;
