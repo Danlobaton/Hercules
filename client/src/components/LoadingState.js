@@ -4,11 +4,11 @@ export class LoadingState extends Component {
     render() {
         const {isLoaded} = this.props
         let loadTop = !isLoaded ? '10px' : '-5%'
-        let loadHeight = !isLoaded ? '100%' : 0
+        let loadHeight = !isLoaded ? '80%' : 0
         let loadIndex = !isLoaded ? 100 : 0
         let loadStart = !isLoaded ? 60 : 0
         return (
-            <div style={{height: '100vh', width: '100%', position: "absolute", zIndex: loadIndex, transition: 'z-index 1500ms'}}>
+            <div style={{height: '100%', width: '100%', position: "absolute", zIndex: loadIndex, transition: 'z-index 1500ms'}}>
                 <div style={{height: 60}}>
                     <div style={{...loadingPrompt, top: loadTop}}>
                         Loading <div className='loadBubble' style={{transform: 'translateY(2px)'}} />
@@ -42,7 +42,7 @@ const loadingPrompt = {
 const screenCover = {
     background: 'linear-gradient(rgba(101, 71, 184, 0.72), rgba(101, 71, 184, 0.00)',
     width: '100%',
-    height: '60%',
+    height: '80%',
     transition: 'height 1500ms',
 }
 
