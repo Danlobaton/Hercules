@@ -62,7 +62,8 @@ export class App extends Component {
       left: '50%',
       marginLeft: '-165px',
       textAlign: 'center',
-      transition: 'top 350ms'
+      transition: 'top 350ms',
+      zIndex: 200
     }
     return (
       <div style={{...errorStyle, top: isActive}}>
