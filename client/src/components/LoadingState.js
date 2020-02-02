@@ -25,7 +25,7 @@ export class LoadingState extends Component {
 const loadingPrompt = {
     position: 'absolute',
     padding: '10px 25px',
-    background: '#f5f5f5',
+    background: '#FAF9F7',
     color: '#707070',
     fontWeight: 600,
     fontSize: 12,
