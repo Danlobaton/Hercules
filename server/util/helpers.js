@@ -18,15 +18,8 @@ module.exports.compare_revenue = function(a, b) {
   return 0;
 }
 
-module.exports.compare_raw_score = function(a, b) {
-    if (a.raw_score < b.raw_score)
-     return -1;
-    if (a.raw_score > b.raw_score)
-    return 1;
-  return 0;
-}
-
 module.exports.ranker = function(ad_objects){
+      //todo sorting is fucked
     let percentile_space = Math.trunc(ad_objects.length * 0.33),
         offset = ad_objects.length % 3,
         lower_percentile = ad_objects.slice(0 , percentile_space),
