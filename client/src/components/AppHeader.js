@@ -106,6 +106,7 @@ const innerHeaderStyle = {
 const homeButton = {
     background: 'none',
     border: 'none',
+    zIndex: 99
 }
 const backButton = {
     background: 'none', 

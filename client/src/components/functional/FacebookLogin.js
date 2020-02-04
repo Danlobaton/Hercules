@@ -1,38 +1,32 @@
 import React, { Component } from 'react';
 
 export default class FacebookLogin extends Component {
-  componentDidMount() {
-    if (window.FB) {
-      this.initializeFacebookLogin()
-    } else
-      document.addEventListener('FBObjectReady', this.initializeFacebookLogin);
+  state = {
+    FBSession: window.FB,
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('FBObjectReady', this.initializeFacebookLogin);
-  }
+  // initializes facebook login on component mount
+  componentDidMount() { document.addEventListener('FBObjectReady', this.initializeFacebookLogin); }
 
-  /**
-   * Init FB object and check Facebook Login status
-   */
+  // removes listener for facebook object once login is initialized
+  componentWillUnmount() { document.removeEventListener('FBObjectReady', this.initializeFacebookLogin); }
+
+  // initializes facebook object 
   initializeFacebookLogin = () => {
-    this.setState({listenerActive: true})
     this.FB = window.FB;
     this.checkLoginStatus();
   }
 
-  /**
-   * Check login status
-   */
+  // checks login status
   checkLoginStatus = () => {
     this.FB.getLoginStatus(this.facebookLoginHandler);
   }
 
-  /**
-   * Check login status and call login api is user is not logged in
-   */
+  // handles connection to Facebook, and logs in when not connected
   facebookLogin = () => {
+    this.setState({firstInit: true})
     if (!this.FB) {
+      alert('Facebook Object Initialization failure')
       return;
     }
 
@@ -40,14 +34,12 @@ export default class FacebookLogin extends Component {
       if (response.status === 'connected') {
         this.facebookLoginHandler(response);
       } else {
-        this.FB.login(this.facebookLoginHandler, {scope: 'ads_management'});
+        this.FB.login(this.facebookLoginHandler, {scope: 'ads_management'}); // add email to permission scope
       }
-    }, );
+    });
   }
 
-  /**
-   * Handle login response
-   */
+  // Handle Login Response
   facebookLoginHandler = response => {
     if (response.status === 'connected') {
       this.FB.api('/me?fields=email,name,id', userData => {
@@ -57,12 +49,17 @@ export default class FacebookLogin extends Component {
         };
         this.props.onLogin(true, result);
       });
+    } else if (response.status === 'not_authorized') {
+      console.log('login failure')
+      this.props.onLogin(false, {error: true});
     } else {
-      this.props.onLogin(false);
+      this.props.onLogin(false)
     }
   }
 
   render() {
+    // re-initialize facebook login if listener doesn't catch object
+    this.state.FBSession && this.initializeFacebookLogin()
     let {children} = this.props;
     return (
       <div onClick={this.facebookLogin} >

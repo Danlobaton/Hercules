@@ -3,10 +3,8 @@ import React, { Component } from 'react'
 import Data from '../data.json' // dummy data
 
 // component imports
-import DateDropdown from '../DateDropdown'
+import LoadingState from '../LoadingState'
 import ObjectList from '../ObjectList'
-import MainDropdown from '../MainDropdown'
-import PerformanceBar from '../PerformanceBar'
 import MainGraph from '../MainGraph'
 import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
@@ -36,7 +34,9 @@ export class App extends Component {
     objectRecord: null, // this stays null
     loaded: false, // use for loading state
     liveCurrent: [],
-    currentActive: false
+    currentActive: false,
+    error: false,
+    loaded: false,
   }
 
   // makes state the origin ad account
@@ -50,6 +50,28 @@ export class App extends Component {
     this.changeView(history[history.length-1].id, history[history.length-1].level, history[history.length-1].name)
   }
   
+  renderErrorMessage = (isActive) => {
+    const errorStyle = {
+      position: 'absolute',
+      background: '#fc6060',
+      padding: '10px 25px',
+      width: 330,
+      color: 'white',
+      fontWeight: 600,
+      fontSize: 12,
+      left: '50%',
+      marginLeft: '-165px',
+      textAlign: 'center',
+      transition: 'top 350ms',
+      zIndex: 200
+    }
+    return (
+      <div style={{...errorStyle, top: isActive}}>
+        Something went wrong. Please try again later.
+      </div>
+    )
+  }
+
   // gets children's level
   getNextLevel = (level) => {
     switch (true) {
@@ -90,13 +112,17 @@ export class App extends Component {
           spent: incoming.KPI.spent,
           costPerPurchase: incoming.KPI.costPerPurchase
         },
-        data: Data[0]
+        data: Data[0],
+        loaded: true
       })
-    } 
+    }
   }
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
+    if (this.state.loaded) {
+      this.setState({loaded: false})
+    }
     if (level === 'Ad') {
       return;
     }
@@ -147,6 +173,10 @@ export class App extends Component {
         incoming.liveCurrent = data
         this.loadState(incoming)
       })
+      .catch(err => {
+        console.log(err)
+        this.setState({error: true})
+      })
     } else {
       incoming.currentLoaded = true
     }
@@ -158,6 +188,10 @@ export class App extends Component {
       incoming.sub = data
       incoming.subLoaded = true 
       this.loadState(incoming)
+    })
+    .catch(err => {
+      console.log(err)
+      this.setState({error: true})
     })
     
     // gets current ad objects Kpis
@@ -179,11 +213,15 @@ export class App extends Component {
       incoming.kpiLoaded = true
       this.loadState(incoming)
     })
+    .catch(err => {
+      console.log(err)
+      this.setState({error: true})
+    })
   }
   
   // Initializes the ad account list and changes view to first ad account in list
   componentDidMount() {
-    fetch(`/getAccounts?user_id=${this.props.id}&token=${this.props.token}`)
+    fetch(`/getAccounts?user_id=${this.state.id}&token=${this.state.token}`)
     .then(res => res.json())
     .then((data) => {
       data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
@@ -192,6 +230,10 @@ export class App extends Component {
         history: [{id: data[0].id, level: data[0].level, name: data[0].name}]
       }) 
       this.changeView(data[0].id, data[0].level, data[0].name) 
+    })
+    .catch(err => {
+      console.log(err)
+      this.setState({error: true})
     })
   }
 
@@ -216,10 +258,14 @@ export class App extends Component {
   }
 
   render() {
-    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub,
+    console.log('App is loaded?: ' + this.state.loaded)
+    const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, error, loaded,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
+    let errorActive = error ? '10px' : '-5%'
     return (
         <div className='app'>
+          <LoadingState isLoaded={loaded} />
+          {this.renderErrorMessage(errorActive)}
           <AppHeader 
             goHome={this.goHome}
             level={liveLevel}

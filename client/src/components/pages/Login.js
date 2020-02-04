@@ -7,6 +7,15 @@ import FacebookLogin from '../functional/FacebookLogin'
 export class Login extends Component {
     state = {
         loggedIn: this.props.loggedIn,
+        error: false
+    }
+
+    renderErrorMessage = (active) => {
+        return (
+            <div style={{...errorBubble, top: active}}>
+                Couldn't Login in, Please try again later.
+            </div>
+        )
     }
 
     onFacebookLogin = (loginStatus, resultObject) => {
@@ -18,19 +27,25 @@ export class Login extends Component {
             .then((data) => { 
                 console.log(data);
                 this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
-            });
+            })
+            .catch(err => console.log(err));
+        } else if (!resultObject) {
+            console.log('Not logged in')
         } else {
-          console.log('Not logged in');
+            console.log('Login Failure')
+            this.setState({error: true})
         }
-      }
+    } 
 
     render() {
+        let errorActive = this.state.error ? '5%' : '-5%'
         return (
             <div style={loginStyle}>
+                    {this.renderErrorMessage(errorActive)}
                 <div style={contentStyle}>
                     <img src={logo} alt='ADM' height='350' />
                     <FacebookLogin onLogin={this.onFacebookLogin}>
-                        <Button style={buttonStyle} onClick={this.props.login}>
+                        <Button style={buttonStyle}>
                             <div style={buttonContentStyle} >
                                 <img style={{transform: 'translateY(2px)'}} src={fbIcon} alt='fb' height='20' />
                                 Sign in with Facebook
@@ -44,6 +59,19 @@ export class Login extends Component {
     }
 }
 
+const errorBubble = {
+    position: 'absolute',
+    background: '#fc6060',
+    padding: '10px 25px',
+    width: 300,
+    color: 'white',
+    fontWeight: 600,
+    fontSize: 12,
+    left: '50%',
+    marginLeft: '-150px',
+    textAlign: 'center',
+    transition: 'top 350ms'
+}
 const loginStyle = {
     display: 'flex',
     margin: '0 auto',
