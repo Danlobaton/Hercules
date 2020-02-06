@@ -307,9 +307,9 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                                         counter += 1;
                                     })
                                     resolve(coordinates)
-                                })                      
+                                })
                             } else { 
-                                console.log(update.message)
+                                console.log(updated.message)
                                 resolve([]) 
                             }
                         })
