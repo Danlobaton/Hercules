@@ -3,7 +3,7 @@ import backgroundImg from './backgroundIMG.png'
 import loadingGraph from './loadingGraph.png'
 import admLoading from './admLoading.png'
 
-export class initLoading extends Component {
+export class InitLoading extends Component {
     render() {
         let {loadCount, loaded} = this.props
         let loadIndex = !loaded ? 300 : 0;
@@ -44,4 +44,4 @@ const loadingGraphS = {
     transition: 'width 500ms'
 }
 
-export default initLoading
+export default InitLoading
