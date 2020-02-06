@@ -48,7 +48,6 @@ export class App extends Component {
     }
   }
   render() {
-    console.log(this.state.loadCount)
     return (
       <div>
         {this.showApp()}

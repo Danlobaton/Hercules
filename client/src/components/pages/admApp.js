@@ -95,7 +95,6 @@ export class App extends Component {
   // defines state only when all call responses are loaded
   loadState = (incoming) => {  
     if (incoming.subLoaded && incoming.kpiLoaded && incoming.currentLoaded) {
-      this.props.loadCount <= 2 && this.props.incrementLoadCount()
       this.setState({
         liveSub: incoming.sub,
         liveLevel: incoming.level,
@@ -121,15 +120,23 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
-    if (this.props.loadCount <= 2) {
-      this.props.isLoaded(false)
-      this.props.incrementLoadCount()
-    } else if (this.state.loaded) {
-      this.setState({loaded: false})
+    // increments load count to keep track when there should be a switch between ils and tls
+    this.props.loadCount < 2 && this.props.incrementLoadCount() 
+
+    // starts loading process
+    this.state.loaded && this.setState({loaded: false})
+    
+    // sets the loadCount to 2 after login animation
+    if (this.props.loadCount === 1) {
+      setTimeout(()=>{
+        this.props.incrementLoadCount()
+      }, 3000)
     }
+
     if (level === 'Ad') {
       return;
     }
+
     // remove later
     if (subMessage) console.log(subMessage)
     // the incoming response object that will be loaded
@@ -262,7 +269,6 @@ export class App extends Component {
   }
 
   render() {
-    console.log('App is loaded?: ' + this.state.loaded)
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, error, loaded,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
     let errorActive = error ? '10px' : '-5%'
