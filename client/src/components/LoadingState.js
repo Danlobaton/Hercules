@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import InitLoading from './pages/initLoading'
 
 export class LoadingState extends Component {
     render() {
@@ -7,7 +8,9 @@ export class LoadingState extends Component {
         let loadHeight = !isLoaded ? '80%' : 0
         let loadIndex = !isLoaded ? 100 : 0
         let loadStart = !isLoaded ? 60 : 0
-        return (
+        return this.props.loadingCount === 1 ? 
+        <InitLoading /> :
+        (
             <div style={{height: '100%', width: '100%', position: "absolute", zIndex: loadIndex, transition: 'z-index 1500ms'}}>
                 <div style={{height: 60}}>
                     <div style={{...loadingPrompt, top: loadTop}}>

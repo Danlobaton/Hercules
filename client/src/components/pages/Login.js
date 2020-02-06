@@ -4,6 +4,7 @@ import graphImg from '../graphIMG.png'
 import outlineImg from '../outlineIMG.png'
 import logo from '../logo.png'
 import FacebookLogin from '../functional/FacebookLogin'
+import InitLoading from './InitLoading'
 
 export class Login extends Component {
     state = {
@@ -22,12 +23,15 @@ export class Login extends Component {
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
             console.log(resultObject)
+            this.setState({loggedIn: loginStatus})
             // gets current ad objects children
             fetch(`/checkUser?token=${resultObject.authResponse.accessToken}&user_id=${resultObject.authResponse.userID}&name=${resultObject.user.name}&email=${resultObject.user.email}`)
             .then(res => res.json())
             .then((data) => { 
                 console.log(data);
-                this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
+                setTimeout(() => {
+                    this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
+                }, 1200)
             })
             .catch(err => console.log(err));
         } else if (!resultObject) {
@@ -40,13 +44,15 @@ export class Login extends Component {
 
     render() {
         let errorActive = this.state.error ? '5%' : '-5%'
+        let loggedIn = this.state.loggedIn ? 0 : 1
+        console.log("hello: " + this.state.loggedIn)
         return (
             <div style={loginStyle}>
                 <img src={backgroundImg} alt='something' style={{height: '100vh', width: '100%', position: 'absolute', zIndex: 0}} />
-                <img src={graphImg} alt='graphs dude' style={{width: '101%', position: 'absolute', bottom: -10}} />
-                <img src={outlineImg} alt='outline dude' style={{width: '101%', position: 'absolute', bottom: -10}} />
-                    {this.renderErrorMessage(errorActive)}
-                <div style={contentStyle}>
+                <img src={graphImg} alt='graphs dude' style={{width: '101%', position: 'absolute', bottom: -10, opacity: loggedIn,transition: 'opacity 1000ms'}} />
+                <img src={outlineImg} alt='outline dude' style={{width: '101%', position: 'absolute', bottom: -10, opacity: loggedIn,transition: 'opacity 1000ms'}} />
+                {this.renderErrorMessage(errorActive)}
+                <div style={{...contentStyle, opacity: loggedIn}}>
                     <img src={logo} alt='ADM' style={{height: 50, width: 170}}/>
                     <FacebookLogin onLogin={this.onFacebookLogin}>
                         <button style={buttonStyle}>
@@ -91,6 +97,7 @@ const contentStyle = {
     fontFamily: "'Roboto', sans-serif",
     width: 500,
     justifyContent: 'space-between',
+    transition: 'opacity 1000ms'
 }
 const buttonStyle = { 
     borderRadius: 0,

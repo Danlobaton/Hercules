@@ -1,13 +1,43 @@
 import React, { Component } from 'react'
+import backgroundImg from '../backgroundIMG.png'
+import loadingGraph from '../loadingGraph.png'
+import admLoading from '../admLoading.png'
 
 export class initLoading extends Component {
     render() {
+        let { loaded} = this.props
+        let loadIndex = !loaded ? 300 : 0;
+        let loadgraph = !loaded ? 0 : 274;
         return (
-            <div>
-                
+            <div style={{...loadState, zIndex: loadIndex}}>
+                <img src={backgroundImg} alt='triangles dude' style={{height: '100%', width: '100%', position: 'absolute'}} />
+                <div style={{display: 'flex', margin: '0 auto', flexDirection: 'column', transform: 'translateY(-60px)'}}>
+                    <div style={{...loadingGraphS, width: loadgraph}}/>
+                    <img src={admLoading} alt='adm loading' style={{transform: 'translateY(50px)'}} />
+                </div>
             </div>
         )
     }
+}
+
+const loadState = { 
+    height: '100%',
+    width: '100%',
+    position: "absolute",
+    transition: 'z-index 1500ms',
+    display: 'flex',
+    justifyContent: 'space-around',
+    alignItem: 'middle',
+    flexDirection: 'column',
+    margin: '0 auto',
+    background: 'black'
+}
+
+const loadingGraphS = {
+    backgroundImage: `url(${loadingGraph})`,
+    height: 150,
+    overflow: 'hidden',
+    transition: 'width 500ms'
 }
 
 export default initLoading
