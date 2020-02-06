@@ -66,7 +66,7 @@ export class App extends Component {
       zIndex: 200
     }
     return (
-      <div style={{...errorStyle, top: isActive}}>
+      <div style={{...errorStyle, top: isActive.top, opacity: isActive.opacity}}>
         Something went wrong. Please try again later.
       </div>
     )
@@ -120,12 +120,24 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
-    if (this.state.loaded) {
-      this.setState({loaded: false})
+    // increments load count to keep track when there should be a switch between ils and tls
+    this.props.loadCount < 2 && this.props.incrementLoadCount() 
+
+    // starts loading process
+    this.state.loaded && this.setState({loaded: false})
+    
+    // sets the loadCount to 2 after login animation
+    if (this.props.loadCount === 1) {
+      setTimeout(()=>{
+        this.props.incrementLoadCount()
+      }, 3000)
     }
+
     if (level === 'Ad') {
+      this.setState({loaded: true})
       return;
     }
+
     // remove later
     if (subMessage) console.log(subMessage)
     // the incoming response object that will be loaded
@@ -258,13 +270,15 @@ export class App extends Component {
   }
 
   render() {
-    console.log('App is loaded?: ' + this.state.loaded)
     const {liveName, liveKPI, liveLevel, liveNextLevel, liveSub, error, loaded,
           liveAdAccounts, objectRecord, history, liveCurrent, currentActive} = this.state
-    let errorActive = error ? '10px' : '-5%'
+    let errorActive = {top: error ? '10px' : '-5%', opacity: error ? 1 : 0} 
     return (
         <div className='app'>
-          <LoadingState isLoaded={loaded} />
+          <LoadingState 
+            isLoaded={loaded} 
+            loadCount={this.props.loadCount}
+          />
           {this.renderErrorMessage(errorActive)}
           <AppHeader 
             goHome={this.goHome}
@@ -275,17 +289,19 @@ export class App extends Component {
             goBack={this.goBack}
           />
           <div className='contentBox'>
-            
-            <div className='scroll'>
-              <ObjectList 
-                objects={liveSub}
-                nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel(true)}
-                changeData={this.changeView}
-                objectRecord={objectRecord}
-              />
-            </div>
+            {liveKPI.impressions.length || liveSub.length || liveCurrent.length ? (
+              <div className='scroll'>
+                <ObjectList 
+                  objects={liveSub}
+                  nextLevel={liveNextLevel ? liveNextLevel : this.passDownLevel(true)}
+                  changeData={this.changeView}
+                  objectRecord={objectRecord}
+                />
+              </div>
+            ) : null}
             <div className='mainBox'>
-              <div className='box'>
+              {liveSub.length || liveCurrent.length ? 
+              (<div className='box'>
                 <div id='title'>
                   <p id='normFont'>PREDICTIVE MODEL:</p>
                   <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
@@ -331,11 +347,24 @@ export class App extends Component {
                     </div>
                   </div>
                 </div>
+              </div>)
+              : 
+              (
+              <div className='box'>
+                <div id='title'>
+                  <p id='normFont'>PREDICTIVE MODEL:</p>
+                  <p id='mainFont'>{(liveName ? liveName : this.passDownName()).toUpperCase()}</p>
+                </div>
+                <h1 style={{color: '#A4A4A4', fontWeight: 750, letterSpacing: 3, margin: '0 auto', top: '20%', position: "relative", fontSize: 60}}>NO DATA AVAILABLE :(</h1>
               </div>
+              )
+            }
             </div>
-            <div className='specBar'> 
-              <InfoCol liveKPI={liveKPI}/>
-            </div>
+            {liveKPI.impressions.length || liveSub.length || liveCurrent.length ? (
+              <div className='specBar'> 
+                <InfoCol liveKPI={liveKPI}/>
+              </div>
+            ) : null}
           </div>
         </div>
       )

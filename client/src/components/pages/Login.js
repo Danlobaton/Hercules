@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import Button from 'react-bootstrap/Button'
+import backgroundImg from '../backgroundIMG.png'
+import graphImg from '../graphIMG.png'
+import outlineImg from '../outlineIMG.png'
 import logo from '../logo.png'
-import fbIcon from './FB_Icon.png'
 import FacebookLogin from '../functional/FacebookLogin'
 
 export class Login extends Component {
@@ -12,7 +13,7 @@ export class Login extends Component {
 
     renderErrorMessage = (active) => {
         return (
-            <div style={{...errorBubble, top: active}}>
+            <div style={{...errorBubble, top: active.top, opacity: active.opacity}}>
                 Couldn't Login in, Please try again later.
             </div>
         )
@@ -21,12 +22,15 @@ export class Login extends Component {
     onFacebookLogin = (loginStatus, resultObject) => {
         if (loginStatus === true) {
             console.log(resultObject)
+            this.setState({loggedIn: loginStatus})
             // gets current ad objects children
             fetch(`/checkUser?token=${resultObject.authResponse.accessToken}&user_id=${resultObject.authResponse.userID}&name=${resultObject.user.name}&email=${resultObject.user.email}`)
             .then(res => res.json())
             .then((data) => { 
                 console.log(data);
-                this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
+                setTimeout(() => {
+                    this.props.login(resultObject.authResponse.userID, resultObject.authResponse.accessToken, loginStatus);
+                }, 1200)
             })
             .catch(err => console.log(err));
         } else if (!resultObject) {
@@ -38,21 +42,21 @@ export class Login extends Component {
     } 
 
     render() {
-        let errorActive = this.state.error ? '5%' : '-5%'
+        let errorActive = {top: this.state.error ? '5%' : '-5%', opacity: this.state.error ? 1 : 0}
+        let loggedIn = this.state.loggedIn ? 0 : 1
         return (
             <div style={loginStyle}>
-                    {this.renderErrorMessage(errorActive)}
-                <div style={contentStyle}>
-                    <img src={logo} alt='ADM' height='350' />
+                <img src={backgroundImg} alt='something' style={{height: '100vh', width: '100%', position: 'absolute', zIndex: 0}} />
+                <img src={graphImg} alt='graphs dude' style={{width: '101%', position: 'absolute', bottom: -10, opacity: loggedIn,transition: 'opacity 1000ms'}} />
+                <img src={outlineImg} alt='outline dude' style={{width: '101%', position: 'absolute', bottom: -10, opacity: loggedIn,transition: 'opacity 1000ms'}} />
+                {this.renderErrorMessage(errorActive)}
+                <div style={{...contentStyle, opacity: loggedIn}}>
+                    <img src={logo} alt='ADM' style={{height: 50, width: 170}}/>
                     <FacebookLogin onLogin={this.onFacebookLogin}>
-                        <Button style={buttonStyle}>
-                            <div style={buttonContentStyle} >
-                                <img style={{transform: 'translateY(2px)'}} src={fbIcon} alt='fb' height='20' />
-                                Sign in with Facebook
-                                <div />
-                            </div>
-                        </Button>
-                    </FacebookLogin>
+                        <button style={buttonStyle}>
+                            SIGN IN WITH FACEBOOK
+                        </button>
+                    </FacebookLogin> 
                 </div>
             </div>
         )
@@ -77,35 +81,33 @@ const loginStyle = {
     margin: '0 auto',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    background: '#EBEBEC',
+    background: 'black',
     alignItems: 'middle',
     height: '100vh',
-    width: '100%'
+    width: '100%',
+    overflow: 'hidden'
 }
 const contentStyle = {
+    transform: 'translateY(200px)',
     display: 'flex',
     margin: '0 auto',
-    flexDirection: 'column',
     height: 500,
     fontWeight: 500,
-    fontFamily: "'Roboto', sans-serif"
-}
-const buttonStyle = {
-    transform: 'translateY(-40px)', 
-    background: '#3b5998', 
-    borderRadius: 0,
-    boxShadow: '0 3px 6px rgba(0, 0, 0, 0.20)',
-    border: 'none',
-    height: 50,
-    width: '100%'
-}
-
-const buttonContentStyle = {
-    width: '90%',
-    display: 'flex',
+    fontFamily: "'Roboto', sans-serif",
+    width: 500,
     justifyContent: 'space-between',
-    alignItems: 'middle',
-    margin: '0 auto'
+    transition: 'opacity 1000ms'
+}
+const buttonStyle = { 
+    borderRadius: 0,
+    border: '2px solid #3A4B8B',
+    height: 50,
+    width: 250,
+    fontWeight: 300,
+    letterSpacing: 1,
+    color: 'white',
+    fontSize: 15,
+    background: 'none'
 }
 
 export default Login

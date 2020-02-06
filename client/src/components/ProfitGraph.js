@@ -110,6 +110,13 @@ export class ProfitGraph extends Component {
         const data = this.getGraphData() // live data
         return (
             <div style={{height: '76%', width: '100%', transform: 'translateX(-20px)'}}>
+                {!data.length ? (
+                    <div style={{position: 'absolute', top: '50%', marginTop: '-10px', left: '50%', width: 400, marginLeft: -180}}>
+                        <p style={{fontSize: 12, fontWeight: 350, color: '#A4A4A4', textAlign: 'center', letterSpacing: 3}}>
+                            NO DATA AVAILABLE IN THE LAST 60 DAYS
+                        </p>
+                    </div>
+                ) : null}
                 <ResponsiveContainer>
                     <BarChart data={data}>
                         <CartesianGrid vertical={false} stroke='#333028'/>

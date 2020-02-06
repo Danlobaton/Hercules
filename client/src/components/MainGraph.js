@@ -190,6 +190,13 @@ export class MainGraph extends Component {
                             </div>28 Day Prediction
                         </div>
                     </div>
+                    {!data.length ? (
+                        <div style={{position: 'absolute', top: '50%', marginTop: '-8', left: '50%', width: 400, marginLeft: -200}}>
+                            <p style={{fontSize: 16, fontWeight: 350, color: '#A4A4A4', textAlign: 'center', letterSpacing: 2}}>
+                                NO DATA AVAILABLE IN THE LAST 60 DAYS
+                            </p>
+                        </div>
+                    ) : null}
                     <ResponsiveContainer style={{zIndex: 3}}>
                         <AreaChart height={270} width={800} data={data}>
                             <CartesianGrid stroke='#f5f5f5'/>
