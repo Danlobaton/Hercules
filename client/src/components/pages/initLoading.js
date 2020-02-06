@@ -8,8 +8,10 @@ export class initLoading extends Component {
         let { loaded} = this.props
         let loadIndex = !loaded ? 300 : 0;
         let loadgraph = !loaded ? 0 : 274;
+        let opacity = !loaded ? 1 : 0;
+
         return (
-            <div style={{...loadState, zIndex: loadIndex}}>
+            <div style={{...loadState, zIndex: loadIndex, opacity: opacity}}>
                 <img src={backgroundImg} alt='triangles dude' style={{height: '100%', width: '100%', position: 'absolute'}} />
                 <div style={{display: 'flex', margin: '0 auto', flexDirection: 'column', transform: 'translateY(-60px)'}}>
                     <div style={{...loadingGraphS, width: loadgraph}}/>
@@ -30,7 +32,9 @@ const loadState = {
     alignItem: 'middle',
     flexDirection: 'column',
     margin: '0 auto',
-    background: 'black'
+    background: 'black',
+    transition: 'opacity 1000ms, z-index 1000ms',
+    transitionDelay: '1000ms',
 }
 
 const loadingGraphS = {

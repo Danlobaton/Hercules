@@ -276,7 +276,7 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
             } else {
                 get_last_date(view, object_id, function(date) {
                     if(date) {
-                        let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}obj_level=${view}`
+                        let fullPath = `https://hercdata.herokuapp.com/fill_values?obj_id=${object_id}&parent_id=${parent_id}&user_id=${user_id}&last_date=${date}&obj_level=${view}`
                         request.get(fullPath,(err, res, body) => {
                             let updated = JSON.parse(body)
                             coordinates = []
@@ -309,7 +309,7 @@ module.exports.returnCurrent = function(object_id, view, user_id, parent_id) {
                                     resolve(coordinates)
                                 })                      
                             } else { 
-                                console.log(update.message)
+                                console.log(updated.message)
                                 resolve([]) 
                             }
                         })

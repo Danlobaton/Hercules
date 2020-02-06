@@ -45,7 +45,6 @@ export class Login extends Component {
     render() {
         let errorActive = this.state.error ? '5%' : '-5%'
         let loggedIn = this.state.loggedIn ? 0 : 1
-        console.log("hello: " + this.state.loggedIn)
         return (
             <div style={loginStyle}>
                 <img src={backgroundImg} alt='something' style={{height: '100vh', width: '100%', position: 'absolute', zIndex: 0}} />

@@ -95,7 +95,7 @@ export class App extends Component {
   // defines state only when all call responses are loaded
   loadState = (incoming) => {  
     if (incoming.subLoaded && incoming.kpiLoaded && incoming.currentLoaded) {
-      this.props.loadCount <= 1 && this.props.isLoaded(true)
+      this.props.loadCount <= 2 && this.props.incrementLoadCount()
       this.setState({
         liveSub: incoming.sub,
         liveLevel: incoming.level,
@@ -121,7 +121,7 @@ export class App extends Component {
 
   // changes the ad object in the view
   changeView = (id, level, name, subMessage) => {
-    if (this.props.loadCount < 2) {
+    if (this.props.loadCount <= 2) {
       this.props.isLoaded(false)
       this.props.incrementLoadCount()
     } else if (this.state.loaded) {
@@ -270,6 +270,7 @@ export class App extends Component {
         <div className='app'>
           <LoadingState 
             isLoaded={loaded} 
+            loadCount={this.props.loadCount}
           />
           {this.renderErrorMessage(errorActive)}
           <AppHeader 

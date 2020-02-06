@@ -3,13 +3,14 @@ import InitLoading from './pages/initLoading'
 
 export class LoadingState extends Component {
     render() {
+        let loadCount = this.props.loadCount <= 2 ? 1 : 0
         const {isLoaded} = this.props
         let loadTop = !isLoaded ? '10px' : '-5%'
         let loadHeight = !isLoaded ? '80%' : 0
         let loadIndex = !isLoaded ? 100 : 0
         let loadStart = !isLoaded ? 60 : 0
-        return this.props.loadingCount === 1 ? 
-        <InitLoading /> :
+        return loadCount === 1 ? 
+        (<InitLoading loaded={isLoaded}/>) :
         (
             <div style={{height: '100%', width: '100%', position: "absolute", zIndex: loadIndex, transition: 'z-index 1500ms'}}>
                 <div style={{height: 60}}>
