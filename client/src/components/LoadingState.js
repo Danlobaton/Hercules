@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import InitLoading from './pages/initLoading'
+import InitLoading from './pages/InitLoading'
 
 export class LoadingState extends Component {
     render() {
