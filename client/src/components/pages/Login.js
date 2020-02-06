@@ -4,7 +4,7 @@ import graphImg from '../graphIMG.png'
 import outlineImg from '../outlineIMG.png'
 import logo from '../logo.png'
 import FacebookLogin from '../functional/FacebookLogin'
-import InitLoading from './InitLoading'
+import InitLoading from '../InitLoading'
 
 export class Login extends Component {
     state = {
