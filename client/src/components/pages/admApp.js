@@ -134,6 +134,7 @@ export class App extends Component {
     }
 
     if (level === 'Ad') {
+      this.setState({loaded: true})
       return;
     }
 
