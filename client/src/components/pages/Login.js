@@ -14,7 +14,7 @@ export class Login extends Component {
 
     renderErrorMessage = (active) => {
         return (
-            <div style={{...errorBubble, top: active}}>
+            <div style={{...errorBubble, top: active.top, opacity: active.opacity}}>
                 Couldn't Login in, Please try again later.
             </div>
         )
@@ -43,7 +43,7 @@ export class Login extends Component {
     } 
 
     render() {
-        let errorActive = this.state.error ? '5%' : '-5%'
+        let errorActive = {top: this.state.error ? '5%' : '-5%', opacity: this.state.error ? 1 : 0}
         let loggedIn = this.state.loggedIn ? 0 : 1
         return (
             <div style={loginStyle}>
@@ -85,7 +85,8 @@ const loginStyle = {
     background: 'black',
     alignItems: 'middle',
     height: '100vh',
-    width: '100%'
+    width: '100%',
+    overflow: 'hidden'
 }
 const contentStyle = {
     transform: 'translateY(200px)',

@@ -5,7 +5,7 @@ import admLoading from '../admLoading.png'
 
 export class initLoading extends Component {
     render() {
-        let { loaded} = this.props
+        let {loadCount, loaded} = this.props
         let loadIndex = !loaded ? 300 : 0;
         let loadgraph = !loaded ? 0 : 274;
         let opacity = !loaded ? 1 : 0;

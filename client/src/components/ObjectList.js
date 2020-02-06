@@ -94,6 +94,11 @@ export class ObjectList extends Component {
                             nextLevel={nextLevel}
                         />
                     )) }
+                    {!objects.length ? (
+                        <div style={{width: 200, position: "absolute", top: '50%', marginTop: -6, left: '50%', marginLeft: -100}}>
+                            <p style={{fontSize: 12, fontWeight: 350, color: '#A4A4A4', letterSpacing: 3, textAlign: "center"}}>There's nothing here...</p>
+                        </div>
+                    ) : null}
                 </div>
             </div>
         )
