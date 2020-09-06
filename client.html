@@ -1,0 +1,22 @@
+<html>
+    <script>
+        var  burl = 'http://localhost:5000'
+
+        request('GET',burl + '/getAccount')
+            .then((r1) => {
+                console.log(JSON.parse(r1.target.responseText));
+            }).catch(err => {
+                console.log("Oh well, I guess you're just going to have to fuck yourself");
+            }) 
+
+            function request(method, url) {
+                return new Promise(function (resolve, reject) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open(method, url);
+                    xhr.onload = resolve;
+                    xhr.onerror = reject;
+                    xhr.send();
+                });
+            }
+    </script>
+</html>
