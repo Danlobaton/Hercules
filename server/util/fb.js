@@ -10,7 +10,7 @@ let build_uri = module.exports.build_uri = function(path, params = {}, fb_token)
       access_token: fb_token
     }, params); // todo make sure these won't break anything
     let limit = 5000;
-    let uri = `https://graph.facebook.com/v5.0/${path}`;
+    let uri = `https://graph.facebook.com/v7.0/${path}`;
     let query = `?limit=${limit}`
     for(let param in params) {
       let val = params[param];

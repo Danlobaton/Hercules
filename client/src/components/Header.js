@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Navbar from 'react-bootstrap/Navbar'
-import logo from '../logo.png'
+import logo from '../assets/logo.png'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Nav from 'react-bootstrap/Nav'
 import PropTypes from 'prop-types'

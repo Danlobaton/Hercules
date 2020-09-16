@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import logo from '../logo.png'
-import back from '../back_button.svg'
+import logo from '../assets/logo.png'
+import back from '../assets/back_button.svg'
 import PropTypes from 'prop-types'
 
 export class AppHeader extends Component {

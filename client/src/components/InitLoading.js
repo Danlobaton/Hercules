@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import backgroundImg from './backgroundIMG.png'
-import loadingGraph from './loadingGraph.png'
-import admLoading from './admLoading.png'
+import backgroundImg from '../assets/backgroundIMG.png'
+import loadingGraph from '../assets/loadingGraph.png'
+import admLoading from '../assets/admLoading.png'
 
 export class InitLoading extends Component {
     render() {

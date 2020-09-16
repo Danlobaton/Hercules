@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import backgroundImg from '../backgroundIMG.png'
-import graphImg from '../graphIMG.png'
-import outlineImg from '../outlineIMG.png'
-import logo from '../logo.png'
+import backgroundImg from '../../assets/backgroundIMG.png'
+import graphImg from '../../assets/graphIMG.png'
+import outlineImg from '../../assets/outlineIMG.png'
+import logo from '../../assets/logo.png'
 import FacebookLogin from '../functional/FacebookLogin'
 
 export class Login extends Component {
@@ -46,9 +46,9 @@ export class Login extends Component {
         let loggedIn = this.state.loggedIn ? 0 : 1
         return (
             <div style={loginStyle}>
-                <img src={backgroundImg} alt='something' style={{height: '100vh', width: '100%', position: 'absolute', zIndex: 0}} />
-                <img src={graphImg} alt='graphs dude' style={{width: '101%', position: 'absolute', bottom: -10, opacity: loggedIn,transition: 'opacity 1000ms'}} />
-                <img src={outlineImg} alt='outline dude' style={{width: '101%', position: 'absolute', bottom: -10, opacity: loggedIn,transition: 'opacity 1000ms'}} />
+                <img src={backgroundImg} alt='something' style={{height: '100vh', width: '100vw', position: 'absolute', zIndex: 0}} />
+                <img src={graphImg} alt='graphs dude' style={{width: '100%', position: 'absolute', bottom: 0, opacity: loggedIn,transition: 'opacity 1000ms'}} />
+                <img src={outlineImg} alt='outline dude' style={{width: '100%', position: 'absolute', bottom: 0, opacity: loggedIn,transition: 'opacity 1000ms'}} />
                 {this.renderErrorMessage(errorActive)}
                 <div style={{...contentStyle, opacity: loggedIn}}>
                     <img src={logo} alt='ADM' style={{height: 50, width: 170}}/>
@@ -84,7 +84,7 @@ const loginStyle = {
     background: 'black',
     alignItems: 'middle',
     height: '100vh',
-    width: '100%',
+    width: '100vw',
     overflow: 'hidden'
 }
 const contentStyle = {
