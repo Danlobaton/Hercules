@@ -9,7 +9,7 @@ import MainGraph from '../MainGraph'
 import PurchaseGraph from '../PurchaseGraph'
 import InfoCol from '../InfoCol'
 import ProfitGraph from '../ProfitGraph'
-import GraphIcon from '../../graph.png'
+import GraphIcon from '../../assets/graph.png'
 import AppHeader from '../AppHeader'
 
 export class App extends Component {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ObjectListItem from './ObjectListItem'
-import filter from '../filter.png'
+import filter from '../assets/filter.png'
 import sort from '../sort.png'
 import TaskBar from './ListTaskBar'
 import PropTypes from 'prop-types'

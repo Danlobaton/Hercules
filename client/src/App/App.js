@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import ADMApp from './components/pages/admApp' 
-import Login from './components/pages/Login'
+import ADMApp from '../components/pages/admApp' 
+import Login from '../components/pages/Login'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 
